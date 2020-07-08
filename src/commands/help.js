@@ -1,4 +1,4 @@
-const state = require('../state');
+import State from "../state"
 
 class Help {
   static shouldExecute(messageService) {

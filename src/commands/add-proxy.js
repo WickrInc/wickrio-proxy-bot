@@ -1,4 +1,4 @@
-const State = require('../state');
+import State from "../state"
 
 // TODO use this instead of putting it in main!
 class AddProxy {

@@ -1,6 +1,6 @@
 
-const logger = require('../logger');
-const state = require('../state');
+import logger from '../logger';
+import { NONE } from '../state';
 
 // TODO use this instead of putting it in main!
 class RemoveMembers {
@@ -46,10 +46,10 @@ class RemoveMembers {
     }
     const obj = {
       reply,
-      state: state.NONE,
+      state: NONE,
     };
     return obj;
   }
 }
 
-module.exports = RemoveMembers;
+export default RemoveMembers;

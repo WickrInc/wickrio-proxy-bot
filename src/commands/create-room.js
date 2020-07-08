@@ -1,7 +1,7 @@
 
-const WickrIOAPI = require('wickrio_addon');
-const logger = require('../logger');
-const state = require('../state');
+import WickrIOAPI from 'wickrio_addon';
+import { debug } from '../logger';
+import { NONE } from '../state';
 
 // TODO use this instead of putting it in main!
 class CreateRoom {
@@ -17,18 +17,18 @@ class CreateRoom {
     } else {
       const uMessage = WickrIOAPI.cmdAddRoom(members, moderators, title, description, '', '');
       const vGroupID = JSON.parse(uMessage).vgroupid;
-      logger.debug(`Here is the uMessage${uMessage}`);
-      logger.debug(`Here is the vGroupID${vGroupID}`);
+      debug(`Here is the uMessage${uMessage}`);
+      debug(`Here is the vGroupID${vGroupID}`);
       WickrIOAPI.cmdSendRoomMessage(vGroupID, description);
       // WickrIOAPI.cmdLeaveRoom(vGroupID);
     }
     const obj = {
       reply,
-      state: state.NONE,
+      state: NONE,
     };
     return obj;
   }
 }
 
 
-module.exports = CreateRoom;
+export default CreateRoom;

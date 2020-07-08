@@ -1,29 +1,20 @@
 
 import WickrIOAPI from 'wickrio_addon';
-import MessageService from './src/services/message-service.js';
+import MessageService from './services/message-service';
 import WickrIOBotAPI from 'wickrio-bot-api';
 
 import fs from 'fs';
 
-import Factory from './src/factory.js';
-import WhitelistRepository from './src/helpers/whitelist.js';
-import pino from "pino"
+import Factory from './factory';
+import WhitelistRepository from './helpers/whitelist';
+import { debug } from './logger'
+
 const { WickrUser } = WickrIOBotAPI;
 const bot = new WickrIOBotAPI.WickrIOBot();
 const whitelist = new WhitelistRepository(fs);
 const factory = new Factory(whitelist);
 
 let currentState;
-
-const logger = pino({
-  prettyPrint: {
-    translateTime: true,
-    ignore: 'pid,hostname',
-  },
-  level: 'debug',
-});
-
-let { debug } = logger
 
 process.stdin.resume(); // so the program will not close instantly
 

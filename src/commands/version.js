@@ -1,13 +1,12 @@
 
-const state = require('../state');
-const logger = require('../logger');
-const pkgjson = require('../../package.json');
+import State from '../state';
+import { version, dependencies } from '../../package.json';
 
 class Version {
   execute() {
-    const reply = `*Versions*\nIntegration: ${pkgjson.version
-    }\nWickrIO Addon: ${pkgjson.dependencies.wickrio_addon
-    }\nWickrIO API: ${pkgjson.dependencies['wickrio-bot-api']}`;
+    const reply = `*Versions*\nIntegration: ${version
+      }\nWickrIO Addon: ${dependencies.wickrio_addon
+      }\nWickrIO API: ${dependencies['wickrio-bot-api']}`;
     const obj = {
       reply,
       state: state.NONE,
@@ -20,4 +19,4 @@ class Version {
   }
 }
 
-module.exports = Version;
+export default Version;

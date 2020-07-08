@@ -1,6 +1,4 @@
-
-const logger = require('../logger');
-const state = require('../state');
+import { NONE } from '../state';
 
 class ListMembers {
   constructor(memberListRepository) {
@@ -21,10 +19,10 @@ class ListMembers {
     }
     const obj = {
       reply,
-      state: state.NONE,
+      state: NONE,
     };
     return obj;
   }
 }
 
-module.exports = ListMembers;
+export default ListMembers;

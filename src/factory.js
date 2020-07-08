@@ -1,10 +1,9 @@
-const Help = require('./commands/help');
-const logger = require('./logger');
-const AddMembers = require('./commands/add-members');
-const RemoveMembers = require('./commands/remove-members');
-const ListMembers = require('./commands/list-members');
-const CreateRoom = require('./commands/create-room');
-const Version = require('./commands/version');
+import Help from './commands/help'
+// import AddMembers from './commands/add-members'
+import RemoveMembers from './commands/remove-members'
+import ListMembers from './commands/list-members'
+import CreateRoom from './commands/create-room'
+import Version from './commands/version'
 
 const MemberListRepo = require('./helpers/member-list');
 
@@ -13,7 +12,7 @@ const memberListRepo = new MemberListRepo(fs);
 
 class Factory {
   factory() {
-    this.addMembers = new AddMembers(memberListRepo);
+    // this.addMembers = new AddMembers(memberListRepo);
     this.removeMembers = new RemoveMembers(memberListRepo);
     this.listMembers = new ListMembers(memberListRepo);
     this.help = new Help();
