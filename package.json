@@ -15,7 +15,7 @@
     "wickrio_addon": "5.47.x"
   },
   "scripts": {
-    "start": "pm2 start processes.json --update-env",
+    "start": "node --trace-warnings --es-module-specifier-resolution=node ./src/proxy-bot.js",
     "test": "jest --coverage",
     "watch:test": "jest --watch",
     "dev": "pm2 start devprocesses.json --update-env",
