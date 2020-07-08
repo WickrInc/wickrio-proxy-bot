@@ -66,4 +66,4 @@ class WhitelistRepo {
   }
 }
 
-module.exports = WhitelistRepo;
+export default WhitelistRepo

@@ -5,6 +5,7 @@
   "main": "proxy-bot.js",
   "author": "Toren DeRosa",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
     "log4js": "^5.3.0",
     "pino": "^5.15.0",

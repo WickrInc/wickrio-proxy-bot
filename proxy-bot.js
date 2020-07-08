@@ -1,20 +1,29 @@
-import MessageService from './src/services/message-service';
 
-const WickrIOAPI = require('wickrio_addon');
-const WickrIOBotAPI = require('wickrio-bot-api');
+import WickrIOAPI from 'wickrio_addon';
+import MessageService from './src/services/message-service.js';
+import WickrIOBotAPI from 'wickrio-bot-api';
 
-const fs = require('fs');
+import fs from 'fs';
 
+import Factory from './src/factory.js';
+import WhitelistRepository from './src/helpers/whitelist.js';
+import pino from "pino"
 const { WickrUser } = WickrIOBotAPI;
 const bot = new WickrIOBotAPI.WickrIOBot();
-const Factory = require('./src/factory');
-const WhitelistRepository = require('./src/helpers/whitelist');
-
 const whitelist = new WhitelistRepository(fs);
 const factory = new Factory(whitelist);
-const logger = require('./src/logger');
 
 let currentState;
+
+const logger = pino({
+  prettyPrint: {
+    translateTime: true,
+    ignore: 'pid,hostname',
+  },
+  level: 'debug',
+});
+
+let { debug } = logger
 
 process.stdin.resume(); // so the program will not close instantly
 
@@ -22,13 +31,13 @@ async function exitHandler(options, err) {
   try {
     const closed = await bot.close();
     if (err || options.exit) {
-      logger.error('Exit reason:', err);
+      error('Exit reason:', err);
       process.exit();
     } else if (options.pid) {
       process.kill(process.pid);
     }
   } catch (err) {
-    logger.error(err);
+    error(err);
   }
 }
 
@@ -51,7 +60,7 @@ process.on('uncaughtException', exitHandler.bind(null, {
 }));
 
 async function main() {
-  logger.debug('Entering main!');
+  // debug('Entering main!');
   try {
     const tokens = JSON.parse(process.env.tokens);
     let status;
@@ -71,7 +80,7 @@ async function main() {
     // Start coding below and modify the listen function to your needs
     // /////////////////////
   } catch (err) {
-    logger.error(err);
+    error(err);
   }
 }
 
@@ -83,7 +92,7 @@ function listen(incomingMessage) {
     if (!parsedMessage) {
       return;
     }
-    logger.debug('New incoming Message:', parsedMessage);
+    debug('New incoming Message:', parsedMessage);
     let wickrUser;
     // TODO is this ok formatting??
     // combine all into one line
@@ -106,15 +115,15 @@ function listen(incomingMessage) {
         argument: '',
       });
       user = bot.addUser(wickrUser); // Add a new user to the database
-      logger.debug('Added user:', user);
+      debug('Added user:', user);
       user.token = 'example_token_A1234';
-      logger.debug(bot.getUser(userEmail)); // Print the changed user object
+      debug(bot.getUser(userEmail)); // Print the changed user object
     }
 
     if (!parsedMessage.isAdmin) {
       const reply = `${userEmail} is not authorized to use this bot. If you have a question, please get a hold of us a support@wickr.com or visit us a support.wickr.com. Thanks, Team Wickr`;
-      const sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, reply);
-      logger.debug({ sMessage });
+      const sMessage = cmdSendRoomMessage(vGroupID, reply);
+      debug({ sMessage });
       // writer.writeFile(message);
       return;
     }
@@ -129,14 +138,14 @@ function listen(incomingMessage) {
       user,
     );
     const obj = factory.execute(messageService);
-    logger.debug('Object reply:', obj.reply);
+    debug('Object reply:', obj.reply);
     if (obj.reply) {
-      logger.debug('Object has a reply');
-      const sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, obj.reply);
+      debug('Object has a reply');
+      const sMessage = cmdSendRoomMessage(vGroupID, obj.reply);
     }
     currentState = obj.state;
   } catch (err) {
-    logger.error(err);
+    error(err);
   }
 }
 
