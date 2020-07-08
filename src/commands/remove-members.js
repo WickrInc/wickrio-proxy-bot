@@ -4,9 +4,8 @@ import { NONE } from '../state';
 
 // TODO use this instead of putting it in main!
 class RemoveMembers {
-  constructor(memberListRepo, whitelistRepo) {
+  constructor(memberListRepo) {
     this.memberList = memberListRepo;
-    this.whitelist = whitelistRepo;
   }
 
   shouldExecute() {
@@ -40,8 +39,8 @@ class RemoveMembers {
 
         this.memberList.updateMemberList(memberList);
         // Send a message to all the current members
-        const doneReply = `${userEmail} has removed the following members from the member list:\n${members.join('\n')}`;
-        const uMessage = this.whitelist.sendToWhitelist(doneReply);
+        // const doneReply = `${userEmail} has removed the following members from the member list:\n${members.join('\n')}`;
+        // const uMessage = this.whitelist.sendToWhitelist(doneReply);
       }
     }
     const obj = {

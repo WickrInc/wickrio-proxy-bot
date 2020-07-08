@@ -1,10 +1,11 @@
-import Help from './commands/help'
+import Help from './commands/help';
 // import AddMembers from './commands/add-members'
-import RemoveMembers from './commands/remove-members'
-import ListMembers from './commands/list-members'
-import CreateRoom from './commands/create-room'
-import Version from './commands/version'
+import RemoveMembers from './commands/remove-members';
+import ListMembers from './commands/list-members';
+import CreateRoom from './commands/create-room';
+import Version from './commands/version';
 
+const fs = require('fs');
 const MemberListRepo = require('./helpers/member-list');
 
 // TODO consts vs this's

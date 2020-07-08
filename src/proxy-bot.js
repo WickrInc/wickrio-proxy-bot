@@ -1,18 +1,15 @@
-
 import WickrIOAPI from 'wickrio_addon';
-import MessageService from './services/message-service';
 import WickrIOBotAPI from 'wickrio-bot-api';
 
 import fs from 'fs';
+import MessageService from './services/message-service';
 
 import Factory from './factory';
-import WhitelistRepository from './helpers/whitelist';
-import { debug } from './logger'
+import { debug } from './logger';
 
 const { WickrUser } = WickrIOBotAPI;
 const bot = new WickrIOBotAPI.WickrIOBot();
-const whitelist = new WhitelistRepository(fs);
-const factory = new Factory(whitelist);
+const factory = new Factory();
 
 let currentState;
 

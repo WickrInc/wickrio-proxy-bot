@@ -1,5 +1,5 @@
-
-const logger = require('../logger');
+// const logger = require('../logger');
+import logger from '../logger';
 
 class MemberListRepo {
   // constructor(fs){
@@ -11,7 +11,7 @@ class MemberListRepo {
       if (fs.existsSync('./files/members.json')) {
         memberData = fs.readFileSync('./files/members.json');
         if (!memberData) {
-          logger.error('Error reading members.json!');
+          // logger.error('Error reading members.json!');
           return;
         }
         this.members = JSON.parse(memberData);
@@ -22,7 +22,7 @@ class MemberListRepo {
         this.updateMemberList(this.members);
       }
     } catch (err) {
-      logger.error(err);
+      // logger.error(err);
     }
   }
 
@@ -47,7 +47,7 @@ class MemberListRepo {
       });
       return memberList.toString();
     } catch (err) {
-      logger.error(err);
+      // logger.error(err);
     }
   }
 }
