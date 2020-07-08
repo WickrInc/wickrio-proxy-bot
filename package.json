@@ -5,7 +5,6 @@
   "main": "proxy-bot.js",
   "author": "Toren DeRosa",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "log4js": "^5.3.0",
     "pino": "^5.15.0",
@@ -15,7 +14,7 @@
     "wickrio_addon": "5.47.x"
   },
   "scripts": {
-    "start": "node --trace-warnings --es-module-specifier-resolution=node ./src/proxy-bot.js",
+    "start": "node ./build/proxy-bot.js",
     "test": "jest --coverage",
     "watch:test": "jest --watch",
     "dev": "pm2 start devprocesses.json --update-env",
@@ -38,6 +37,9 @@
   ],
   "database": true,
   "devDependencies": {
+    "@babel/cli": "^7.10.4",
+    "@babel/core": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
     "@typescript-eslint/eslint-plugin": "^3.6.0",
     "@typescript-eslint/parser": "^3.6.0",
     "eslint": "^7.4.0",
