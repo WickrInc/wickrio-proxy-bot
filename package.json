@@ -16,6 +16,10 @@
   },
   "scripts": {
     "start": "pm2 start processes.json --update-env",
+    "test": "jest --coverage",
+    "watch:test": "jest --watch",
+    "dev": "pm2 start devprocesses.json --update-env",
+    "transpile": "babel ./src --out-dir ./build",
     "stop": "pm2 delete processes.json"
   },
   "repository": {
