@@ -1,48 +1,59 @@
-import Help from "./commands/help";
-// import AddMembers from './commands/add-members'
-import RemoveMembers from "./commands/remove-members";
-import ListMembers from "./commands/list-members";
-import CreateRoom from "./commands/create-room";
-import Version from "./commands/version";
-import AddProxy from "./commands/add-proxy";
-import fs from "fs";
-import MemberListRepo from "./helpers/member-list";
-
-// TODO consts vs this's
-const memberListRepo = new MemberListRepo(fs);
+import fs from 'fs'
+import { NONE } from './state'
+import Help from './commands/help'
+import logger from './logger'
+import AddProxy from './commands/add-proxy'
+import SetAlias from './commands/set-alias'
+import Send from './commands/send'
+import SendFromRoom from './commands/send-from-room'
+import RemoveMembers from './commands/remove-members'
+import ListMembers from './commands/list-members'
+import CreateRoom from './commands/create-room'
+import Version from './commands/version'
 
 class Factory {
-  factory(proxyService) {
-    // this.addMembers = new AddMembers(memberListRepo);
-    this.proxyService = proxyService;
-    this.removeMembers = new RemoveMembers(memberListRepo);
-    this.listMembers = new ListMembers(memberListRepo);
-    this.help = new Help();
-    this.createRoom = new CreateRoom();
-    this.version = new Version();
+  constructor(memberListRepo) {
+    this.addProxy = new AddProxy(memberListRepo)
+    this.setAlias = new SetAlias(memberListRepo)
+    this.removeMembers = new RemoveMembers(memberListRepo)
+    this.listMembers = new ListMembers(memberListRepo)
+    // this.help = new Help();
+    this.createRoom = new CreateRoom(memberListRepo)
+    this.version = new Version()
+    this.send = new Send(memberListRepo)
+    this.sendFromRoom = new SendFromRoom(memberListRepo)
 
     // Order matters here /commands must go first
     // TODO make it so that the order doesn' matter?
     this.commandList = [
       // These are the /commands and must go first
-      this.help,
+      Help,
+      this.addProxy,
+      this.setAlias,
+      this.createRoom,
+      this.send,
+      this.sendFromRoom,
+      Version,
       // Here are the options that rely on the current state
       (this.addProxy = new AddProxy(this.proxyService)),
-    ];
+    ]
   }
 
   execute(messageService) {
     for (const command of this.commandList) {
+      // this.commandList.forEach( command => {
+      // for (let i = 0; i < this.commandList.length; i += 1) {
       if (command.shouldExecute(messageService)) {
-        return command.execute(messageService);
+        return command.execute(messageService)
       }
     }
     // TODO fix the admin command returning this then add it back
-    // return {
-    //   reply: 'Command not recognized send the command /help for a list of commands',
-    //   state: State.NONE,
-    // };
+    return {
+      reply:
+        'Command not recognized send the command /help for a list of commands',
+      state: NONE,
+    }
   }
 }
 
-export default Factory;
+export default Factory
