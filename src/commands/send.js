@@ -25,7 +25,7 @@ class Send {
     } else if (this.proxyService.members === undefined) {
       reply = 'Before sending a message please set up a proxy for yourself';
     }
-    reply = this.proxyService.sendMessage();
+    reply = this.proxyService.sendMessage(messageService.getArgument());
     return {
       reply,
       state: State.NONE,

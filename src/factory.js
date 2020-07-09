@@ -4,6 +4,8 @@ const Help = require('./commands/help');
 const logger = require('./logger');
 const AddProxy = require('./commands/add-proxy');
 const SetAlias = require('./commands/set-alias');
+const Send = require('./commands/send');
+const SendFromRoom = require('./commands/send-from-room');
 const RemoveMembers = require('./commands/remove-members');
 const ListMembers = require('./commands/list-members');
 const CreateRoom = require('./commands/create-room');
@@ -18,6 +20,8 @@ class Factory {
     // this.help = new Help();
     this.createRoom = new CreateRoom(memberListRepo);
     this.version = new Version();
+    this.send = new Send(memberListRepo);
+    this.sendFromRoom = new SendFromRoom(memberListRepo);
 
     // Order matters here /commands must go first
     // TODO make it so that the order doesn' matter?
@@ -27,7 +31,9 @@ class Factory {
       this.addProxy,
       this.setAlias,
       this.createRoom,
-      // this.help,
+      this.send,
+      this.sendFromRoom,
+      Version,
       // Here are the options that rely on the current state
 
     ];

@@ -103,6 +103,13 @@ class MemberListRepo {
     }
     return reply;
   }
+
+  sendMessage(message) {
+    const messageString = `Message from ${this.members[0].alias}:\n${message}`;
+    const aliasArray = [];
+    aliasArray.push(this.alias.userID);
+    WickrIOAPI.cmdSend1to1Message(aliasArray, messageString, '', '', '');
+  }
 }
 
 module.exports = MemberListRepo;

@@ -1,23 +1,27 @@
-
-const state = require('../state');
-const logger = require('../logger');
-const pkgjson = require('../../package.json');
+// import State from '../state';
+const State = require('../state');
 
 class Version {
-  execute() {
-    const reply = `*Versions*\nIntegration: ${pkgjson.version
-    }\nWickrIO Addon: ${pkgjson.dependencies.wickrio_addon
-    }\nWickrIO API: ${pkgjson.dependencies['wickrio-bot-api']}`;
-    const obj = {
-      reply,
-      state: state.NONE,
-    };
-    return obj;
+  static shouldExecute(messageService) {
+    if (messageService.getCommand() === '/version') {
+      return true;
+    }
+    return false;
   }
 
-  shouldExecute() {
-
+  static execute() {
+    let json = require('../../node_modules/wickrio_addon/package.json');
+    const addonVersion = json.version;
+    json = require('../../node_modules/wickrio-bot-api/package.json');
+    const apiVersion = json.version;
+    const reply = `*Versions*\nIntegration: ${process.env.npm_package_version}\n`
+      + `WickrIO Addon: ${addonVersion}\n`
+      + `WickrIO API: ${apiVersion}`;
+    return {
+      reply,
+      state: State.NONE,
+    };
   }
 }
 
-module.exports = Version;
+export default Version;
