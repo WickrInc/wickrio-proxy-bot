@@ -1,4 +1,4 @@
-
+const WickrIOAPI = require('wickrio_addon');
 const logger = require('../logger');
 
 class MemberListRepo {
@@ -7,6 +7,7 @@ class MemberListRepo {
   constructor(fs) {
     this.fs = fs;
     let memberData;
+    let aliasData;
     try {
       if (fs.existsSync('./files/members.json')) {
         memberData = fs.readFileSync('./files/members.json');
@@ -19,7 +20,17 @@ class MemberListRepo {
         logger.debug(`Members is:${this.members}`);
       } else {
         this.members = [];
-        this.updateMemberList(this.members);
+        // this.updateMemberList(this.members);
+      }
+      if (fs.existsSync('./files/alias.json')) {
+        aliasData = fs.readFileSync('./files/alias.json');
+        if (!aliasData) {
+          logger.error('Error reading alias.json!');
+          return;
+        }
+        this.alias = JSON.parse(aliasData);
+      } else {
+        this.alias = '';
       }
     } catch (err) {
       logger.error(err);
@@ -49,6 +60,48 @@ class MemberListRepo {
     } catch (err) {
       logger.error(err);
     }
+  }
+
+  setAlias(alias) {
+    this.alias = alias;
+    try {
+      const aliasToWrite = JSON.stringify(alias);
+      if (!this.fs.existsSync('./files')) {
+        this.fs.mkdirSync('./files');
+      }
+      this.fs.writeFile('./files/alias.json', aliasToWrite, (err) => {
+        // TODO Fix this
+        if (err) throw err;
+        logger.trace('Current alias saved in file');
+      });
+      return alias.toString();
+    } catch (err) {
+      logger.error(err);
+    }
+  }
+
+  createRoom() {
+    let reply = 'Room created.';
+    if (this.members === undefined || this.members.length === 0) {
+      reply = 'Alias contains no members';
+    } else if (this.alias === undefined || this.alias === '') {
+      reply = 'No alias to send to set and alias with /alias';
+    } else {
+      const description = `Conversation with ${this.alias.alias}`;
+      const title = `Conversation with ${this.alias.alias}`;
+      const usernames = [];
+      for (const member of this.members) {
+        usernames.push(member.userID);
+      }
+      // usernames.push() bot name!
+      const uMessage = WickrIOAPI.cmdAddRoom(usernames, usernames, title, description, '', '');
+      this.vGroupID = JSON.parse(uMessage).vgroupid;
+      logger.debug(`Here is the uMessage${uMessage}`);
+      logger.debug(`Here is the vGroupID${this.vGroupID}`);
+      WickrIOAPI.cmdSendRoomMessage(this.vGroupID, description);
+      // WickrIOAPI.cmdLeaveRoom(vGroupID);
+    }
+    return reply;
   }
 }
 

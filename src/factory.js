@@ -1,30 +1,33 @@
+const fs = require('fs');
+const State = require('./state');
 const Help = require('./commands/help');
 const logger = require('./logger');
-const AddMembers = require('./commands/add-members');
+const AddProxy = require('./commands/add-proxy');
+const SetAlias = require('./commands/set-alias');
 const RemoveMembers = require('./commands/remove-members');
 const ListMembers = require('./commands/list-members');
 const CreateRoom = require('./commands/create-room');
 const Version = require('./commands/version');
 
-const MemberListRepo = require('./helpers/member-list');
-
-// TODO consts vs this's
-const memberListRepo = new MemberListRepo(fs);
-
 class Factory {
-  factory() {
-    this.addMembers = new AddMembers(memberListRepo);
+  constructor(memberListRepo) {
+    this.addProxy = new AddProxy(memberListRepo);
+    this.setAlias = new SetAlias(memberListRepo);
     this.removeMembers = new RemoveMembers(memberListRepo);
     this.listMembers = new ListMembers(memberListRepo);
-    this.help = new Help();
-    this.createRoom = new CreateRoom();
+    // this.help = new Help();
+    this.createRoom = new CreateRoom(memberListRepo);
     this.version = new Version();
 
     // Order matters here /commands must go first
     // TODO make it so that the order doesn' matter?
     this.commandList = [
       // These are the /commands and must go first
-      this.help,
+      Help,
+      this.addProxy,
+      this.setAlias,
+      this.createRoom,
+      // this.help,
       // Here are the options that rely on the current state
 
     ];
@@ -32,16 +35,18 @@ class Factory {
 
   execute(messageService) {
     for (const command of this.commandList) {
+    // this.commandList.forEach( command => {
+    // for (let i = 0; i < this.commandList.length; i += 1) {
       if (command.shouldExecute(messageService)) {
         return command.execute(messageService);
       }
     }
     // TODO fix the admin command returning this then add it back
-    // return {
-    //   reply: 'Command not recognized send the command /help for a list of commands',
-    //   state: State.NONE,
-    // };
+    return {
+      reply: 'Command not recognized send the command /help for a list of commands',
+      state: State.NONE,
+    };
   }
 }
 
-export default Factory;
+module.exports = Factory;

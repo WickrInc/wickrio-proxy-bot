@@ -79,4 +79,4 @@ class MessageService {
   }
 }
 
-export default MessageService;
+module.exports = MessageService;

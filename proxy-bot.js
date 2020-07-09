@@ -1,18 +1,19 @@
-import MessageService from './src/services/message-service';
-
 const WickrIOAPI = require('wickrio_addon');
 const WickrIOBotAPI = require('wickrio-bot-api');
 
 const fs = require('fs');
+const MessageService = require('./src/services/message-service');
 
 const { WickrUser } = WickrIOBotAPI;
 const bot = new WickrIOBotAPI.WickrIOBot();
 const Factory = require('./src/factory');
-const WhitelistRepository = require('./src/helpers/whitelist');
 
-const whitelist = new WhitelistRepository(fs);
-const factory = new Factory(whitelist);
 const logger = require('./src/logger');
+
+const MemberListRepo = require('./src/helpers/member-list');
+
+const memberListRepo = new MemberListRepo(fs);
+const factory = new Factory(memberListRepo);
 
 let currentState;
 
@@ -111,13 +112,17 @@ function listen(incomingMessage) {
       logger.debug(bot.getUser(userEmail)); // Print the changed user object
     }
 
-    if (!parsedMessage.isAdmin) {
-      const reply = `${userEmail} is not authorized to use this bot. If you have a question, please get a hold of us a support@wickr.com or visit us a support.wickr.com. Thanks, Team Wickr`;
-      const sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, reply);
-      logger.debug({ sMessage });
-      // writer.writeFile(message);
-      return;
-    }
+    // if (!parsedMessage.isAdmin) {
+    //   const reply = `${userEmail} is not authorized to use this bot. If you have a question, please get a hold of us a support@wickr.com or visit us a support.wickr.com. Thanks, Team Wickr`;
+    //   const sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, reply);
+    //   logger.debug({ sMessage });
+    //   // writer.writeFile(message);
+    //   return;
+    // }
+
+    // if (memberListRepo.vGroupID && memberListRepo === vGroupID) {
+    //   WickrIOAPI.send1to1(message);
+    // }
 
     const messageService = new MessageService(
       message,

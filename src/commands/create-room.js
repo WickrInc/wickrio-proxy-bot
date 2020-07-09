@@ -1,34 +1,28 @@
-
 const WickrIOAPI = require('wickrio_addon');
 const logger = require('../logger');
-const state = require('../state');
+const State = require('../state');
 
 // TODO use this instead of putting it in main!
 class CreateRoom {
-  shouldExecute() {
+  constructor(proxyService) {
+    this.proxyService = proxyService;
+    this.commandString = '/create';
   }
 
-  execute(members, moderators, title, description) {
-    let reply = 'Room created.';
-    if (members === undefined || members.length === 0) {
-      reply = 'Alias contains no members';
-    } else if (description === undefined || description === '') {
-      reply = 'Invalid /create command Usage: /create <question>';
-    } else {
-      const uMessage = WickrIOAPI.cmdAddRoom(members, moderators, title, description, '', '');
-      const vGroupID = JSON.parse(uMessage).vgroupid;
-      logger.debug(`Here is the uMessage${uMessage}`);
-      logger.debug(`Here is the vGroupID${vGroupID}`);
-      WickrIOAPI.cmdSendRoomMessage(vGroupID, description);
-      // WickrIOAPI.cmdLeaveRoom(vGroupID);
+  shouldExecute(messageService) {
+    if (messageService.getCommand() === this.commandString) {
+      return true;
     }
-    const obj = {
+    return false;
+  }
+
+  execute(messageService) {
+    const reply = this.proxyService.createRoom();
+    return {
       reply,
-      state: state.NONE,
+      state: State.NONE,
     };
-    return obj;
   }
 }
-
 
 module.exports = CreateRoom;
