@@ -8,9 +8,5 @@ const logger = pino({
   level: 'debug',
 });
 
-let { debug } = logger
 
-
-export default {
-  debug
-}
+export default logger

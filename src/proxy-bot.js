@@ -5,8 +5,7 @@ import fs from 'fs';
 import MessageService from './services/message-service';
 
 import Factory from './factory';
-import { debug } from './logger';
-
+import logger from './logger';
 const { WickrUser } = WickrIOBotAPI;
 const bot = new WickrIOBotAPI.WickrIOBot();
 const factory = new Factory();
@@ -19,13 +18,13 @@ async function exitHandler(options, err) {
   try {
     const closed = await bot.close();
     if (err || options.exit) {
-      error('Exit reason:', err);
+      logger.error('Exit reason:', err);
       process.exit();
     } else if (options.pid) {
       process.kill(process.pid);
     }
   } catch (err) {
-    error(err);
+    logger.error(err);
   }
 }
 
@@ -68,7 +67,7 @@ async function main() {
     // Start coding below and modify the listen function to your needs
     // /////////////////////
   } catch (err) {
-    error(err);
+    logger.error(err);
   }
 }
 
@@ -80,7 +79,7 @@ function listen(incomingMessage) {
     if (!parsedMessage) {
       return;
     }
-    debug('New incoming Message:', parsedMessage);
+    logger.debug('New incoming Message:', parsedMessage);
     let wickrUser;
     // TODO is this ok formatting??
     // combine all into one line
@@ -103,15 +102,15 @@ function listen(incomingMessage) {
         argument: '',
       });
       user = bot.addUser(wickrUser); // Add a new user to the database
-      debug('Added user:', user);
+      logger.debug('Added user:', user);
       user.token = 'example_token_A1234';
-      debug(bot.getUser(userEmail)); // Print the changed user object
+      logger.debug(bot.getUser(userEmail)); // Print the changed user object
     }
 
     if (!parsedMessage.isAdmin) {
       const reply = `${userEmail} is not authorized to use this bot. If you have a question, please get a hold of us a support@wickr.com or visit us a support.wickr.com. Thanks, Team Wickr`;
       const sMessage = cmdSendRoomMessage(vGroupID, reply);
-      debug({ sMessage });
+      logger.debug({ sMessage });
       // writer.writeFile(message);
       return;
     }
@@ -126,14 +125,14 @@ function listen(incomingMessage) {
       user,
     );
     const obj = factory.execute(messageService);
-    debug('Object reply:', obj.reply);
+    logger.debug('Object reply:', obj.reply);
     if (obj.reply) {
-      debug('Object has a reply');
+      logger.debug('Object has a reply');
       const sMessage = cmdSendRoomMessage(vGroupID, obj.reply);
     }
     currentState = obj.state;
   } catch (err) {
-    error(err);
+    logger.error(err);
   }
 }
 
