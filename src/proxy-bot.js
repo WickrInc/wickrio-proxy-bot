@@ -1,14 +1,16 @@
 import WickrIOAPI from 'wickrio_addon';
 import WickrIOBotAPI from 'wickrio-bot-api';
-
 import fs from 'fs';
+
+import ProxyService from './services/proxy-service';
 import MessageService from './services/message-service';
 
 import Factory from './factory';
 import logger from './logger';
+
 const { WickrUser } = WickrIOBotAPI;
 const bot = new WickrIOBotAPI.WickrIOBot();
-const factory = new Factory();
+const factory = new Factory(ProxyService);
 
 let currentState;
 
