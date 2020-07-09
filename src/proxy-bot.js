@@ -100,6 +100,7 @@ function listen(incomingMessage) {
     const { message } = parsedMessage
     const { argument } = parsedMessage
     const { userEmail } = parsedMessage
+
     const vGroupID = parsedMessage.vgroupid
     const { convoType } = parsedMessage
     let personalVGroupID = ''

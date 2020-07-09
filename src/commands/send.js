@@ -11,6 +11,7 @@ class Send {
     if (messageService.getCommand() === this.commandString) {
       return true
     }
+
     return false
   }
 
