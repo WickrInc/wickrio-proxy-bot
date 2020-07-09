@@ -1,9 +1,9 @@
 import * as WickrIOBotAPI from 'wickrio-bot-api'
 import fs from 'fs'
-import MessageService from './src/services/message-service'
-import Factory from './src/factory'
-import logger from './src/logger'
-import MemberListRepo from './src/helpers/member-list'
+import MessageService from './services/message-service'
+import Factory from './factory'
+import logger from './logger'
+import MemberListRepo from './helpers/member-list'
 
 const memberListRepo = new MemberListRepo(fs)
 const factory = new Factory(memberListRepo)
