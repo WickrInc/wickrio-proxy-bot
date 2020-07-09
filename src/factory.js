@@ -19,7 +19,6 @@ class Factory {
     this.listMembers = new ListMembers(memberListRepo);
     // this.help = new Help();
     this.createRoom = new CreateRoom(memberListRepo);
-    this.version = new Version();
     this.send = new Send(memberListRepo);
     this.sendFromRoom = new SendFromRoom(memberListRepo);
 
@@ -33,6 +32,7 @@ class Factory {
       this.createRoom,
       this.send,
       this.sendFromRoom,
+      this.listMembers,
       Version,
       // Here are the options that rely on the current state
 
@@ -41,8 +41,6 @@ class Factory {
 
   execute(messageService) {
     for (const command of this.commandList) {
-    // this.commandList.forEach( command => {
-    // for (let i = 0; i < this.commandList.length; i += 1) {
       if (command.shouldExecute(messageService)) {
         return command.execute(messageService);
       }

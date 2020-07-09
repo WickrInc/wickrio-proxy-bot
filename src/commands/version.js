@@ -24,4 +24,4 @@ class Version {
   }
 }
 
-export default Version;
+module.eports = Version;
