@@ -5,9 +5,8 @@ import ListMembers from './commands/list-members';
 import CreateRoom from './commands/create-room';
 import Version from './commands/version';
 import AddProxy from './commands/add-proxy';
-
-const fs = require('fs');
-const MemberListRepo = require('./helpers/member-list');
+import fs from 'fs'
+import MemberListRepo from './helpers/member-list'
 
 // TODO consts vs this's
 const memberListRepo = new MemberListRepo(fs);

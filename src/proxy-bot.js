@@ -1,5 +1,8 @@
-import WickrIOAPI from 'wickrio_addon';
-import WickrIOBotAPI from 'wickrio-bot-api';
+import * as WickrIOBotAPI from 'wickrio-bot-api'
+
+const WickrUser = WickrIOBotAPI.WickrUser;
+const bot = new WickrIOBotAPI.WickrIOBot();
+const WickrIOAPI = bot.getWickrIOAddon();
 import fs from 'fs';
 
 import ProxyService from './services/proxy-service';
@@ -7,9 +10,6 @@ import MessageService from './services/message-service';
 
 import Factory from './factory';
 import logger from './logger';
-
-const { WickrUser } = WickrIOBotAPI;
-const bot = new WickrIOBotAPI.WickrIOBot();
 const factory = new Factory(ProxyService);
 
 let currentState;
