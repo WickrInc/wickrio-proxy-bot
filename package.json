@@ -58,11 +58,11 @@
     "dev": "nodemon --exec 'babel-node --inspect=0.0.0.0 src/server.js'",
     "test": "jest --coverage",
     "watch:test": "jest --watch",
+    "stop": "pm2 delete processes.json",
     "transpile": "npm run prettier && npm run lint && npm run babel",
     "babel": "babel ./src --out-dir ./build --ignore node_modules",
     "lint": "eslint src/**/*.js --fix --color",
-    "prettier": "prettier --write ./src",
-    "stop": "pm2 delete processes.json"
+    "prettier": "prettier --write ./src"
   },
   "husky": {
     "hooks": {
