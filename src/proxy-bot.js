@@ -10,9 +10,7 @@ const factory = new Factory(memberListRepo)
 const WickrUser = WickrIOBotAPI.WickrUser
 const bot = new WickrIOBotAPI.WickrIOBot()
 const WickrIOAPI = bot.getWickrIOAddon()
-
 let currentState
-
 process.stdin.resume() // so the program will not close instantly
 
 async function exitHandler(options, err) {
