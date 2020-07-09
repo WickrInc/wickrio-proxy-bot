@@ -54,7 +54,7 @@ class MemberListRepo {
       if (!this.fs.existsSync('./files')) {
         this.fs.mkdirSync('./files')
       }
-      this.fs.writeFile('./files/members.json', memberListToWrite, (err) => {
+      this.fs.writeFile('./files/members.json', memberListToWrite, err => {
         // TODO Fix this
         if (err) throw err
         logger.trace('Current Members saved in file')
@@ -72,7 +72,7 @@ class MemberListRepo {
       if (!this.fs.existsSync('./files')) {
         this.fs.mkdirSync('./files')
       }
-      this.fs.writeFile('./files/alias.json', aliasToWrite, (err) => {
+      this.fs.writeFile('./files/alias.json', aliasToWrite, err => {
         // TODO Fix this
         if (err) throw err
         logger.trace('Current alias saved in file')

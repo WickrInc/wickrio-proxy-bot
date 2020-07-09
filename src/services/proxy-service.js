@@ -7,14 +7,14 @@ class ProxyService {
 
   static findUserByProxy(proxyid) {
     const findUserByProxy = this.readCredentialFile.credentials.find(
-      (usercredential) => usercredential.proxyid === proxyid
+      usercredential => usercredential.proxyid === proxyid
     )
     return findUserByProxy
   }
 
   static findUserByID(userid) {
     const findUserByID = this.readCredentialFile.credentials.find(
-      (usercredential) => usercredential.userid === userid
+      usercredential => usercredential.userid === userid
     )
     return findUserByID
   }
@@ -43,7 +43,7 @@ class ProxyService {
     user
       ? // add proxy to the cedentials
         creds.credentials
-          .find((usercredential) => usercredential.userid === userid)
+          .find(usercredential => usercredential.userid === userid)
           .proxyid.append(proxyid)
       : // if not, add the user and proxy
         creds.credentials.append({
@@ -59,7 +59,7 @@ class ProxyService {
   static list(userid) {
     const creds = this.readCredentialFile()
     const user = creds.credentials.find(
-      (usercredential) => usercredential.userid === userid
+      usercredential => usercredential.userid === userid
     )
 
     return `${user.userid}: ${user.proxyid}`

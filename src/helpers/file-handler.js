@@ -16,7 +16,7 @@ class FileHandler {
     // TODO just pass this as a parameter??
     const filePath = `${path}/${file}`
     // TODO fix this! use async await!
-    fs.access(filePath, fs.constants.R_OK | fs.constants.W_OK, (err) => {
+    fs.access(filePath, fs.constants.R_OK | fs.constants.W_OK, err => {
       if (err) {
         // TODO fix this!
         logger.error(
@@ -36,7 +36,7 @@ class FileHandler {
       if (err) {
         logger.error('Can not read from directory')
       } else {
-        files.forEach((file) => {
+        files.forEach(file => {
           // logger.debug(file);
           fileArr.push(file.toString())
         })
