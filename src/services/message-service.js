@@ -1,7 +1,15 @@
-const logger = require('../logger');
+const logger = require("../logger");
 
 class MessageService {
-  constructor(message, userEmail, argument, command, currentState, vGroupID, user) {
+  constructor(
+    message,
+    userEmail,
+    argument,
+    command,
+    currentState,
+    vGroupID,
+    user
+  ) {
     this.message = message;
     this.userEmail = userEmail;
     this.argument = argument;
@@ -49,11 +57,15 @@ class MessageService {
   }
 
   affirmativeReply() {
-    return this.message.toLowerCase() === 'yes' || this.message.toLowerCase() === 'y';
+    return (
+      this.message.toLowerCase() === "yes" || this.message.toLowerCase() === "y"
+    );
   }
 
   negativeReply() {
-    return this.message.toLowerCase() === 'no' || this.message.toLowerCase() === 'n';
+    return (
+      this.message.toLowerCase() === "no" || this.message.toLowerCase() === "n"
+    );
   }
 
   isInt() {
@@ -65,14 +77,14 @@ class MessageService {
 
   static replyWithButtons(message) {
     const button1 = {
-      type: 'message',
-      text: 'Yes',
-      message: 'yes',
+      type: "message",
+      text: "Yes",
+      message: "yes",
     };
     const button2 = {
-      type: 'message',
-      text: 'No',
-      message: 'no',
+      type: "message",
+      text: "No",
+      message: "no",
     };
     const buttons = [button1, button2];
     // Send message with buttons here

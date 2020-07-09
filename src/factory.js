@@ -1,12 +1,12 @@
-import Help from './commands/help';
+import Help from "./commands/help";
 // import AddMembers from './commands/add-members'
-import RemoveMembers from './commands/remove-members';
-import ListMembers from './commands/list-members';
-import CreateRoom from './commands/create-room';
-import Version from './commands/version';
-import AddProxy from './commands/add-proxy';
-import fs from 'fs'
-import MemberListRepo from './helpers/member-list'
+import RemoveMembers from "./commands/remove-members";
+import ListMembers from "./commands/list-members";
+import CreateRoom from "./commands/create-room";
+import Version from "./commands/version";
+import AddProxy from "./commands/add-proxy";
+import fs from "fs";
+import MemberListRepo from "./helpers/member-list";
 
 // TODO consts vs this's
 const memberListRepo = new MemberListRepo(fs);
@@ -27,8 +27,7 @@ class Factory {
       // These are the /commands and must go first
       this.help,
       // Here are the options that rely on the current state
-      this.addProxy = new AddProxy(this.proxyService),
-
+      (this.addProxy = new AddProxy(this.proxyService)),
     ];
   }
 

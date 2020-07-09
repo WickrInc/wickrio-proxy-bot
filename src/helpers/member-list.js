@@ -1,5 +1,5 @@
 // const logger = require('../logger');
-import logger from '../logger';
+import logger from "../logger";
 
 class MemberListRepo {
   // constructor(fs){
@@ -8,8 +8,8 @@ class MemberListRepo {
     this.fs = fs;
     let memberData;
     try {
-      if (fs.existsSync('./files/members.json')) {
-        memberData = fs.readFileSync('./files/members.json');
+      if (fs.existsSync("./files/members.json")) {
+        memberData = fs.readFileSync("./files/members.json");
         if (!memberData) {
           // logger.error('Error reading members.json!');
           return;
@@ -37,13 +37,13 @@ class MemberListRepo {
     try {
       logger.debug(`This is the memberList: ${memberList}`);
       const memberListToWrite = JSON.stringify(memberList);
-      if (!this.fs.existsSync('./files')) {
-        this.fs.mkdirSync('./files');
+      if (!this.fs.existsSync("./files")) {
+        this.fs.mkdirSync("./files");
       }
-      this.fs.writeFile('./files/members.json', memberListToWrite, (err) => {
+      this.fs.writeFile("./files/members.json", memberListToWrite, (err) => {
         // TODO Fix this
         if (err) throw err;
-        logger.trace('Current Members saved in file');
+        logger.trace("Current Members saved in file");
       });
       return memberList.toString();
     } catch (err) {

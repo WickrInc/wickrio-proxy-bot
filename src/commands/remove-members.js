@@ -1,6 +1,5 @@
-
-import logger from '../logger';
-import { NONE } from '../state';
+import logger from "../logger";
+import { NONE } from "../state";
 
 // TODO use this instead of putting it in main!
 class RemoveMembers {
@@ -8,8 +7,7 @@ class RemoveMembers {
     this.memberList = memberListRepo;
   }
 
-  shouldExecute() {
-  }
+  shouldExecute() {}
 
   execute(userEmail, members) {
     let reply;
@@ -17,7 +15,7 @@ class RemoveMembers {
     const memberList = this.memberList.getMemberList();
     const removeFails = [];
     if (members === undefined || members.length === 0) {
-      reply = 'Command contains no user names to remove!';
+      reply = "Command contains no user names to remove!";
     } else {
       for (let i = 0; i < members.length; i++) {
         if (!memberList.includes(members[i])) {
@@ -26,8 +24,9 @@ class RemoveMembers {
         }
       }
       if (removeFails.length >= 1) {
-        reply = 'Failed to remove some members, current list of members does not contain:\n';
-        reply += removeFails.join('\n');
+        reply =
+          "Failed to remove some members, current list of members does not contain:\n";
+        reply += removeFails.join("\n");
       }
 
       if (members.length >= 1) {
@@ -35,7 +34,7 @@ class RemoveMembers {
           memberList.splice(memberList.indexOf(members[i]), 1);
         }
 
-        console.log('memberList', memberList);
+        console.log("memberList", memberList);
 
         this.memberList.updateMemberList(memberList);
         // Send a message to all the current members

@@ -3,15 +3,11 @@
     {
       "name": "WickrIO-Proxy-Bot",
       "args": [],
-      "script": "node ./src/proxy-bot.js",
+      "script": "node --inspect=0.0.0.0 ./build/proxy-bot.js",
       "exec_interpreter": "none",
       "autorestart": false,
-      "watch": [
-        "package.json"
-      ],
-      "ignore_watch": [
-        ".git"
-      ],
+      "watch": ["package.json"],
+      "ignore_watch": [".git"],
       "env": {
         "tokens": {}
       },

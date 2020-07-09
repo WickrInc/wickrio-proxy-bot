@@ -1,12 +1,9 @@
-
-import State from '../state';
-import { version, dependencies } from '../../package.json';
+import State from "../state";
+import { version, dependencies } from "../../package.json";
 
 class Version {
   execute() {
-    const reply = `*Versions*\nIntegration: ${version
-      }\nWickrIO Addon: ${dependencies.wickrio_addon
-      }\nWickrIO API: ${dependencies['wickrio-bot-api']}`;
+    const reply = `*Versions*\nIntegration: ${version}\nWickrIO Addon: ${dependencies.wickrio_addon}\nWickrIO API: ${dependencies["wickrio-bot-api"]}`;
     const obj = {
       reply,
       state: state.NONE,
@@ -14,9 +11,7 @@ class Version {
     return obj;
   }
 
-  shouldExecute() {
-
-  }
+  shouldExecute() {}
 }
 
 export default Version;

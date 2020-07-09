@@ -1,15 +1,15 @@
-import * as WickrIOBotAPI from 'wickrio-bot-api'
+import * as WickrIOBotAPI from "wickrio-bot-api";
 
 const WickrUser = WickrIOBotAPI.WickrUser;
 const bot = new WickrIOBotAPI.WickrIOBot();
 const WickrIOAPI = bot.getWickrIOAddon();
-import fs from 'fs';
+import fs from "fs";
 
-import ProxyService from './services/proxy-service';
-import MessageService from './services/message-service';
+import ProxyService from "./services/proxy-service";
+import MessageService from "./services/message-service";
 
-import Factory from './factory';
-import logger from './logger';
+import Factory from "./factory";
+import logger from "./logger";
 const factory = new Factory(ProxyService);
 
 let currentState;
@@ -20,7 +20,7 @@ async function exitHandler(options, err) {
   try {
     const closed = await bot.close();
     if (err || options.exit) {
-      logger.error('Exit reason:', err);
+      logger.error("Exit reason:", err);
       process.exit();
     } else if (options.pid) {
       process.kill(process.pid);
@@ -31,22 +31,34 @@ async function exitHandler(options, err) {
 }
 
 // catches ctrl+c and stop.sh events
-process.on('SIGINT', exitHandler.bind(null, {
-  exit: true,
-}));
+process.on(
+  "SIGINT",
+  exitHandler.bind(null, {
+    exit: true,
+  })
+);
 
 // catches "kill pid" (for example: nodemon restart)
-process.on('SIGUSR1', exitHandler.bind(null, {
-  pid: true,
-}));
-process.on('SIGUSR2', exitHandler.bind(null, {
-  pid: true,
-}));
+process.on(
+  "SIGUSR1",
+  exitHandler.bind(null, {
+    pid: true,
+  })
+);
+process.on(
+  "SIGUSR2",
+  exitHandler.bind(null, {
+    pid: true,
+  })
+);
 
 // catches uncaught exceptions
-process.on('uncaughtException', exitHandler.bind(null, {
-  exit: true,
-}));
+process.on(
+  "uncaughtException",
+  exitHandler.bind(null, {
+    exit: true,
+  })
+);
 
 async function main() {
   // debug('Entering main!');
@@ -61,7 +73,7 @@ async function main() {
     if (!status) {
       exitHandler(null, {
         exit: true,
-        reason: 'Client not able to start',
+        reason: "Client not able to start",
       });
     }
     await bot.startListening(listen); // Passes a callback function that will receive incoming messages into the bot client
@@ -81,7 +93,7 @@ function listen(incomingMessage) {
     if (!parsedMessage) {
       return;
     }
-    logger.debug('New incoming Message:', parsedMessage);
+    logger.debug("New incoming Message:", parsedMessage);
     let wickrUser;
     // TODO is this ok formatting??
     // combine all into one line
@@ -91,21 +103,22 @@ function listen(incomingMessage) {
     const { userEmail } = parsedMessage;
     const vGroupID = parsedMessage.vgroupid;
     const { convoType } = parsedMessage;
-    let personalVGroupID = '';
+    let personalVGroupID = "";
 
-    if (convoType === 'personal') personalVGroupID = vGroupID;
+    if (convoType === "personal") personalVGroupID = vGroupID;
 
     let user = bot.getUser(userEmail); // Look up user by their wickr email
-    if (user === undefined) { // Check if a user exists in the database
+    if (user === undefined) {
+      // Check if a user exists in the database
       wickrUser = new WickrUser(userEmail, {
         index: 0,
         personalVGroupID,
-        command: '',
-        argument: '',
+        command: "",
+        argument: "",
       });
       user = bot.addUser(wickrUser); // Add a new user to the database
-      logger.debug('Added user:', user);
-      user.token = 'example_token_A1234';
+      logger.debug("Added user:", user);
+      user.token = "example_token_A1234";
       logger.debug(bot.getUser(userEmail)); // Print the changed user object
     }
 
@@ -124,12 +137,12 @@ function listen(incomingMessage) {
       command,
       currentState,
       vGroupID,
-      user,
+      user
     );
     const obj = factory.execute(messageService);
-    logger.debug('Object reply:', obj.reply);
+    logger.debug("Object reply:", obj.reply);
     if (obj.reply) {
-      logger.debug('Object has a reply');
+      logger.debug("Object has a reply");
       const sMessage = cmdSendRoomMessage(vGroupID, obj.reply);
     }
     currentState = obj.state;
