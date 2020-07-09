@@ -4,7 +4,6 @@ package-lock.json
 *.cert
 *.output
 build/
-.vscode
 last_id.json
 # processes.json
 processes_backup.json
@@ -20,3 +19,13 @@ software
 .DS_Store
 software.tar.gz
 coverage/
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+**/.history
