@@ -4,6 +4,7 @@ import RemoveMembers from './commands/remove-members';
 import ListMembers from './commands/list-members';
 import CreateRoom from './commands/create-room';
 import Version from './commands/version';
+import AddProxy from './commands/add-proxy';
 
 const fs = require('fs');
 const MemberListRepo = require('./helpers/member-list');
@@ -12,8 +13,9 @@ const MemberListRepo = require('./helpers/member-list');
 const memberListRepo = new MemberListRepo(fs);
 
 class Factory {
-  factory() {
+  factory(proxyService) {
     // this.addMembers = new AddMembers(memberListRepo);
+    this.proxyService = proxyService;
     this.removeMembers = new RemoveMembers(memberListRepo);
     this.listMembers = new ListMembers(memberListRepo);
     this.help = new Help();
@@ -26,6 +28,7 @@ class Factory {
       // These are the /commands and must go first
       this.help,
       // Here are the options that rely on the current state
+      this.addProxy = new AddProxy(this.proxyService),
 
     ];
   }
