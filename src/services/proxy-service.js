@@ -1,44 +1,43 @@
+import fs from 'fs'
 class ProxyService {
-  constructor() {}
-
   static readCredentialFile() {
-    let creds = JSON.parse(fs.readFile("credentials.json"));
-    return creds;
+    const creds = JSON.parse(fs.readFile('credentials.json'))
+    return creds
   }
 
   static findUserByProxy(proxyid) {
-    let findUserByProxy = this.readCredentialFile.credentials.find(
+    const findUserByProxy = this.readCredentialFile.credentials.find(
       (usercredential) => usercredential.proxyid === proxyid
-    );
-    return findUserByProxy;
+    )
+    return findUserByProxy
   }
 
   static findUserByID(userid) {
-    let findUserByID = this.readCredentialFile.credentials.find(
+    const findUserByID = this.readCredentialFile.credentials.find(
       (usercredential) => usercredential.userid === userid
-    );
-    return findUserByID;
+    )
+    return findUserByID
   }
 
   static getUserID(proxyid) {
-    let user = this.findUserByProxy(proxyid);
+    const user = this.findUserByProxy(proxyid)
     if (user) {
-      let userid = user.userid;
-      return userid;
+      const userid = user.userid
+      return userid
     }
   }
 
   static getProxyID(userid) {
-    let user = this.findUserByID(userid);
+    const user = this.findUserByID(userid)
     if (user) {
-      let proxyid = user.proxyid;
-      return proxyid;
+      const proxyid = user.proxyid
+      return proxyid
     }
   }
 
   static addProxyID(userid, proxyid) {
-    let user = this.findUserByID(userid);
-    let creds = this.readCredentialFile();
+    const user = this.findUserByID(userid)
+    const creds = this.readCredentialFile()
 
     // if we find the user
     user
@@ -50,21 +49,21 @@ class ProxyService {
         creds.credentials.append({
           userid: userid,
           proxyid: proxyid,
-        });
+        })
 
-    fs.writeFile("credentials.json", creds, function writeJSON(err) {
-      if (err) return console.log(err);
-    });
+    fs.writeFile('credentials.json', creds, function writeJSON(err) {
+      if (err) return console.log(err)
+    })
   }
 
   static list(userid) {
-    let creds = this.readCredentialFile();
-    let user = creds.credentials.find(
+    const creds = this.readCredentialFile()
+    const user = creds.credentials.find(
       (usercredential) => usercredential.userid === userid
-    );
+    )
 
-    return `${user.userid}: ${user.proxyid}`;
+    return `${user.userid}: ${user.proxyid}`
   }
 }
 
-export default ProxyService;
+export default ProxyService

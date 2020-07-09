@@ -1,7 +1,5 @@
-import fs from 'fs'
-import { NONE } from './state'
+import State from './state'
 import Help from './commands/help'
-import logger from './logger'
 import AddProxy from './commands/add-proxy'
 import SetAlias from './commands/set-alias'
 import Send from './commands/send'
@@ -51,7 +49,7 @@ class Factory {
     return {
       reply:
         'Command not recognized send the command /help for a list of commands',
-      state: NONE,
+      state: State.NONE,
     }
   }
 }

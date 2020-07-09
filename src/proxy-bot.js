@@ -17,7 +17,7 @@ process.stdin.resume() // so the program will not close instantly
 
 async function exitHandler(options, err) {
   try {
-    const closed = await bot.close()
+    await bot.close()
     if (err || options.exit) {
       logger.error('Exit reason:', err)
       process.exit()
@@ -146,7 +146,7 @@ function listen(incomingMessage) {
     logger.debug('Object reply:', obj.reply)
     if (obj.reply) {
       logger.debug('Object has a reply')
-      const sMessage = cmdSendRoomMessage(vGroupID, obj.reply)
+      WickrIOAPI.cmdSendRoomMessage(vGroupID, obj.reply)
     }
     currentState = obj.state
   } catch (err) {

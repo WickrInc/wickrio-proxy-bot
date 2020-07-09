@@ -1,11 +1,11 @@
-import pino from "pino";
+import pino from 'pino'
 
 const logger = pino({
   prettyPrint: {
     translateTime: true,
-    ignore: "pid,hostname",
+    ignore: 'pid,hostname',
   },
-  level: "debug",
-});
+  level: 'debug',
+})
 
-export default logger;
+export default logger

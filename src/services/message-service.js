@@ -1,5 +1,3 @@
-const logger = require("../logger");
-
 class MessageService {
   constructor(
     message,
@@ -10,85 +8,75 @@ class MessageService {
     vGroupID,
     user
   ) {
-    this.message = message;
-    this.userEmail = userEmail;
-    this.argument = argument;
-    this.command = command;
-    this.currentState = currentState;
-    this.vGroupID = vGroupID;
-    this.user = user;
+    this.message = message
+    this.userEmail = userEmail
+    this.argument = argument
+    this.command = command
+    this.currentState = currentState
+    this.vGroupID = vGroupID
+    this.user = user
   }
 
   // TODO why use getters and setters here??
   getMessage() {
-    return this.message;
+    return this.message
   }
 
   getArgument() {
-    return this.argument;
+    return this.argument
   }
 
   getUserEmail() {
-    return this.userEmail;
+    return this.userEmail
   }
 
   getVGroupID() {
-    return this.vGroupID;
+    return this.vGroupID
   }
 
   getCommand() {
-    return this.command;
+    return this.command
   }
 
   getCurrentState() {
-    return this.currentState;
+    return this.currentState
   }
 
   getFile() {
-    return this.file;
+    return this.file
   }
 
   getFilename() {
-    return this.filename;
+    return this.filename
   }
 
   getUser() {
-    return this.user;
+    return this.user
   }
 
   affirmativeReply() {
     return (
-      this.message.toLowerCase() === "yes" || this.message.toLowerCase() === "y"
-    );
+      this.message.toLowerCase() === 'yes' || this.message.toLowerCase() === 'y'
+    )
   }
 
   negativeReply() {
     return (
-      this.message.toLowerCase() === "no" || this.message.toLowerCase() === "n"
-    );
+      this.message.toLowerCase() === 'no' || this.message.toLowerCase() === 'n'
+    )
   }
 
   isInt() {
     if (!Number.isInteger(+this.message)) {
-      return false;
+      return false
     }
-    return true;
+    return true
   }
 
-  static replyWithButtons(message) {
-    const button1 = {
-      type: "message",
-      text: "Yes",
-      message: "yes",
-    };
-    const button2 = {
-      type: "message",
-      text: "No",
-      message: "no",
-    };
-    const buttons = [button1, button2];
+  static replyWithButtons() {
+    // const buttons = [button1, button2]
     // Send message with buttons here
   }
 }
 
-module.exports = MessageService;
+export default MessageService

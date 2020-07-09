@@ -35,9 +35,10 @@ class RemoveMembers {
 
         console.log('memberList', memberList)
 
-        this.memberList.updateMemberList(memberList)
-        // Send a message to all the current members
-        const doneReply = `${userEmail} has removed the following members from the member list:\n${members.join(
+        this.memberList.updateMemberList(
+          memberList
+        ) // Send a message to all the current members
+        `${userEmail} has removed the following members from the member list:\n${members.join(
           '\n'
         )}`
         // const uMessage = this.whitelist.sendToWhitelist(doneReply);

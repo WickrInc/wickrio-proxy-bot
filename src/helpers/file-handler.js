@@ -1,82 +1,80 @@
-const fs = require("fs");
-const util = require("util");
-const logger = require("../logger");
+import util from 'util'
+import fs from 'fs'
+import logger from '../logger'
 
-const copyFileAsync = util.promisify(fs.copyFile);
-const readdirAsync = util.promisify(fs.readdir);
+const copyFileAsync = util.promisify(fs.copyFile)
+util.promisify(fs.readdir)
 // const readdir = util.promisify(fs.readdir);
 
 class FileHandler {
   listFiles(path) {
-    return fs.readdirSync(path);
+    return fs.readdirSync(path)
     // return readdir(path);
   }
 
   checkFile(path, file) {
     // TODO just pass this as a parameter??
-    const filePath = `${path}/${file}`;
+    const filePath = `${path}/${file}`
     // TODO fix this! use async await!
-    const as = fs.access(
-      filePath,
-      fs.constants.R_OK | fs.constants.W_OK,
-      (err) => {
-        if (err) {
-          // TODO fix this!
-          logger.error(
-            `${file} ${
-              err.code === "ENOENT" ? "does not exist" : "is read-only"
-            }`
-          );
-          return false;
-        }
-        logger.debug(`${file} exists, and it is writable`);
-        return true;
+    fs.access(filePath, fs.constants.R_OK | fs.constants.W_OK, (err) => {
+      if (err) {
+        // TODO fix this!
+        logger.error(
+          `${file} ${err.code === 'ENOENT' ? 'does not exist' : 'is read-only'}`
+        )
+        return false
       }
-    );
+      logger.debug(`${file} exists, and it is writable`)
+      return true
+    })
   }
 
   findFile(path, fileName) {
-    let found = false;
-    const fileArr = [];
+    let found = false
+    const fileArr = []
     fs.readdir(path, (err, files) => {
       if (err) {
-        logger.error("Can not read from directory");
+        logger.error('Can not read from directory')
       } else {
         files.forEach((file) => {
           // logger.debug(file);
-          fileArr.push(file.toString());
-        });
+          fileArr.push(file.toString())
+        })
       }
-    });
-    if (fileArr === undefined || fileArr.length == 0) {
-      return false;
+    })
+    if (
+      fileArr === undefined ||
+      fileArr.length === 0 ||
+      fileArr.length === '0'
+    ) {
+      return false
     }
-    for (file of fileArr) {
+    for (const file of fileArr) {
       if (file === fileName) {
-        found = true;
+        found = true
       }
     }
-    return found;
+    return found
   }
 
   async copyFile(originalPath, newPath) {
     try {
-      await copyFileAsync(originalPath, newPath);
-      logger.debug(`${originalPath} copied to ${newPath}`);
-      return true;
+      await copyFileAsync(originalPath, newPath)
+      logger.debug(`${originalPath} copied to ${newPath}`)
+      return true
     } catch (err) {
-      logger.error(err);
-      return false;
+      logger.error(err)
+      return false
     }
   }
 }
 
-module.exports = FileHandler;
+module.exports = FileHandler
 
-function main() {
-  FileHandler.listFiles("./attachments");
-  FileHandler.checkFile("./attachments", "messages.txt");
-  FileHandler.checkFile("./attachments", "toren");
-}
+// function main() {
+//   FileHandler.listFiles('./attachments')
+//   FileHandler.checkFile('./attachments', 'messages.txt')
+//   FileHandler.checkFile('./attachments', 'toren')
+// }
 
 // main();
