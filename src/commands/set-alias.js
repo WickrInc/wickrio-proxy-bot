@@ -1,5 +1,5 @@
-const State = require('../state')
-const logger = require('../logger')
+import State from '../state'
+import logger from '../logger'
 
 // TODO use this instead of putting it in main!
 class SetAlias {
