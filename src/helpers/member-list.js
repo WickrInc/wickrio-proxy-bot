@@ -22,6 +22,7 @@ class MemberListRepo {
         logger.debug(`Members is:${this.members}`)
       } else {
         this.members = []
+        logger.debug(`Members is empty:${this.members}`)
         // this.updateMemberList(this.members);
       }
       if (fs.existsSync('./files/alias.json')) {
@@ -113,11 +114,32 @@ class MemberListRepo {
     return reply
   }
 
+  // sendMessage(userID, message) {
+  // TODO for multiple aliases
   sendMessage(message) {
     const messageString = `Message from ${this.members[0].alias}:\n${message}`
     const aliasArray = []
     aliasArray.push(this.alias.userID)
-    WickrIOAPI.cmdSend1to1Message(aliasArray, messageString, '', '', '')
+    logger.debug(`UserID: ${this.alias.userID}`)
+    logger.debug(`Array: ${aliasArray}`)
+    const uMessage = WickrIOAPI.cmdSend1to1Message(
+      aliasArray,
+      messageString,
+      '',
+      '',
+      ''
+    )
+    logger.debug('uMessage:' + uMessage)
+  }
+
+  replyMessage(message) {
+    const messageString = `Message from ${this.alias.alias}:\n${message}`
+    const proxyArray = []
+    for (const member of this.members) {
+      proxyArray.push(member.userID)
+    }
+    logger.debug(`Members: ${proxyArray}`)
+    WickrIOAPI.cmdSend1to1Message(proxyArray, messageString, '', '', '')
   }
 }
 
