@@ -1,8 +1,8 @@
 import fs from 'fs'
 import logger from '../logger'
-import * as WickrIOBotAPI from 'wickrio-bot-api'
-const bot = new WickrIOBotAPI.WickrIOBot()
-const WickrIOAPI = bot.getWickrIOAddon()
+// import * as WickrIOBotAPI from 'wickrio-bot-api'
+// const bot = new WickrIOBotAPI.WickrIOBot()
+// const WickrIOAPI = bot.getWickrIOAddon()
 
 class ProxyService {
   constructor() {
@@ -10,31 +10,32 @@ class ProxyService {
   }
 
   readCredentialFile() {
+    // console.log('hello')
     const defaultdata = {
       credentials: [],
     }
-    const creds = fs.readFile('credentials.json', (err, data) => {
-      if (err) {
-        fs.writeFile('credentials.json', JSON.stringify(defaultdata), err => {
-          if (err) console.log({ err })
-          logger.trace('Current alias saved in file')
-        })
-      } else if (data) {
-        console.log({ data })
-        return data
-      }
-    })
-    return creds
+    // console.log(JSON.stringify(defaultdata))
+    if (fs.existsSync('credentials.json')) {
+      // console.log('killme')
+      const creds = fs.readFileSync('credentials.json')
+      // let data = JSON.parse(creds)
+      console.log({ 'type of credentials': typeof creds.credentials })
+      return JSON.parse(creds)
+    } else {
+      fs.writeFileSync('credentials.json', JSON.parse(defaultdata))
+      return defaultdata
+    }
   }
 
-  static findUserByProxy(proxyid) {
+  findUserByProxy(proxyid) {
+    console.log(this.allMembers)
     const findUserByProxy = this.allMembers.credentials.find(
       usercredential => usercredential.proxyid === proxyid
     )
     return findUserByProxy
   }
 
-  static findUserByID(userid) {
+  findUserByID(userid) {
     const findUserByID = this.allMembers.credentials.find(
       usercredential => usercredential.userid === userid
     )
@@ -57,12 +58,14 @@ class ProxyService {
     }
   }
 
-  static addProxyID(userid, proxyid) {
+  addProxyID(userid, proxyid) {
     const user = this.findUserByID(userid)
     const userCredentials = {
       userid: userid,
       proxyid: proxyid,
     }
+    console.log({ user })
+    console.log({ credentials: typeof this.allMembers.credentials })
     // if we find the user
     user
       ? // add proxy to the cedentials
@@ -93,44 +96,49 @@ class ProxyService {
     return agents
   }
 
-  static createRoom() {
-    let reply = 'Room created.'
-    if (this.members === undefined || this.members.length === 0) {
-      reply = 'Alias contains no members'
-    } else if (this.alias === undefined || this.alias === '') {
-      reply = 'No alias to send to set and alias with /alias'
-    } else {
-      const description = `Conversation with ${this.alias.alias}`
-      const title = `Conversation with ${this.alias.alias}`
-      const usernames = []
-      for (const member of this.members) {
-        usernames.push(member.userID)
-      }
-      // usernames.push() bot name!
-      const uMessage = WickrIOAPI.cmdAddRoom(
-        usernames,
-        usernames,
-        title,
-        description,
-        '',
-        ''
-      )
-      this.vGroupID = JSON.parse(uMessage).vgroupid
-      logger.debug(`Here is the uMessage${uMessage}`)
-      logger.debug(`Here is the vGroupID${this.vGroupID}`)
-      WickrIOAPI.cmdSendRoomMessage(this.vGroupID, description)
+  // static createRoom() {
+  //   let reply = 'Room created.'
+  //   if (this.members === undefined || this.members.length === 0) {
+  //     reply = 'Alias contains no members'
+  //   } else if (this.alias === undefined || this.alias === '') {
+  //     reply = 'No alias to send to set and alias with /alias'
+  //   } else {
+  //     const description = `Conversation with ${this.alias.alias}`
+  //     const title = `Conversation with ${this.alias.alias}`
+  //     const usernames = []
+  //     for (const member of this.members) {
+  //       usernames.push(member.userID)
+  //     }
+  //     // usernames.push() bot name
+  //     const uMessage = WickrIOAPI.cmdAddRoom(
+  //       usernames,
+  //       usernames,
+  //       title,
+  //       description,
+  //       '',
+  //       ''
+  //     )
+  //     this.vGroupID = JSON.parse(uMessage).vgroupid
+  //     logger.debug(`Here is the uMessage${uMessage}`)
+  //     logger.debug(`Here is the vGroupID${this.vGroupID}`)
+  //     WickrIOAPI.cmdSendRoomMessage(this.vGroupID, description)
 
-      WickrIOAPI.cmdLeaveRoom(this.vGroupID)
-    }
-    return reply
-  }
+  //     WickrIOAPI.cmdLeaveRoom(this.vGroupID)
+  //   }
+  //   return reply
+  // }
 
-  static sendMessage(message) {
-    const messageString = `Message from ${this.members[0].alias}:\n${message}`
-    const aliasArray = []
-    aliasArray.push(this.alias.userID)
-    WickrIOAPI.cmdSend1to1Message(aliasArray, messageString, '', '', '')
-  }
+  // static sendMessage(message) {
+  //   const messageString = `Message from ${this.members[0].alias}:\n${message}`
+  //   const aliasArray = []
+  //   aliasArray.push(this.alias.userID)
+  //   WickrIOAPI.cmdSend1to1Message(aliasArray, messageString, '', '', '')
+  // }
 }
+
+const service = new ProxyService()
+service.findUserByProxy('myproxy')
+service.addProxyID('me', 'myproxy')
+service.addProxyID('you', 'yourproxy')
 
 export default ProxyService
