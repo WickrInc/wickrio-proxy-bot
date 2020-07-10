@@ -14,6 +14,7 @@ class ListMembers {
   }
 
   execute(messageService) {
+    // TODO test
     const members = this.memberList.getMemberList()
     let reply
     if (members === undefined || members.length === 0) {

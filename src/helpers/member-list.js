@@ -6,7 +6,6 @@ const WickrIOAPI = bot.getWickrIOAddon()
 
 class MemberListRepo {
   // constructor(fs){
-  // TODO what if this returns false??
   constructor(fs) {
     this.fs = fs
     let memberData

@@ -31,7 +31,7 @@ class ProxyService {
   static getUserID(proxyid) {
     const user = this.findUserByProxy(proxyid)
     if (user) {
-      const userid = user.userid
+      const { userid } = user
       return userid
     }
   }
@@ -39,7 +39,7 @@ class ProxyService {
   static getProxyID(userid) {
     const user = this.findUserByID(userid)
     if (user) {
-      const proxyid = user.proxyid
+      const { proxyid } = user
       return proxyid
     }
   }
