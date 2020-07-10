@@ -31,6 +31,7 @@ class Factory {
       this.createRoom,
       this.send,
       this.sendFromRoom,
+      this.listMembers,
       Version,
       // Here are the options that rely on the current state
       (this.addProxy = new AddProxy(this.proxyService)),
@@ -39,8 +40,6 @@ class Factory {
 
   execute(messageService) {
     for (const command of this.commandList) {
-      // this.commandList.forEach( command => {
-      // for (let i = 0; i < this.commandList.length; i += 1) {
       if (command.shouldExecute(messageService)) {
         return command.execute(messageService)
       }

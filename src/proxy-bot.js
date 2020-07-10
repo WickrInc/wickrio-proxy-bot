@@ -28,34 +28,12 @@ async function exitHandler(options, err) {
 }
 
 // catches ctrl+c and stop.sh events
-process.on(
-  'SIGINT',
-  exitHandler.bind(null, {
-    exit: true,
-  })
-)
-
+process.on('SIGINT', exitHandler.bind(null, { exit: true }))
 // catches "kill pid" (for example: nodemon restart)
-process.on(
-  'SIGUSR1',
-  exitHandler.bind(null, {
-    pid: true,
-  })
-)
-process.on(
-  'SIGUSR2',
-  exitHandler.bind(null, {
-    pid: true,
-  })
-)
-
+process.on('SIGUSR1', exitHandler.bind(null, { pid: true }))
+process.on('SIGUSR2', exitHandler.bind(null, { pid: true }))
 // catches uncaught exceptions
-process.on(
-  'uncaughtException',
-  exitHandler.bind(null, {
-    exit: true,
-  })
-)
+process.on('uncaughtException', exitHandler.bind(null, { exit: true }))
 
 async function main() {
   // logger.debug('Entering main!');
