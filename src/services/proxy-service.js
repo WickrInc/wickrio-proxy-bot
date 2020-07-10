@@ -71,12 +71,15 @@ class ProxyService {
       ? // add proxy to the cedentials
         this.allMembers.credentials
           .find(usercredential => usercredential.userid === userid)
-          .proxyid.append(proxyid)
+          .proxyid.push(proxyid)
       : // if not, add the user and proxy
-        this.allMembers.credentials.append(userCredentials)
+        this.allMembers.credentials.push(userCredentials)
+    // const members = JSON.parse(this.allMembers)
 
-    fs.writeFile('credentials.json', this.allMembers, err => {
-      if (err) return console.log(err)
+    console.log({ meembers: this.allMembers })
+
+    fs.writeFile('credentials.json', JSON.stringify(this.allMembers), err => {
+      if (err) return console.log({ err })
       logger.trace('Current alias saved in file')
     })
     return userCredentials.proxyid.toString()
