@@ -8,6 +8,7 @@ import RemoveMembers from './commands/remove-members'
 import ListMembers from './commands/list-members'
 import CreateRoom from './commands/create-room'
 import Version from './commands/version'
+import ReplyReceived from './commands/reply-received'
 
 class Factory {
   constructor(memberListRepo) {
@@ -20,6 +21,7 @@ class Factory {
     this.version = new Version()
     this.send = new Send(memberListRepo)
     this.sendFromRoom = new SendFromRoom(memberListRepo)
+    this.replyReceived = new ReplyReceived(memberListRepo)
 
     // Order matters here /commands must go first
     // TODO make it so that the order doesn' matter?
@@ -33,6 +35,7 @@ class Factory {
       this.sendFromRoom,
       this.listMembers,
       Version,
+      this.replyReceived,
       // Here are the options that rely on the current state
       (this.addProxy = new AddProxy(this.proxyService)),
     ]
