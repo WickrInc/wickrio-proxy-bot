@@ -88,10 +88,9 @@ class ProxyService {
   }
 
   static getMemberList() {
-    const description = `Conversation with ${this.alias.alias}`
-    const title = `Conversation with ${this.alias.alias}`
-
-    console.log({ description, title })
+    const agents = this.allMembers.credentials.map(agent => agent.userid)
+    console.log({ agents })
+    return agents
   }
 
   static createRoom() {
@@ -133,7 +132,5 @@ class ProxyService {
     WickrIOAPI.cmdSend1to1Message(aliasArray, messageString, '', '', '')
   }
 }
-const service = new ProxyService()
-console.log(service.allMembers)
 
 export default ProxyService

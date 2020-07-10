@@ -23,11 +23,7 @@ class SetAlias {
     if (argArray.length !== 2) {
       reply = 'Incorrect format, usage: /set <UserID> <Alias>'
     } else {
-      const proxyObject = {
-        userID: argArray[0],
-        alias: argArray[1],
-      }
-      this.proxyService.setAlias(proxyObject)
+      this.proxyService.setProxy(argArray[0], argArray[1])
       reply = `Alias "${argArray[1]}" created for user ${argArray[0]}`
     }
     return {

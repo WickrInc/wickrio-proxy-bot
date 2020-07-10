@@ -24,15 +24,15 @@ class AddProxy {
       reply = 'Incorrect format, usage: /add <UserID> <Alias>'
     } else {
       // this.proxyService.addProxyID(argArray[0], argArray[1]);
-      const members = this.proxyService.getMemberList()
-      logger.debug(`Here are the members ${members}`)
-      const proxyObject = {
-        userID: argArray[0],
-        alias: argArray[1],
-      }
-      members.push(proxyObject)
-      logger.debug(`Here are the members after ${members}`)
-      this.proxyService.updateMemberList(members)
+      // const members = this.proxyService.getMemberList()
+      // logger.debug(`Here are the members ${members}`)
+      // const proxyObject = {
+      //   userid: argArray[0],
+      //   proxyid: argArray[1],
+      // }
+      // members.push(proxyObject)
+      // logger.debug(`Here are the members after ${members}`)
+      this.proxyService.addProxyID(argArray[0], argArray[1])
       reply = `Alias "${argArray[1]}" created for user ${argArray[0]}`
     }
     return {
