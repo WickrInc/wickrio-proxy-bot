@@ -1,4 +1,5 @@
 import fs from 'fs'
+
 class ProxyService {
   static readCredentialFile() {
     const creds = JSON.parse(fs.readFile('credentials.json'))
@@ -22,7 +23,7 @@ class ProxyService {
   static getUserID(proxyid) {
     const user = this.findUserByProxy(proxyid)
     if (user) {
-      const userid = user.userid
+      const { userid } = user
       return userid
     }
   }
@@ -30,7 +31,7 @@ class ProxyService {
   static getProxyID(userid) {
     const user = this.findUserByID(userid)
     if (user) {
-      const proxyid = user.proxyid
+      const { proxyid } = user
       return proxyid
     }
   }
@@ -47,11 +48,11 @@ class ProxyService {
           .proxyid.append(proxyid)
       : // if not, add the user and proxy
         creds.credentials.append({
-          userid: userid,
-          proxyid: proxyid,
+          userid,
+          proxyid,
         })
 
-    fs.writeFile('credentials.json', creds, function writeJSON(err) {
+    fs.writeFile('credentials.json', creds, err => {
       if (err) return console.log(err)
     })
   }
