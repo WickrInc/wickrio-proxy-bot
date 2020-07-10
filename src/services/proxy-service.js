@@ -9,9 +9,22 @@ class ProxyService {
     this.allMembers = this.readCredentialFile()
   }
 
-  static readCredentialFile() {
-    const allMembers = JSON.parse(fs.readFile('credentials.json'))
-    return allMembers
+  readCredentialFile() {
+    const defaultdata = {
+      credentials: [],
+    }
+    const creds = fs.readFile('credentials.json', (err, data) => {
+      if (err) {
+        fs.writeFile('credentials.json', JSON.stringify(defaultdata), err => {
+          if (err) console.log({ err })
+          logger.trace('Current alias saved in file')
+        })
+      } else if (data) {
+        console.log({ data })
+        return data
+      }
+    })
+    return creds
   }
 
   static findUserByProxy(proxyid) {
@@ -66,12 +79,19 @@ class ProxyService {
     return userCredentials.proxyid.toString()
   }
 
-  static getMemberList(userid) {
+  static getUser(userid) {
     const user = this.allMembers.credentials.find(
       usercredential => usercredential.userid === userid
     )
 
     return `${user.userid}: ${user.proxyid}`
+  }
+
+  static getMemberList() {
+    const description = `Conversation with ${this.alias.alias}`
+    const title = `Conversation with ${this.alias.alias}`
+
+    console.log({ description, title })
   }
 
   static createRoom() {
@@ -100,7 +120,8 @@ class ProxyService {
       logger.debug(`Here is the uMessage${uMessage}`)
       logger.debug(`Here is the vGroupID${this.vGroupID}`)
       WickrIOAPI.cmdSendRoomMessage(this.vGroupID, description)
-      // WickrIOAPI.cmdLeaveRoom(vGroupID);
+
+      WickrIOAPI.cmdLeaveRoom(this.vGroupID)
     }
     return reply
   }
@@ -112,5 +133,7 @@ class ProxyService {
     WickrIOAPI.cmdSend1to1Message(aliasArray, messageString, '', '', '')
   }
 }
+const service = new ProxyService()
+console.log(service.allMembers)
 
 export default ProxyService
