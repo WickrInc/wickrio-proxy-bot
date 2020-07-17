@@ -47,7 +47,7 @@ set -e
 # Copy the attachment files to the new software location
 #
 set +e
-cp -rf attachments $NEW_BOT_LOCATION
+cp -rf attachments files $NEW_BOT_LOCATION
 set -e
 
 #
