@@ -4,11 +4,19 @@ import State from '../state'
 class RemoveMembers {
   constructor(memberListRepo) {
     this.memberList = memberListRepo
+    this.commandString = '/remove'
   }
 
-  shouldExecute() {}
+  shouldExecute(messageService) {
+    if (messageService.getCommand() === this.commandString) {
+      return true
+    }
+    return false
+  }
 
-  execute(userEmail, members) {
+  execute(messageService) {
+    const userEmail = messageService.getUserEmail()
+    const members = messageService.getArgument.split(' ')
     let reply
     // TODO fix this!
     const memberList = this.memberList.getMemberList()
@@ -16,6 +24,7 @@ class RemoveMembers {
     if (members === undefined || members.length === 0) {
       reply = 'Command contains no user names to remove!'
     } else {
+      // TODO fix this for alias/ userEmail
       for (let i = 0; i < members.length; i++) {
         if (!memberList.includes(members[i])) {
           removeFails.push(members.splice(i, 1))
@@ -35,20 +44,18 @@ class RemoveMembers {
 
         console.log('memberList', memberList)
 
-        this.memberList.updateMemberList(
-          memberList
-        ) // Send a message to all the current members
-        `${userEmail} has removed the following members from the member list:\n${members.join(
+        this.memberList.updateMemberList(memberList)
+        // Send a message to all the current members
+        reply += `${userEmail} has removed the following members from the member list:\n${members.join(
           '\n'
         )}`
         // const uMessage = this.whitelist.sendToWhitelist(doneReply);
       }
     }
-    const obj = {
+    return {
       reply,
       state: State.NONE,
     }
-    return obj
   }
 }
 

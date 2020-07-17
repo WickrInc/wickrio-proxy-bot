@@ -97,17 +97,17 @@ function listen(incomingMessage) {
       logger.debug(bot.getUser(userEmail)) // Print the changed user object
     }
 
-    // if (!parsedMessage.isAdmin) {
-    //   const reply = `${userEmail} is not authorized to use this bot. If you have a question, please get a hold of us a support@wickr.com or visit us a support.wickr.com. Thanks, Team Wickr`;
-    //   const sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, reply);
-    //   logger.logger.debug({ sMessage });
-    //   // writer.writeFile(message);
-    //   return;
-    // }
+    if (!parsedMessage.isAdmin) {
+      const reply = `${userEmail} is not authorized to use this bot. If you have a question, please get a hold of us a support@wickr.com or visit us a support.wickr.com. Thanks, Team Wickr`
+      const sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, reply)
+      logger.logger.debug({ sMessage })
+      // writer.writeFile(message);
+      return
+    }
 
-    // if (memberListRepo.vGroupID && memberListRepo === vGroupID) {
-    //   WickrIOAPI.send1to1(message);
-    // }
+    if (memberListRepo.vGroupID && memberListRepo === vGroupID) {
+      WickrIOAPI.send1to1(message)
+    }
 
     const messageService = new MessageService(
       message,

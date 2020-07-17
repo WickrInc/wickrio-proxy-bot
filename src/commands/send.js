@@ -28,8 +28,11 @@ class Send {
     } else if (this.proxyService.members === undefined) {
       reply = 'Before sending a message please set up a proxy for yourself'
     }
-    reply = `Message sent to ${this.proxyService.alias.alias}`
-    this.proxyService.sendMessage(messageService.getArgument())
+    // reply = `Message sent to ${this.proxyService.alias.alias}`
+    this.proxyService.sendMessage(
+      messageService.getUserEmail(),
+      messageService.getArgument()
+    )
     return {
       reply,
       state: State.NONE,

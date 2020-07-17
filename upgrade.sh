@@ -25,8 +25,8 @@ fi
 #
 # Save the input values:
 # Example:
-# old location: '/opt/WickrIODebug/clients/user_engagement/integration/user_engagement_bot'
-# new location: '/opt/WickrIODebug/clients/user_engagement/integration/user_engagement_bot.new'
+# old location: '/opt/WickrIODebug/clients/bcast_bot/integration/proxy_bot'
+# new location: '/opt/WickrIODebug/clients/bcast_bot/integration/proxy_bot.new'
 #
 export OLD_BOT_LOCATION=$1
 export NEW_BOT_LOCATION=$2
@@ -36,14 +36,18 @@ cd $OLD_BOT_LOCATION
 # Copy the json data files to the new software location
 #
 set +e
-cp -f users.txt processes.json last_id.json $NEW_BOT_LOCATION
+# need to convert the WHITELISTED_USERS to ADMINISTRATORS
+sed -e "s/WHITELISTED_USERS/ADMINISTRATORS/g" <processes.json > $NEW_BOT_LOCATION/processes.json
+
+cp -f users.txt last_id.json $NEW_BOT_LOCATION
 set -e
+
 
 #
 # Copy the attachment files to the new software location
 #
 set +e
-cp -rf attachments files $NEW_BOT_LOCATION
+cp -rf attachments $NEW_BOT_LOCATION
 set -e
 
 #
@@ -53,8 +57,8 @@ set -e
 cd ..
 echo $PWD
 ls
-rm -rf user_engagement_bot.old_Version
-mv $OLD_BOT_LOCATION user_engagement_bot.old_Version
+rm -rf proxy_bot.old_Version
+mv $OLD_BOT_LOCATION proxy_bot.old_Version
 
 #
 # Move the NEW installation to the bot's integration directory
@@ -62,3 +66,8 @@ mv $OLD_BOT_LOCATION user_engagement_bot.old_Version
 cd $NEW_BOT_LOCATION/..
 mv $NEW_BOT_LOCATION $OLD_BOT_LOCATION
 
+#
+# Change the script value in processes.json
+#
+cd $OLD_BOT_LOCATION
+node upgrade.js
