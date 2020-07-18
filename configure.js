@@ -45,18 +45,7 @@ process.on(
 main()
 
 async function main() {
-  const tokenConfig = [
-    // {
-    //   token: 'WEB_INTERFACE',
-    //   pattern: 'yes|no',
-    //   type: 'string',
-    //   description:
-    //     'Do you want to setup the web interface (REST API or WEB Application) [yes/no]',
-    //   message: 'Please enter either yes or no',
-    //   required: true,
-    //   default: 'no',
-    // },
-  ]
+  const tokenConfig = []
 
   var fullName = process.cwd() + '/processes.json'
   wickrIOConfigure = new WickrIOBotAPI.WickrIOConfigure(

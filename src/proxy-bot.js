@@ -100,7 +100,7 @@ function listen(incomingMessage) {
     if (!parsedMessage.isAdmin) {
       const reply = `${userEmail} is not authorized to use this bot. If you have a question, please get a hold of us a support@wickr.com or visit us a support.wickr.com. Thanks, Team Wickr`
       const sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, reply)
-      logger.logger.debug({ sMessage })
+      logger.debug({ sMessage })
       // writer.writeFile(message);
       return
     }
