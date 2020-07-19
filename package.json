@@ -2,7 +2,7 @@
   "name": "wickrio-proxy-bot",
   "version": "5.59.1",
   "description": "WickrIO Proxy Bot",
-  "main": "proxy-bot.js",
+  "main": "build/proxy-bot.js",
   "author": "Toren DeRosa",
   "license": "ISC",
   "dependencies": {
@@ -57,7 +57,7 @@
   "database": true,
   "scripts": {
     "start": "pm2 start processes.json --update-env",
-    "dev": "nodemon --exec 'babel-node --inspect=0.0.0.0 src/server.js'",
+    "dev": "nodemon --exec 'babel-node --inspect=0.0.0.0 src/proxy-bot.js'",
     "test": "jest --coverage",
     "watch:test": "jest --watch",
     "transpile": "npm run prettier && npm run lint && npm run babel",
