@@ -1,0 +1,31 @@
+node_modules/
+package-lock.json
+*.key
+*.cert
+*.output
+build/
+last_id.json
+# processes.json
+processes_backup.json
+attachments/
+users.txt
+files
+.eslintrc.js*
+exclude-list.txt
+sync.sh
+.env*
+._.DS_store
+software
+.DS_Store
+software.tar.gz
+coverage/
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+**/.history

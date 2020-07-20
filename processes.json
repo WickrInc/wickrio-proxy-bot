@@ -1,0 +1,18 @@
+{
+  "apps": [
+    {
+      "name": "WickrIO-Proxy-Bot",
+      "args": [],
+      "script": "build/proxy-bot.js",
+      "exec_interpreter": "none",
+      "autorestart": false,
+      "watch": ["package.json"],
+      "ignore_watch": [".git"],
+      "env": {
+        "tokens": {}
+      },
+      "out_file": "log.output",
+      "error_file": "err.output"
+    }
+  ]
+}
