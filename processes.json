@@ -1,16 +1,44 @@
 {
   "apps": [
     {
-      "name": "WickrIO-Proxy-Bot",
+      "name": "prod",
       "args": [],
-      "script": "build/proxy-bot.js",
-      "exec_interpreter": "none",
+      "script": "build/index.js",
       "autorestart": false,
       "watch": ["package.json"],
       "ignore_watch": [".git"],
       "env": {
         "tokens": {}
       },
+      "out_file": "log.output",
+      "error_file": "err.output"
+    },
+    {
+      "name": "dev",
+      "args": ["nodemon"],
+      "script": "src/index.js",
+      "exec_interpreter": "babel-node",
+      "autorestart": true,
+      "watch": true,
+      "ignore_watch": [".git"],
+      "env": {
+        "tokens": {
+          "WEB_APPLICATION": { "value": "no" },
+          "WICKRIO_BOT_NAME": { "value": "bcstlocalbot" }
+        }
+      },
+      "out_file": "log.output",
+      "error_file": "err.output"
+    },
+    {
+      "name": "dev-config",
+      "args": [],
+      "script": "configure.js",
+      "exec_interpreter": "babel-node",
+      "autorestart": false,
+      "watch": ["package.json"],
+      "ignore_watch": [".git"],
+      "env": { "WEB_APPLICATION": { "value": "no" } },
       "out_file": "log.output",
       "error_file": "err.output"
     }

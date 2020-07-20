@@ -8,7 +8,7 @@
   // Use 'settings' to set *default* container specific settings.json values on container create.
   "settings": {
     // "terminal.integrated.shell.linux": "/bin/bash"
-    // "terminal.integrated.shell.linux": "/bin/zsh"
+    "terminal.integrated.shell.linux": "/bin/zsh"
   },
   "mounts": [
     // "source=/opt/WickrIO,target=opt/WickrIODebug ,type=bind,consistency=cached"

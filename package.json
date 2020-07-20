@@ -2,7 +2,7 @@
   "name": "wickrio-proxy-bot",
   "version": "5.59.1",
   "description": "WickrIO Proxy Bot",
-  "main": "build/proxy-bot.js",
+  "main": "build/index.js",
   "author": "Toren DeRosa",
   "license": "ISC",
   "dependencies": {
@@ -57,15 +57,16 @@
   ],
   "database": true,
   "scripts": {
-    "start": "pm2 start processes.json --update-env",
-    "dev": "nodemon --exec 'babel-node --inspect=0.0.0.0 src/proxy-bot.js'",
-    "test": "jest --coverage",
+    "start": "pm2 start processes.json --only prod",
+    "dev": "pm2 start processes.json --only dev",
+    "devmon": "nodemon --exec 'babel-node --inspect=0.0.0.0 src/index.js'",
+    "dev:configure": "nodemon configure.sh",
     "watch:test": "jest --watch",
-    "stop": "pm2 delete processes.json",
-    "transpile": "npm run prettier && npm run lint && npm run babel",
-    "babel": "babel ./src --out-dir ./build --ignore node_modules",
+    "stop": "pm2 delete ecosystem.config.js",
+    "prettier": "prettier --write ./src/**/*",
     "lint": "eslint src/**/*.js --fix --color",
-    "prettier": "prettier --write ./src"
+    "build": "babel ./src --out-dir ./build --ignore node_modules",
+    "test": "jest --coverage"
   },
   "husky": {
     "hooks": {
@@ -76,8 +77,7 @@
     "./src/**/*.{js,jsx,ts,tsx}": [
       "npm run prettier",
       "npm run lint",
-      "npm run test",
-      "npm run lint"
+      "npm run build"
     ]
   },
   "jest": {
@@ -142,6 +142,10 @@
         "retainLines": true
       },
       "production": {
+        "ignore": [
+          "**/__tests__",
+          "**/*.test.js"
+        ],
         "presets": [
           "@babel/preset-env"
         ],
@@ -153,6 +157,10 @@
         ]
       },
       "development": {
+        "ignore": [
+          "**/__tests__",
+          "**/*.test.js"
+        ],
         "presets": [
           "@babel/preset-env"
         ],

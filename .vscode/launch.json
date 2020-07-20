@@ -6,31 +6,42 @@
   "diagnosticLogging": true,
   "configurations": [
     {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Prod",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/build/index.js",
+      "runtimeExecutable": "/usr/local/nvm/versions/node/v10.18.1/bin/node"
+    },
+    {
       "name": "Develop",
       "type": "node",
       "request": "launch",
       "protocol": "inspector",
-      "program": "${workspaceRoot}/src/proxy-bot.js",
+      "program": "${workspaceRoot}/src/index.js",
       "stopOnEntry": false,
-      // "args": [],
       "cwd": "${workspaceRoot}",
+      // "skipFiles": ["<node_internals>/**"],
       "preLaunchTask": null,
-      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/nodemon",
-      "args": ["${workspaceRoot}/src/proxy-bot.js"],
-      // "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/babel-node",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/babel-node",
+      // "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/nodemon",
+      "args": ["${workspaceRoot}/src/index.js"],
       "runtimeArgs": ["--nolazy", "--require", "@babel/register"],
-
       "env": {
         "NODE_ENV": "development"
+        // "tokens": {
+        //   "WEB_APPLICATION": { "value": "no" }
+        // }
       },
       "console": "internalConsole",
-      "sourceMaps": false,
+      "sourceMaps": true,
       "outFiles": []
     },
     {
       "name": "Debug Jest Tests",
       "type": "node",
       "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/babel-node",
       "runtimeArgs": [
         "--inspect-brk",
         "${workspaceRoot}/node_modules/.bin/jest",
