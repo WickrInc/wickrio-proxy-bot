@@ -51,10 +51,10 @@ async function main() {
         reason: 'Client not able to start',
       })
     }
-    await bot.startListening(listen) // Passes a callback function that will receive incoming messages into the bot client
     // /////////////////////
     // Start coding below and modify the listen function to your needs
     // /////////////////////
+    await bot.startListening(listen) // Passes a callback function that will receive incoming messages into the bot client
   } catch (err) {
     logger.error(err)
   }
