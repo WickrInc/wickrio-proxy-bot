@@ -36,6 +36,7 @@ class Factory {
       this.listMembers,
       Version,
       this.replyReceived,
+      this.removeMembers,
       // Here are the options that rely on the current state
       (this.addProxy = new AddProxy(this.proxyService)),
     ]

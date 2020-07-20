@@ -2,15 +2,17 @@
   "name": "wickrio-proxy-bot",
   "version": "5.59.1",
   "description": "WickrIO Proxy Bot",
-  "main": "proxy-bot.js",
+  "main": "build/proxy-bot.js",
   "author": "Toren DeRosa",
   "license": "ISC",
   "dependencies": {
+    "babel-eslint": "^10.1.0",
+    "dotenv": "^8.2.0",
     "log4js": "^5.3.0",
     "pino": "^5.15.0",
     "pm2": "^3.5.2",
     "prompt": "^1.0.0",
-    "wickrio-bot-api": "^5.59.1"
+    "wickrio-bot-api": "^5.59.x"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.4",
@@ -56,7 +58,7 @@
   "database": true,
   "scripts": {
     "start": "pm2 start processes.json --update-env",
-    "dev": "nodemon --exec 'babel-node --inspect=0.0.0.0 src/server.js'",
+    "dev": "nodemon --exec 'babel-node --inspect=0.0.0.0 src/proxy-bot.js'",
     "test": "jest --coverage",
     "watch:test": "jest --watch",
     "stop": "pm2 delete processes.json",
@@ -73,16 +75,78 @@
   "lint-staged": {
     "./src/**/*.{js,jsx,ts,tsx}": [
       "npm run prettier",
+      "npm run lint",
+      "npm run test",
       "npm run lint"
     ]
   },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!**/node_modules/**"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "arrowParens": "avoid",
+    "singleQuote": true,
+    "jsxBracketSameLine": false
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "extends": [
+      "standard",
+      "prettier",
+      "prettier/standard"
+    ],
+    "plugins": [
+      "import",
+      "prettier",
+      "standard"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2020
+    },
+    "env": {
+      "node": true,
+      "es6": true,
+      "jest": true
+    },
+    "rules": {
+      "space-before-function-paren": "off",
+      "new-cap": "off",
+      "prettier/prettier": "error",
+      "no-var": "error",
+      "prefer-const": "error"
+    }
+  },
   "babel": {
     "env": {
-      "production": {
+      "test": {
         "presets": [
-          "airbnb"
+          "@babel/preset-env"
         ],
         "plugins": [
+          "@babel/plugin-proposal-optional-chaining",
+          "@babel/plugin-transform-runtime",
+          "@babel/plugin-transform-modules-commonjs",
+          "@babel/plugin-proposal-class-properties"
+        ],
+        "sourceMaps": "inline",
+        "retainLines": true
+      },
+      "production": {
+        "presets": [
+          "@babel/preset-env"
+        ],
+        "plugins": [
+          "@babel/plugin-proposal-optional-chaining",
           "@babel/plugin-transform-runtime",
           "@babel/plugin-transform-modules-commonjs",
           "@babel/plugin-proposal-class-properties"
@@ -90,9 +154,10 @@
       },
       "development": {
         "presets": [
-          "airbnb"
+          "@babel/preset-env"
         ],
         "plugins": [
+          "@babel/plugin-proposal-optional-chaining",
           "@babel/plugin-transform-runtime",
           "@babel/plugin-transform-modules-commonjs",
           "@babel/plugin-proposal-class-properties"

@@ -3,7 +3,7 @@
     {
       "name": "WickrIO-Proxy-Bot",
       "args": [],
-      "script": "node --inspect=0.0.0.0 ./build/proxy-bot.js",
+      "script": "build/proxy-bot.js",
       "exec_interpreter": "none",
       "autorestart": false,
       "watch": ["package.json"],
