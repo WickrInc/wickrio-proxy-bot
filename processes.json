@@ -4,7 +4,7 @@
       "name": "prod",
       "args": [],
       "script": "build/index.js",
-      "exec_interpreter": "node",
+      "exec_interpreter": "none",
       "autorestart": false,
       "watch": ["package.json"],
       "ignore_watch": [".git"],
@@ -39,7 +39,7 @@
       "autorestart": false,
       "watch": ["package.json"],
       "ignore_watch": [".git"],
-      "env": { "WEB_APPLICATION": { "value": "no" } },
+      "env": {},
       "out_file": "log.output",
       "error_file": "err.output"
     }

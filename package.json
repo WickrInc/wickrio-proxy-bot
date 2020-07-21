@@ -60,13 +60,11 @@
     "start": "pm2 start processes.json --only prod",
     "dev": "pm2 start processes.json --only dev",
     "devmon": "nodemon --exec 'babel-node --inspect=0.0.0.0 src/index.js'",
-    "dev:configure": "nodemon configure.sh",
-    "watch:test": "jest --watch",
-    "stop": "pm2 delete ecosystem.config.js",
+    "config": "nodemon configure.sh",
+    "stop": "pm2 delete processes.json",
     "prettier": "prettier --write ./src/**/*",
     "lint": "eslint src/**/*.js --fix --color",
-    "build": "babel ./src --out-dir ./build --ignore node_modules",
-    "test": "jest --coverage"
+    "build": "rm -rf build && babel ./src --out-dir ./build"
   },
   "husky": {
     "hooks": {
@@ -77,22 +75,52 @@
     "./src/**/*.{js,jsx,ts,tsx}": [
       "npm run prettier",
       "npm run lint",
-      "npm run test",
       "npm run build"
     ]
   },
-  "jest": {
-    "testEnvironment": "node",
-    "collectCoverage": true,
-    "coverageDirectory": "coverage",
-    "collectCoverageFrom": [
-      "src/**/*.js",
-      "!**/node_modules/**"
+  "babel": {
+    "only": [
+      "src"
     ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "package.json"
-    ]
+    "env": {
+      "test": {
+        "presets": [
+          "@babel/preset-env"
+        ],
+        "plugins": [
+          "@babel/plugin-proposal-optional-chaining",
+          "@babel/plugin-transform-runtime",
+          "@babel/plugin-transform-modules-commonjs",
+          "@babel/plugin-proposal-class-properties"
+        ],
+        "sourceMaps": "inline",
+        "retainLines": true
+      },
+      "production": {
+        "presets": [
+          "@babel/preset-env"
+        ],
+        "plugins": [
+          "@babel/plugin-proposal-optional-chaining",
+          "@babel/plugin-transform-runtime",
+          "@babel/plugin-transform-modules-commonjs",
+          "@babel/plugin-proposal-class-properties"
+        ]
+      },
+      "development": {
+        "presets": [
+          "@babel/preset-env"
+        ],
+        "plugins": [
+          "@babel/plugin-proposal-optional-chaining",
+          "@babel/plugin-transform-runtime",
+          "@babel/plugin-transform-modules-commonjs",
+          "@babel/plugin-proposal-class-properties"
+        ],
+        "sourceMaps": "inline",
+        "retainLines": true
+      }
+    }
   },
   "prettier": {
     "semi": false,
@@ -126,55 +154,6 @@
       "prettier/prettier": "error",
       "no-var": "error",
       "prefer-const": "error"
-    }
-  },
-  "babel": {
-    "env": {
-      "test": {
-        "presets": [
-          "@babel/preset-env"
-        ],
-        "plugins": [
-          "@babel/plugin-proposal-optional-chaining",
-          "@babel/plugin-transform-runtime",
-          "@babel/plugin-transform-modules-commonjs",
-          "@babel/plugin-proposal-class-properties"
-        ],
-        "sourceMaps": "inline",
-        "retainLines": true
-      },
-      "production": {
-        "ignore": [
-          "**/__tests__",
-          "**/*.test.js"
-        ],
-        "presets": [
-          "@babel/preset-env"
-        ],
-        "plugins": [
-          "@babel/plugin-proposal-optional-chaining",
-          "@babel/plugin-transform-runtime",
-          "@babel/plugin-transform-modules-commonjs",
-          "@babel/plugin-proposal-class-properties"
-        ]
-      },
-      "development": {
-        "ignore": [
-          "**/__tests__",
-          "**/*.test.js"
-        ],
-        "presets": [
-          "@babel/preset-env"
-        ],
-        "plugins": [
-          "@babel/plugin-proposal-optional-chaining",
-          "@babel/plugin-transform-runtime",
-          "@babel/plugin-transform-modules-commonjs",
-          "@babel/plugin-proposal-class-properties"
-        ],
-        "sourceMaps": "inline",
-        "retainLines": true
-      }
     }
   }
 }

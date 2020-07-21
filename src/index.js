@@ -35,8 +35,8 @@ process.on('SIGUSR2', exitHandler.bind(null, { pid: true }))
 // catches uncaught exceptions
 process.on('uncaughtException', exitHandler.bind(null, { exit: true }))
 
+// logger.debug('Entering main!');
 async function main() {
-  // logger.debug('Entering main!');
   try {
     const tokens = JSON.parse(process.env.tokens)
     let status
@@ -72,8 +72,7 @@ function listen(incomingMessage) {
     let wickrUser
     // TODO is this ok formatting??
     // combine all into one line
-    const { command } = parsedMessage
-    const { message } = parsedMessage
+    const { command, message } = parsedMessage
     const { argument } = parsedMessage
     const { userEmail } = parsedMessage
     const vGroupID = parsedMessage.vgroupid
@@ -101,8 +100,8 @@ function listen(incomingMessage) {
       const reply = `${userEmail} is not authorized to use this bot. If you have a question, please get a hold of us a support@wickr.com or visit us a support.wickr.com. Thanks, Team Wickr`
       const sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, reply)
       logger.debug({ sMessage })
-      // writer.writeFile(message);
       return
+      // writer.writeFile(message);
     }
 
     if (memberListRepo.vGroupID && memberListRepo === vGroupID) {
