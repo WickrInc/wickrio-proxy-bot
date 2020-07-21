@@ -139,9 +139,4 @@ class ProxyService {
   // }
 }
 
-const service = new ProxyService()
-service.findUserByProxy('myproxy')
-service.addProxyID('me', 'myproxy')
-service.addProxyID('you', 'yourproxy')
-
 export default ProxyService
