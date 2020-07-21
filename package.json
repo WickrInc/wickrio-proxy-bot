@@ -64,7 +64,8 @@
     "stop": "pm2 delete processes.json",
     "prettier": "prettier --write ./src/**/*",
     "lint": "eslint src/**/*.js --fix --color",
-    "build": "rm -rf build && babel ./src --out-dir ./build"
+    "build": "rm -rf build && babel ./src --out-dir ./build",
+    "test": "jest --coverage --notify"
   },
   "husky": {
     "hooks": {
@@ -75,7 +76,15 @@
     "./src/**/*.{js,jsx,ts,tsx}": [
       "npm run prettier",
       "npm run lint",
+      "npm run test",
       "npm run build"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/vendor/**"
     ]
   },
   "babel": {
@@ -97,6 +106,9 @@
         "retainLines": true
       },
       "production": {
+        "ignore": [
+          "src/__tests__"
+        ],
         "presets": [
           "@babel/preset-env"
         ],
@@ -108,6 +120,9 @@
         ]
       },
       "development": {
+        "ignore": [
+          "src/__tests__"
+        ],
         "presets": [
           "@babel/preset-env"
         ],
