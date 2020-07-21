@@ -79,7 +79,6 @@ function listen(incomingMessage) {
     const vGroupID = parsedMessage.vgroupid
     const { convoType } = parsedMessage
     let personalVGroupID = ''
-
     if (convoType === 'personal') personalVGroupID = vGroupID
 
     let user = bot.getUser(userEmail) // Look up user by their wickr email
