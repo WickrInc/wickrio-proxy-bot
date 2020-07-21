@@ -4,7 +4,7 @@
       "name": "WickrIO-Proxy-Bot",
       "args": [],
       "script": "build/index.js",
-      "exec_interpreter": "none",
+      "exec_interpreter": "node",
       "autorestart": false,
       "watch": ["package.json"],
       "ignore_watch": [".git"],
