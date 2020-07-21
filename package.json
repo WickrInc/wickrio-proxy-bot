@@ -57,7 +57,8 @@
   ],
   "database": true,
   "scripts": {
-    "start": "pm2 start processes.json --only prod",
+    "start": "pm2 start processes.json --update-env",
+    "startWithJest": "pm2 start processes.json --only prod",
     "dev": "pm2 start processes.json --only dev",
     "devmon": "nodemon --exec 'babel-node --inspect=0.0.0.0 src/index.js'",
     "config": "nodemon configure.sh",
@@ -76,7 +77,6 @@
     "./src/**/*.{js,jsx,ts,tsx}": [
       "npm run prettier",
       "npm run lint",
-      "npm run test",
       "npm run build"
     ]
   },
