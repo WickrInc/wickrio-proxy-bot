@@ -3,8 +3,8 @@
     {
       "name": "WickrIO-Proxy-Bot",
       "args": [],
-      "script": "node ./build/index.js",
-      "exec_interpreter": "none",
+      "script": "./build/index.js",
+      "exec_interpreter": "node",
       "autorestart": false,
       "watch": ["package.json"],
       "ignore_watch": [".git"],
