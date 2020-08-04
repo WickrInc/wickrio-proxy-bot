@@ -2,7 +2,7 @@
   "name": "wickrio-proxy-bot",
   "version": "5.59.2",
   "description": "WickrIO Proxy Bot",
-  "main": "build/proxy-bot.js",
+  "main": "./build/proxy-bot.js",
   "author": "Toren DeRosa",
   "license": "ISC",
   "dependencies": {
