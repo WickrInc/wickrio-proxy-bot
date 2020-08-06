@@ -1,8 +1,8 @@
 import State from '../state'
 
 class ListMembers {
-  constructor(memberListRepository) {
-    this.memberList = memberListRepository
+  constructor(proxyService) {
+    this.proxyService = proxyService
     this.commandString = '/list'
   }
 
@@ -15,8 +15,8 @@ class ListMembers {
 
   execute(messageService) {
     // TODO test
-    const asset = this.memberList.getAsset()
-    const members = this.memberList.getMemberList()
+    const asset = this.proxyService.getAsset()
+    const members = this.proxyService.getMembers()
     let reply
     if (members === undefined || members.length === 0) {
       reply = 'List of members is currently empty'

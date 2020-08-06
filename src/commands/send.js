@@ -29,6 +29,9 @@ class Send {
       reply = 'Before sending a message please set up a proxy for yourself'
     }
     // reply = `Message sent to ${this.proxyService.alias.alias}`
+    // let argument = messageService.getArgument()
+    // let splitArg = argument.split(' ')
+    // for (let str of splitArg) {
     this.proxyService.sendMessage(
       messageService.getUserEmail(),
       messageService.getArgument()

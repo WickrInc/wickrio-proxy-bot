@@ -6,7 +6,8 @@ class MessageService {
     command,
     currentState,
     vGroupID,
-    user
+    user,
+    isAdmin
   ) {
     this.message = message
     this.userEmail = userEmail
@@ -15,6 +16,7 @@ class MessageService {
     this.currentState = currentState
     this.vGroupID = vGroupID
     this.user = user
+    this.isAdmin = isAdmin
   }
 
   // TODO why use getters and setters here??
@@ -52,6 +54,10 @@ class MessageService {
 
   getUser() {
     return this.user
+  }
+
+  getIsAdmin() {
+    return this.isAdmin
   }
 
   affirmativeReply() {

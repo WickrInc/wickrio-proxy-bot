@@ -6,42 +6,65 @@ const WickrIOAPI = bot.getWickrIOAddon()
 
 class ProxyService {
   constructor() {
-    this.allMembers = this.readCredentialFile()
+    const credentialData = this.readCredentialFile()
+    logger.debug(`credential data ${credentialData}`)
+    this.member = []
+    this.asset = ''
+    if (credentialData.members) {
+      this.members = credentialData.members
+    }
+    if (credentialData.asset) {
+      this.asset = credentialData.asset
+    }
+  }
+
+  getMembers() {
+    return this.members
+  }
+
+  getAsset() {
+    return this.asset
   }
 
   readCredentialFile() {
-    const defaultdata = {
-      credentials: [],
+    const defaultData = {
+      members: [],
+      asset: '',
     }
     const creds = fs.readFile('credentials.json', (err, data) => {
       if (err) {
-        fs.writeFile('credentials.json', JSON.stringify(defaultdata), err => {
-          if (err) console.log({ err })
-          logger.trace('Current alias saved in file')
+        logger.debug('Got here')
+        fs.writeFile('credentials.json', JSON.stringify(defaultData), err => {
+          if (err) logger.error({ err })
+          logger.debug('Current alias saved in file')
+          return defaultData
         })
       } else if (data) {
-        console.log({ data })
+        logger.debug('Got here instead')
+        logger.debug({ data })
         return data
       }
     })
+    logger.debug(creds)
     return creds
   }
 
-  static findUserByProxy(proxyid) {
-    const findUserByProxy = this.allMembers.credentials.find(
+  findUserByProxy(proxyid) {
+    const findUserByProxy = this.members.find(
       usercredential => usercredential.proxyid === proxyid
     )
     return findUserByProxy
   }
 
-  static findUserByID(userid) {
-    const findUserByID = this.allMembers.credentials.find(
+  findUserByID(userid) {
+    const findUserByID = this.members.find(
       usercredential => usercredential.userid === userid
     )
     return findUserByID
   }
 
-  static getUserID(proxyid) {
+  // TODO should members be able to have the same proxy?
+  getUserID(proxyid) {
     const user = this.findUserByProxy(proxyid)
     if (user) {
       const { userid } = user
@@ -49,7 +72,7 @@ class ProxyService {
     }
   }
 
-  static getProxyID(userid) {
+  getProxyID(userid) {
     const user = this.findUserByID(userid)
     if (user) {
       const { proxyid } = user
@@ -57,44 +80,50 @@ class ProxyService {
     }
   }
 
-  static addProxyID(userid, proxyid) {
+  addProxyID(userid, proxyid) {
     const user = this.findUserByID(userid)
     const userCredentials = {
       userid: userid,
       proxyid: proxyid,
     }
+
     // if we find the user
     user
       ? // add proxy to the cedentials
-        this.allMembers.credentials
-          .find(usercredential => usercredential.userid === userid)
-          .proxyid.append(proxyid)
+        (this.members.find(
+          usercredential => usercredential.userid === userid
+        ).proxyid = proxyid)
       : // if not, add the user and proxy
-        this.allMembers.credentials.append(userCredentials)
+        this.members.append(userCredentials)
 
-    fs.writeFile('credentials.json', this.allMembers, err => {
+    const writeObject = {
+      members: this.members,
+      asset: this.asset,
+    }
+
+    fs.writeFile('credentials.json', writeObject, err => {
       if (err) return console.log(err)
       logger.trace('Current alias saved in file')
     })
     return userCredentials.proxyid.toString()
   }
 
-  static getUser(userid) {
-    const user = this.allMembers.credentials.find(
+  getUser(userid) {
+    const user = this.members.find(
       usercredential => usercredential.userid === userid
     )
 
     return `${user.userid}: ${user.proxyid}`
   }
 
-  static getMemberList() {
+  getMemberList() {
     const description = `Conversation with ${this.alias.alias}`
     const title = `Conversation with ${this.alias.alias}`
 
     console.log({ description, title })
   }
 
-  static createRoom() {
+  createRoom() {
     let reply = 'Room created.'
     if (this.members === undefined || this.members.length === 0) {
       reply = 'Alias contains no members'
@@ -126,14 +155,12 @@ class ProxyService {
     return reply
   }
 
-  static sendMessage(message) {
+  sendMessage(message) {
     const messageString = `Message from ${this.members[0].alias}:\n${message}`
     const aliasArray = []
     aliasArray.push(this.alias.userID)
     WickrIOAPI.cmdSend1to1Message(aliasArray, messageString, '', '', '')
   }
 }
-const service = new ProxyService()
-console.log(service.allMembers)
 
 export default ProxyService

@@ -9,7 +9,7 @@ class MemberListRepo {
   constructor(fs) {
     this.fs = fs
     let memberData
-    let aliasData
+    let assetData
     try {
       if (fs.existsSync('./files/members.json')) {
         memberData = fs.readFileSync('./files/members.json')
@@ -25,15 +25,15 @@ class MemberListRepo {
         logger.debug(`Members is empty:${this.members}`)
         // this.updateMemberList(this.members);
       }
-      if (fs.existsSync('./files/alias.json')) {
-        aliasData = fs.readFileSync('./files/alias.json')
-        if (!aliasData) {
-          logger.error('Error reading alias.json!')
+      if (fs.existsSync('./files/asset.json')) {
+        assetData = fs.readFileSync('./files/asset.json')
+        if (!assetData) {
+          logger.error('Error reading asset.json!')
           return
         }
-        this.alias = JSON.parse(aliasData)
+        this.asset = JSON.parse(assetData)
       } else {
-        this.alias = ''
+        this.asset = ''
       }
     } catch (err) {
       // logger.error(err);
@@ -65,38 +65,38 @@ class MemberListRepo {
     }
   }
 
-  setAlias(alias) {
-    this.alias = alias
+  setasset(asset) {
+    this.asset = asset
     try {
-      const aliasToWrite = JSON.stringify(alias)
+      const assetToWrite = JSON.stringify(asset)
       if (!this.fs.existsSync('./files')) {
         this.fs.mkdirSync('./files')
       }
-      this.fs.writeFile('./files/alias.json', aliasToWrite, err => {
+      this.fs.writeFile('./files/asset.json', assetToWrite, err => {
         // TODO Fix this
         if (err) throw err
-        logger.trace('Current alias saved in file')
+        logger.trace('Current asset saved in file')
       })
-      return alias.toString()
+      return asset.toString()
     } catch (err) {
       logger.error(err)
     }
   }
 
   getAsset() {
-    return this.alias.userID
+    return this.asset
   }
 
   createRoom() {
     let reply = 'Room created.'
     if (this.members === undefined || this.members.length === 0) {
-      reply = 'Alias contains no members'
-    } else if (this.alias === undefined || this.alias === '') {
-      reply = 'No alias to send to set and alias with /alias'
+      reply = 'asset contains no members'
+    } else if (this.asset === undefined || this.asset === '') {
+      reply = 'No asset to send to set and asset with /asset'
     } else {
       const description = 'To send a message: /send@bot-name <message>'
-      const title = `Conversation with ${this.alias.userID}`
-      // const title = `Conversation with ${this.alias.alias}`
+      const title = `Conversation with ${this.asset.userID}`
+      // const title = `Conversation with ${this.asset.asset}`
       const usernames = []
       for (const member of this.members) {
         usernames.push(member.userID)
@@ -145,8 +145,7 @@ class MemberListRepo {
   }
 
   replyMessage(message) {
-    // const messageString = `Message from ${this.alias.alias}:\n${message}`
-    const messageString = `Message from ${this.alias.userID}:\n${message}`
+    const messageString = `Message from ${this.asset.userID}:\n${message}`
     if (this.vGroupID !== undefined && this.vGroupID !== '') {
       WickrIOAPI.cmdSendRoomMessage(this.vGroupID, messageString)
     } else {

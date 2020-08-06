@@ -11,21 +11,21 @@ import Version from './commands/version'
 import ReplyReceived from './commands/reply-received'
 
 class Factory {
-  constructor(memberListRepo) {
-    this.addProxy = new AddProxy(memberListRepo)
-    this.setAlias = new SetAlias(memberListRepo)
-    this.removeMembers = new RemoveMembers(memberListRepo)
-    this.listMembers = new ListMembers(memberListRepo)
+  constructor(proxyService) {
+    this.addProxy = new AddProxy(proxyService)
+    this.setAlias = new SetAlias(proxyService)
+    this.removeMembers = new RemoveMembers(proxyService)
+    this.listMembers = new ListMembers(proxyService)
     // this.help = new Help();
-    this.createRoom = new CreateRoom(memberListRepo)
+    this.createRoom = new CreateRoom(proxyService)
     this.version = new Version()
-    this.send = new Send(memberListRepo)
-    this.sendFromRoom = new SendFromRoom(memberListRepo)
-    this.replyReceived = new ReplyReceived(memberListRepo)
+    this.send = new Send(proxyService)
+    this.sendFromRoom = new SendFromRoom(proxyService)
+    this.replyReceived = new ReplyReceived(proxyService)
 
     // Order matters here /commands must go first
     // TODO make it so that the order doesn' matter?
-    this.commandList = [
+    this.adminCommandList = [
       // These are the /commands and must go first
       Help,
       this.addProxy,
@@ -35,23 +35,34 @@ class Factory {
       this.sendFromRoom,
       this.listMembers,
       Version,
-      this.replyReceived,
       this.removeMembers,
       // Here are the options that rely on the current state
       (this.addProxy = new AddProxy(this.proxyService)),
     ]
+
+    this.userCommandList = [Help, this.replyReceived, Version]
   }
 
-  execute(messageService) {
-    for (const command of this.commandList) {
+  executeCommands(messageService) {
+    let defaultReply
+    let commandList
+    if (messageService.getIsAdmin()) {
+      commandList = this.adminCommandList
+      defaultReply =
+        'Command not recognized send the command /help for a list of commands'
+    } else {
+      commandList = this.userCommandList
+      defaultReply = `${messageService.getUserEmail} is not authorized to use this bot. If you have a question, please get a hold of us a support@wickr.com or visit us a support.wickr.com. Thanks, Team Wickr`
+    }
+    for (const command of commandList) {
       if (command.shouldExecute(messageService)) {
         return command.execute(messageService)
       }
     }
     // TODO fix the admin command returning this then add it back
+    if (messageService.getCommand === '/admin') return
     return {
-      reply:
-        'Command not recognized send the command /help for a list of commands',
+      reply: defaultReply,
       state: State.NONE,
     }
   }

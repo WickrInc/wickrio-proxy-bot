@@ -16,17 +16,24 @@ class RemoveMembers {
 
   execute(messageService) {
     const userEmail = messageService.getUserEmail()
-    const members = messageService.getArgument.split(' ')
+    const members = messageService.getArgument().split(' ')
     let reply
     // TODO fix this!
     const memberList = this.memberList.getMemberList()
     const removeFails = []
     if (members === undefined || members.length === 0) {
-      reply = 'Command contains no user names to remove!'
+      reply =
+        'Command contains no user names to remove, usage: /remove <username>'
     } else {
       // TODO fix this for alias/ userEmail
+      let found
       for (let i = 0; i < members.length; i++) {
-        if (!memberList.includes(members[i])) {
+        for (const user of memberList) {
+          if (user.userID === members[i]) {
+            found = true
+          }
+        }
+        if (!found) {
           removeFails.push(members.splice(i, 1))
           i--
         }
@@ -39,7 +46,11 @@ class RemoveMembers {
 
       if (members.length >= 1) {
         for (let i = 0; i < members.length; i++) {
-          memberList.splice(memberList.indexOf(members[i]), 1)
+          for (let j = 0; j < memberList.length; j++) {
+            if (members[i] === memberList[j].userID) {
+              memberList.splice(j, 1)
+            }
+          }
         }
 
         console.log('memberList', memberList)
