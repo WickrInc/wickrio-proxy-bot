@@ -6,6 +6,7 @@ const WickrIOAPI = bot.getWickrIOAddon()
 
 class ProxyService {
   constructor() {
+    this.credentialFile = 'credentials.json'
     const credentialData = this.readCredentialFile()
     logger.debug(`credential data ${credentialData}`)
     this.member = []
@@ -22,6 +23,19 @@ class ProxyService {
     return this.members
   }
 
+  setAndSaveAsset(asset) {
+    this.asset = asset
+    const writeObject = {
+      members: this.members,
+      asset: this.asset,
+    }
+
+    fs.writeFile(this.credentialFile, JSON.stringify(writeObject), err => {
+      if (err) return console.log(err)
+      logger.trace('Current asset saved in file')
+    })
+  }
+
   getAsset() {
     return this.asset
   }
@@ -31,12 +45,23 @@ class ProxyService {
       members: [],
       asset: '',
     }
-    const creds = fs.readFile('credentials.json', (err, data) => {
+    // TODO improve this!
+    // if (!fs.existsSync(this.credentialFile)) {
+    if (!fs.existsSync('dne.txt')) {
+      fs.writeFile(this.credentialFile, JSON.stringify(defaultData), err => {
+        if (err) logger.error({ err })
+        logger.debug('Current asset saved in file')
+      })
+      return defaultData
+    }
+    // TODO this needs to be fixed!
+
+    const creds = fs.readFile(this.credentialFile, (err, data) => {
       if (err) {
         logger.debug('Got here')
-        fs.writeFile('credentials.json', JSON.stringify(defaultData), err => {
+        fs.writeFile(this.credentialFile, JSON.stringify(defaultData), err => {
           if (err) logger.error({ err })
-          logger.debug('Current alias saved in file')
+          logger.debug('Current asset saved in file')
           return defaultData
         })
       } else if (data) {
@@ -45,98 +70,103 @@ class ProxyService {
         return data
       }
     })
-    logger.debug(creds)
+    logger.debug('Got nowhere' + creds)
     return creds
   }
 
-  findUserByProxy(proxyid) {
+  // TODO what's the difference between find and get? return value?
+  findUserByProxy(proxyID) {
     const findUserByProxy = this.members.find(
-      usercredential => usercredential.proxyid === proxyid
+      usercredential => usercredential.proxyID === proxyID
     )
     return findUserByProxy
   }
 
-  findUserByID(userid) {
+  findUserByID(userID) {
     const findUserByID = this.members.find(
-      usercredential => usercredential.userid === userid
+      usercredential => usercredential.userID === userID
     )
     return findUserByID
   }
 
+  removeMember(userID) {
+    const index = this.members.findIndex(user => user.userID === userID)
+    if (index < 0) {
+      return false
+    }
+    this.members.splice(index, 1)
+    return true
+  }
+
   // TODO should members be able to have the same proxy?
-  getUserID(proxyid) {
-    const user = this.findUserByProxy(proxyid)
+  getUserID(proxyID) {
+    const user = this.findUserByProxy(proxyID)
     if (user) {
-      const { userid } = user
-      return userid
+      const { userID } = user
+      return userID
     }
   }
 
-  getProxyID(userid) {
-    const user = this.findUserByID(userid)
+  getProxyID(userID) {
+    const user = this.findUserByID(userID)
     if (user) {
-      const { proxyid } = user
-      return proxyid
+      const { proxyID } = user
+      return proxyID
     }
   }
 
-  addProxyID(userid, proxyid) {
-    const user = this.findUserByID(userid)
+  addProxyID(userID, proxyID) {
+    const user = this.findUserByID(userID)
     const userCredentials = {
-      userid: userid,
-      proxyid: proxyid,
+      userID: userID,
+      proxyID: proxyID,
     }
 
     // if we find the user
     user
       ? // add proxy to the cedentials
         (this.members.find(
-          usercredential => usercredential.userid === userid
-        ).proxyid = proxyid)
+          usercredential => usercredential.userID === userID
+        ).proxyID = proxyID)
       : // if not, add the user and proxy
-        this.members.append(userCredentials)
+        this.members.push(userCredentials)
 
     const writeObject = {
       members: this.members,
       asset: this.asset,
     }
 
-    fs.writeFile('credentials.json', writeObject, err => {
+    // TODO make writing to the file a function?? or helper!
+    fs.writeFile(this.credentialFile, JSON.stringify(writeObject), err => {
       if (err) return console.log(err)
-      logger.trace('Current alias saved in file')
+      logger.trace('Current asset saved in file')
     })
-    return userCredentials.proxyid.toString()
+    return userCredentials.proxyID.toString()
   }
 
-  getUser(userid) {
+  getUser(userID) {
     const user = this.members.find(
-      usercredential => usercredential.userid === userid
+      usercredential => usercredential.userID === userID
     )
 
-    return `${user.userid}: ${user.proxyid}`
+    return `${user.userID}: ${user.proxyID}`
   }
 
-  getMemberList() {
-    const description = `Conversation with ${this.alias.alias}`
-    const title = `Conversation with ${this.alias.alias}`
-
-    console.log({ description, title })
-  }
-
+  // TODO most of this should be else where
   createRoom() {
     let reply = 'Room created.'
     if (this.members === undefined || this.members.length === 0) {
-      reply = 'Alias contains no members'
-    } else if (this.alias === undefined || this.alias === '') {
-      reply = 'No alias to send to set and alias with /alias'
+      reply = 'asset contains no members'
+    } else if (this.asset === undefined || this.asset === '') {
+      reply = 'No asset to send to set and asset with /asset'
     } else {
-      const description = `Conversation with ${this.alias.alias}`
-      const title = `Conversation with ${this.alias.alias}`
+      const description = 'To send a message to the asset: /send <message>'
+      const title = `Conversation with ${this.asset.asset}`
       const usernames = []
       for (const member of this.members) {
         usernames.push(member.userID)
       }
-      // usernames.push() bot name!
+      // TODO do we need to usernames.push() bot name?
       const uMessage = WickrIOAPI.cmdAddRoom(
         usernames,
         usernames,
@@ -149,17 +179,15 @@ class ProxyService {
       logger.debug(`Here is the uMessage${uMessage}`)
       logger.debug(`Here is the vGroupID${this.vGroupID}`)
       WickrIOAPI.cmdSendRoomMessage(this.vGroupID, description)
-
-      WickrIOAPI.cmdLeaveRoom(this.vGroupID)
     }
     return reply
   }
 
-  sendMessage(message) {
-    const messageString = `Message from ${this.members[0].alias}:\n${message}`
-    const aliasArray = []
-    aliasArray.push(this.alias.userID)
-    WickrIOAPI.cmdSend1to1Message(aliasArray, messageString, '', '', '')
+  sendMessage(userID, message) {
+    const proxy = this.findUserByID(userID)
+    const messageString = `Message from ${proxy}:\n${message}`
+    const assetArray = [this.asset]
+    WickrIOAPI.cmdSend1to1Message(assetArray, messageString, '', '', '')
   }
 }
 

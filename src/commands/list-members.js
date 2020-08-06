@@ -22,14 +22,14 @@ class ListMembers {
       reply = 'List of members is currently empty'
     } else {
       let userString = ''
-      for (let i = 0; i < members.length - 1; i += 1) {
-        userString += `${members[i].userID}, ${members[i].alias}\n`
+      for (const member of members) {
+        userString += `${member.userID}, ${member.proxyID}\n`
       }
-      userString += `${members[members.length - 1].userID}, ${
-        members[members.length - 1].alias
-      }`
       reply = `Current members:\n${userString}`
-      reply += `\nCurrent Asset:\n${asset}`
+      reply += 'Current Asset:'
+      if (asset !== undefined && asset.length !== 0) {
+        reply += `\n${asset}`
+      }
     }
     const obj = {
       reply,

@@ -1,7 +1,7 @@
 import State from './state'
 import Help from './commands/help'
 import AddProxy from './commands/add-proxy'
-import SetAlias from './commands/set-alias'
+import SetAsset from './commands/set-asset'
 import Send from './commands/send'
 import SendFromRoom from './commands/send-from-room'
 import RemoveMembers from './commands/remove-members'
@@ -13,7 +13,7 @@ import ReplyReceived from './commands/reply-received'
 class Factory {
   constructor(proxyService) {
     this.addProxy = new AddProxy(proxyService)
-    this.setAlias = new SetAlias(proxyService)
+    this.setAsset = new SetAsset(proxyService)
     this.removeMembers = new RemoveMembers(proxyService)
     this.listMembers = new ListMembers(proxyService)
     // this.help = new Help();
@@ -29,7 +29,7 @@ class Factory {
       // These are the /commands and must go first
       Help,
       this.addProxy,
-      this.setAlias,
+      this.setAsset,
       this.createRoom,
       this.send,
       this.sendFromRoom,

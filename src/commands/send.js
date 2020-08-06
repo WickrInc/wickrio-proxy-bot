@@ -17,25 +17,18 @@ class Send {
 
   execute(messageService) {
     let reply
-    if (
-      messageService.getArgument() === undefined ||
-      messageService.getArgument() === ''
-    ) {
+    const asset = this.proxyService.getAsset()
+    const userEmail = messageService.getUserEmail()
+    const argument = messageService.getArgument()
+    if (argument === undefined || argument === '') {
       reply = 'Must have a message to send. Usage /send <message>'
-    } else if (this.proxyService.alias === undefined) {
+    } else if (asset === undefined || asset === '') {
       reply =
-        'Before sending a message set up an alias you would like to send to'
-    } else if (this.proxyService.members === undefined) {
+        'Before sending a message set up an asset you would like to send to'
+    } else if (!this.proxyService.findUserByID(userEmail)) {
       reply = 'Before sending a message please set up a proxy for yourself'
     }
-    // reply = `Message sent to ${this.proxyService.alias.alias}`
-    // let argument = messageService.getArgument()
-    // let splitArg = argument.split(' ')
-    // for (let str of splitArg) {
-    this.proxyService.sendMessage(
-      messageService.getUserEmail(),
-      messageService.getArgument()
-    )
+    this.proxyService.sendMessage(userEmail, argument)
     return {
       reply,
       state: State.NONE,
