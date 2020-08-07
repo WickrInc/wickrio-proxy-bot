@@ -1,6 +1,6 @@
 import State from '../state'
 import logger from '../logger'
-// import APIService from '../services/api-service'
+import APIService from '../services/api-service'
 
 // TODO use this instead of putting it in main!
 class AddProxy {
@@ -21,12 +21,14 @@ class AddProxy {
     const argArray = messageService.getArgument().split(' ')
     logger.debug(`argArray length:${argArray.length}`)
     logger.debug(`argArray:${argArray}`)
-    // const userArray = [argArray[0]]
-    // const validUser = APIService.getUserInfo(userArray).failed !== []
+    const userArray = [argArray[0]]
+    const failed = APIService.getUserInfo(userArray).failed
+    logger.debug(`Failed? ${failed}`)
+    const validUser = failed === []
     if (argArray.length !== 2) {
       reply = 'Incorrect format, usage: /add <UserID> <Alias>'
-      // } else if (!validUser) {
-      //   reply = `Cannot add proxy for ${argArray[0]} user does not exist`
+    } else if (!validUser) {
+      reply = `Cannot add proxy for ${argArray[0]}: User does not exist`
     } else {
       // this.proxyService.addProxyID(argArray[0], argArray[1]);
       const members = this.proxyService.getMembers()
