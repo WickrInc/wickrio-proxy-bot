@@ -4,11 +4,12 @@ import * as WickrIOBotAPI from 'wickrio-bot-api'
 const bot = new WickrIOBotAPI.WickrIOBot()
 const WickrIOAPI = bot.getWickrIOAddon()
 
+// read or create credentials.json
+
 class ProxyService {
   constructor() {
-    this.credentialFile = 'credentials.json'
     const credentialData = this.readCredentialFile()
-    logger.debug(`credential data ${credentialData}`)
+    console.log({ credentialData })
     this.member = []
     this.asset = ''
     if (credentialData.members) {
@@ -17,6 +18,7 @@ class ProxyService {
     if (credentialData.asset) {
       this.asset = credentialData.asset
     }
+    console.log(this.members, this.asset)
   }
 
   getMembers() {
@@ -30,7 +32,7 @@ class ProxyService {
       asset: this.asset,
     }
 
-    fs.writeFile(this.credentialFile, JSON.stringify(writeObject), err => {
+    fs.writeFile('./credentials.json', JSON.stringify(writeObject), err => {
       if (err) return console.log(err)
       logger.trace('Current asset saved in file')
     })
@@ -40,38 +42,38 @@ class ProxyService {
     return this.asset
   }
 
-  readCredentialFile() {
+  readCredentialFile = () => {
     const defaultData = {
       members: [],
       asset: '',
     }
+
     // TODO improve this!
-    // if (!fs.existsSync(this.credentialFile)) {
-    if (!fs.existsSync('dne.txt')) {
-      fs.writeFile(this.credentialFile, JSON.stringify(defaultData), err => {
+    // if (!fs.existsSync('credentials.json')) {
+    if (!fs.existsSync('./credentials.json')) {
+      fs.writeFile('./credentials.json', JSON.stringify(defaultData), err => {
         if (err) logger.error({ err })
-        logger.debug('Current asset saved in file')
+        console.log('creating credenitals.json')
       })
       return defaultData
     }
-    // TODO this needs to be fixed!
 
-    const creds = fs.readFile(this.credentialFile, (err, data) => {
+    // TODO this needs to be fixed!
+    const rawcreds = fs.readFileSync('./credentials.json', (err, data) => {
       if (err) {
-        logger.debug('Got here')
-        fs.writeFile(this.credentialFile, JSON.stringify(defaultData), err => {
-          if (err) logger.error({ err })
-          logger.debug('Current asset saved in file')
-          return defaultData
-        })
+        console.log({ err })
+        // logger.debug('Got here')
+        // fs.writeFile('credentials.json', JSON.stringify(defaultData), err => {
+        //   if (err) logger.error({ err })
+        //   logger.debug('new file')
+        //   return defaultData
+        // })
       } else if (data) {
-        logger.debug('Got here instead')
-        logger.debug({ data })
         return data
       }
     })
-    logger.debug('Got nowhere' + creds)
-    return creds
+    const parsedCreds = JSON.parse(rawcreds)
+    return parsedCreds
   }
 
   // TODO what's the difference between find and get? return value?
@@ -137,7 +139,7 @@ class ProxyService {
     }
 
     // TODO make writing to the file a function?? or helper!
-    fs.writeFile(this.credentialFile, JSON.stringify(writeObject), err => {
+    fs.writeFile('./credentials.json', JSON.stringify(writeObject), err => {
       if (err) return console.log(err)
       logger.trace('Current asset saved in file')
     })
