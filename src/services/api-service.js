@@ -37,6 +37,10 @@ class APIService {
   static getUserInfo(users) {
     return WickrIOAPI.cmdGetUserInfo(users)
   }
+
+  static addRoom(users, moderators, title, description) {
+    return WickrIOAPI.cmdAddRoom(users, moderators, title, description)
+  }
 }
 
 export default APIService
