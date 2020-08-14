@@ -15,7 +15,8 @@ class ReplyReceived {
   execute(messageService) {
     const userEmail = messageService.getUserEmail()
     const message = messageService.getMessage()
-    const uMessage = this.proxyService.replyMessage(userEmail, message)
+    const messageToSend = `Message from ${userEmail}:\n${message}`
+    const uMessage = this.proxyService.replyMessage(userEmail, messageToSend)
     console.log('uMessage' + uMessage)
     const reply = ''
     return {
