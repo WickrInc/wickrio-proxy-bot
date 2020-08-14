@@ -2,7 +2,7 @@ import State from '../state'
 // import logger from '../logger'
 
 // TODO use this instead of putting it in main!
-class SetAsset {
+class AddAsset {
   constructor(proxyService) {
     this.proxyService = proxyService
     this.commandString = '/asset'
@@ -17,8 +17,10 @@ class SetAsset {
 
   execute(messageService) {
     const argument = messageService.getArgument()
-    this.proxyService.setAndSaveAsset(argument)
-    const reply = `Asset ${argument} created`
+    // TODO check for empty argument
+    const added = this.proxyService.addAsset(argument)
+    let reply = `Asset ${argument}`
+    reply += added ? ' created' : ' already exists'
     return {
       reply,
       state: State.NONE,
@@ -26,4 +28,4 @@ class SetAsset {
   }
 }
 
-module.exports = SetAsset
+module.exports = AddAsset

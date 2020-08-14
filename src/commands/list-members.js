@@ -14,22 +14,23 @@ class ListMembers {
   }
 
   execute(messageService) {
-    // TODO test
-    const asset = this.proxyService.getAsset()
+    const assets = this.proxyService.getAssets()
     const members = this.proxyService.getMembers()
-    let reply
+    let reply = 'Current Members:'
     if (members === undefined || members.length === 0) {
-      reply = 'List of members is currently empty'
+      reply += '\nList of members is currently empty'
     } else {
-      let userString = ''
-      for (const member of members) {
-        userString += `${member.userID}, ${member.proxyID}\n`
-      }
-      reply = `Current members:\n${userString}`
-      reply += 'Current Asset:'
-      if (asset !== undefined && asset.length !== 0) {
-        reply += `\n${asset}`
-      }
+      members.forEach(member => {
+        reply += `\n${member.userID}, ${member.proxyID}`
+      })
+    }
+    reply += '\nCurrent Assets:'
+    if (assets === undefined || assets.length === 0) {
+      reply += '\nList of assets is currently empty'
+    } else {
+      assets.forEach(asset => {
+        reply += `\n${asset.asset}`
+      })
     }
     const obj = {
       reply,

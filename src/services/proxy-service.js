@@ -1,20 +1,23 @@
-import fs from 'fs'
-import logger from '../logger'
 import APIService from './api-service'
-
-// read or create credentials.json
-const credentialFile = './credentials.json'
+import Proxy from '../proxy'
+import Asset from '../asset'
 
 class ProxyService {
-  constructor() {
-    const credentialData = this.readCredentialFile()
+  constructor(dataStorage, roomService) {
+    this.dataStorage = dataStorage
+    this.roomService = roomService
     this.members = []
     this.assets = []
-    if (credentialData.members) {
-      this.members = credentialData.members
+    const data = this.dataStorage.readCredentials()
+    if (data.members !== undefined && data.members.length !== 0) {
+      data.members.forEach(member => {
+        this.members.push(new Proxy(member.userID, member.proxyID))
+      })
     }
-    if (credentialData.assets) {
-      this.assets = credentialData.assets
+    if (data.assets !== undefined && data.assets.length !== 0) {
+      data.assets.forEach(asset => {
+        this.assets.push(new Asset(asset.asset, asset.vGroupID))
+      })
     }
     console.log(this.members, this.assets)
   }
@@ -27,76 +30,59 @@ class ProxyService {
     return this.assets
   }
 
-  setAndSaveAsset(asset) {
-    this.asset.push(asset)
-    const writeObject = {
-      members: this.members,
-      assets: this.assets,
+  addAsset(asset) {
+    const index = this.assets.findIndex(user => user.getAsset() === asset)
+    if (index < 0) {
+      this.assets.push(new Asset(asset, ''))
+      this.saveData()
+      return true
     }
-
-    fs.writeFile(credentialFile, JSON.stringify(writeObject), err => {
-      if (err) return console.log(err)
-      logger.trace('Current asset saved in file')
-    })
+    return false
   }
 
-  readCredentialFile = () => {
-    const defaultData = {
-      members: [],
-      assets: [],
-    }
-
-    // TODO improve this!
-    // if (!fs.existsSync('credentials.json')) {
-    if (!fs.existsSync(credentialFile)) {
-      fs.writeFile(credentialFile, JSON.stringify(defaultData), err => {
-        if (err) logger.error({ err })
-        console.log('creating credenitals.json')
-      })
-      return defaultData
-    }
-
-    // TODO this needs to be fixed!
-    const rawcreds = fs.readFileSync(credentialFile, (err, data) => {
-      if (err) {
-        console.log({ err })
-        // logger.debug('Got here')
-        // fs.writeFile('credentials.json', JSON.stringify(defaultData), err => {
-        //   if (err) logger.error({ err })
-        //   logger.debug('new file')
-        //   return defaultData
-        // })
-      } else if (data) {
-        return data
-      }
-    })
-    const parsedCreds = JSON.parse(rawcreds)
-    return parsedCreds
-  }
-
-  findUserByID(userID) {
-    const findUserByID = this.members.find(
-      usercredential => usercredential.userID === userID
-    )
-    return findUserByID
+  addMember(userID, proxyID) {
+    const member = this.findUserByID(userID)
+    // if we find the user
+    member
+      ? // change the proxy for the user
+        this.members
+          .find(user => user.getUserID() === userID)
+          .setProxyID(proxyID)
+      : // if not, add the new user
+        this.members.push(new Proxy(userID, proxyID))
+    this.saveData()
   }
 
   removeMember(userID) {
-    const index = this.members.findIndex(user => user.userID === userID)
+    const index = this.members.findIndex(user => user.getUserID() === userID)
     if (index < 0) {
       return false
     }
     this.members.splice(index, 1)
+    this.saveData()
     return true
   }
 
   removeAsset(userID) {
-    const index = this.assets.findIndex(user => user.asset === userID)
+    const index = this.assets.findIndex(user => user.getAsset() === userID)
     if (index < 0) {
       return false
     }
     this.asset.splice(index, 1)
+    this.saveData()
     return true
+  }
+
+  saveData() {
+    this.dataStorage.saveData({ members: this.members, assets: this.assets })
+  }
+
+  findUserByID(userID) {
+    return this.members.find(user => user.getUserID() === userID)
+  }
+
+  findAssetByID(asset) {
+    return this.assets.find(user => user.getAsset() === asset)
   }
 
   getProxyID(userID) {
@@ -107,46 +93,50 @@ class ProxyService {
     }
   }
 
-  addMember(userID, proxyID) {
-    const member = this.findUserByID(userID)
-    const userCredentials = {
-      userID: userID,
-      proxyID: proxyID,
-    }
-
-    // if we find the user
-    member
-      ? // change the proxy for the user
-        (this.members.find(user => user.userID === userID).proxyID = proxyID)
-      : // if not, add the user and proxy
-        this.members.push(userCredentials)
-
-    const writeObject = {
-      members: this.members,
-      asset: this.asset,
-    }
-
-    // TODO make writing to the file a function?? or helper!
-    fs.writeFile(credentialFile, JSON.stringify(writeObject), err => {
-      if (err) return console.log(err)
-      logger.trace('Current asset saved in file')
-    })
-    return userCredentials.proxyID.toString()
+  setVGroupID(asset, vGroupID) {
+    this.assets.find(user => user.getAsset() === asset).setVGroupID(vGroupID)
+    this.saveData()
   }
 
-  getUser(userID) {
-    const user = this.members.find(
-      usercredential => usercredential.userID === userID
-    )
-
-    return `${user.userID}: ${user.proxyID}`
-  }
-
-  sendMessage(userID, message) {
-    const proxy = this.findUserByID(userID)
+  sendMessage(userID, message, asset) {
+    const proxy = this.getProxyID(userID)
     const messageString = `Message from ${proxy}:\n${message}`
-    const assetArray = [this.asset]
+    const assetArray = [asset]
     APIService.send1to1Message(assetArray, messageString, '', '', '')
+    this.message = ''
+  }
+
+  replyMessage(userID, message) {
+    const vGroupID = this.assets
+      .find(user => user.getAsset() === userID)
+      .getVGroupID()
+    const memberArray = []
+    this.members.forEach(member => {
+      memberArray.push(member.getUserID())
+    })
+    vGroupID
+      ? APIService.sendRoomMessage(vGroupID, message)
+      : APIService.send1to1Message(memberArray, message, '', '', '')
+  }
+
+  createRoom(asset) {
+    const description = 'To send a message to the asset: /send <message>'
+    const title = `Conversation with ${asset}`
+    const users = []
+    this.members.forEach(user => {
+      users.push(user.getUserID())
+    })
+    const uMessage = APIService.addRoom(
+      users,
+      users,
+      title,
+      description,
+      '',
+      ''
+    )
+    const vGroupID = JSON.parse(uMessage).vgroupid
+    this.setVGroupID(asset, vGroupID)
+    APIService.sendRoomMessage(vGroupID, description)
   }
 }
 

@@ -1,58 +1,64 @@
 import State from './state'
-import Help from './commands/help'
+
+// Commands
 import AddProxy from './commands/add-proxy'
-import SetAsset from './commands/set-asset'
+import AddAsset from './commands/add-asset'
+import CreateRoom from './commands/create-room'
+import Help from './commands/help'
+import ListMembers from './commands/list-members'
+import RemoveMembers from './commands/remove-members'
+import ReplyReceived from './commands/reply-received'
 import Send from './commands/send'
 import SendFromRoom from './commands/send-from-room'
-import RemoveMembers from './commands/remove-members'
-import ListMembers from './commands/list-members'
-import CreateRoom from './commands/create-room'
 import Version from './commands/version'
-import ReplyReceived from './commands/reply-received'
+import WhichAsset from './commands/which-asset'
+import WhichRoom from './commands/which-room'
 
 class Factory {
   constructor(proxyService) {
-    this.addProxy = new AddProxy(proxyService)
-    this.setAsset = new SetAsset(proxyService)
-    this.removeMembers = new RemoveMembers(proxyService)
-    this.listMembers = new ListMembers(proxyService)
-    // this.help = new Help();
-    this.createRoom = new CreateRoom(proxyService)
+    this.proxyService = proxyService
+    this.addProxy = new AddProxy(this.proxyService)
+    this.addAsset = new AddAsset(this.proxyService)
+    this.removeMembers = new RemoveMembers(this.proxyService)
+    this.listMembers = new ListMembers(this.proxyService)
+    this.createRoom = new CreateRoom(this.proxyService)
     this.version = new Version()
-    this.send = new Send(proxyService)
-    this.sendFromRoom = new SendFromRoom(proxyService)
-    this.replyReceived = new ReplyReceived(proxyService)
+    this.send = new Send(this.proxyService)
+    this.sendFromRoom = new SendFromRoom(this.proxyService)
+    this.replyReceived = new ReplyReceived(this.proxyService)
+    // Here are the options that rely on the current state
+    this.whichAsset = new WhichAsset(this.proxyService)
+    this.whichRoom = new WhichRoom(this.proxyService)
 
     // Order matters here /commands must go first
-    // TODO make it so that the order doesn' matter?
-    this.adminCommandList = [
-      // These are the /commands and must go first
-      Help,
-      this.addProxy,
-      this.setAsset,
+    this.adminCommandList = [this.addProxy, this.addAsset, this.removeMembers]
+
+    this.userCommandList = [
+      this.whichAsset,
       this.createRoom,
+      Help,
+      this.listMembers,
       this.send,
       this.sendFromRoom,
-      this.listMembers,
       Version,
-      this.removeMembers,
-      // Here are the options that rely on the current state
-      (this.addProxy = new AddProxy(this.proxyService)),
+      this.whichRoom,
     ]
 
-    this.userCommandList = [Help, this.replyReceived, Version]
+    this.assetCommandList = [this.replyReceived]
   }
 
   executeCommands(messageService) {
-    let defaultReply
+    const userEmail = messageService.getUserEmail()
+    let defaultReply = `${userEmail} is not authorized to use this bot. If you have a question, please get a hold of us a support@wickr.com or visit us a support.wickr.com. Thanks, Team Wickr`
     let commandList
     if (messageService.getIsAdmin()) {
-      commandList = this.adminCommandList
+      commandList = this.adminCommandList.concat(this.userCommandList)
       defaultReply =
         'Command not recognized send the command /help for a list of commands'
-    } else {
+    } else if (this.proxyService.findUserByID(userEmail)) {
       commandList = this.userCommandList
-      defaultReply = `${messageService.getUserEmail} is not authorized to use this bot. If you have a question, please get a hold of us a support@wickr.com or visit us a support.wickr.com. Thanks, Team Wickr`
+    } else {
+      commandList = this.assetCommandList
     }
     for (const command of commandList) {
       if (command.shouldExecute(messageService)) {
@@ -60,7 +66,7 @@ class Factory {
       }
     }
     // TODO fix the admin command returning this then add it back
-    if (messageService.getCommand === '/admin') return
+    if (messageService.getCommand() === '/admin') return
     return {
       reply: defaultReply,
       state: State.NONE,

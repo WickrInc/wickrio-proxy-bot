@@ -35,7 +35,9 @@ class APIService {
   }
 
   static getUserInfo(users) {
-    return WickrIOAPI.cmdGetUserInfo(users)
+    const userInfoData = WickrIOAPI.cmdGetUserInfo(users)
+    const temp = JSON.parse(userInfoData)
+    return temp
   }
 
   static addRoom(users, moderators, title, description) {

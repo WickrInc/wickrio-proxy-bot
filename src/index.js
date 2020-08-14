@@ -4,10 +4,20 @@ import Factory from './factory'
 import logger from './logger'
 // import MemberListRepo from './helpers/member-list'
 import ProxyService from './services/proxy-service'
+import JSONCredentialsHandler from './helpers/json-credentials-handler'
 
 // const memberListRepo = new MemberListRepo(fs)
 // const factory = new Factory(memberListRepo)
-const proxyService = new ProxyService()
+const defaultData = {
+  members: [],
+  assets: [],
+}
+
+const jsonCredentialsHandler = new JSONCredentialsHandler(
+  defaultData,
+  './credentials.json'
+)
+const proxyService = new ProxyService(jsonCredentialsHandler)
 const factory = new Factory(proxyService)
 const WickrUser = WickrIOBotAPI.WickrUser
 const bot = new WickrIOBotAPI.WickrIOBot()

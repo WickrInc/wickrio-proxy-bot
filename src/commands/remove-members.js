@@ -39,7 +39,7 @@ class RemoveMembers {
       }
 
       if (members.length >= 1) {
-        reply += 'Successfully removed the following users:'
+        reply += 'Successfully removed the following users:\n'
         reply += members.join('\n')
       }
     }
