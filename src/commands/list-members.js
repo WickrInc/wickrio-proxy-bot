@@ -1,8 +1,8 @@
 import State from '../state'
 
 class ListMembers {
-  constructor(memberListRepository) {
-    this.memberList = memberListRepository
+  constructor(proxyService) {
+    this.proxyService = proxyService
     this.commandString = '/list'
   }
 
@@ -14,22 +14,23 @@ class ListMembers {
   }
 
   execute(messageService) {
-    // TODO test
-    const asset = this.memberList.getAsset()
-    const members = this.memberList.getMemberList()
-    let reply
+    const assets = this.proxyService.getAssets()
+    const members = this.proxyService.getMembers()
+    let reply = 'Current Members:'
     if (members === undefined || members.length === 0) {
-      reply = 'List of members is currently empty'
+      reply += '\nList of members is currently empty'
     } else {
-      let userString = ''
-      for (let i = 0; i < members.length - 1; i += 1) {
-        userString += `${members[i].userID}, ${members[i].alias}\n`
-      }
-      userString += `${members[members.length - 1].userID}, ${
-        members[members.length - 1].alias
-      }`
-      reply = `Current members:\n${userString}`
-      reply += `\nCurrent Asset:\n${asset}`
+      members.forEach(member => {
+        reply += `\n${member.userID}, ${member.proxyID}`
+      })
+    }
+    reply += '\nCurrent Assets:'
+    if (assets === undefined || assets.length === 0) {
+      reply += '\nList of assets is currently empty'
+    } else {
+      assets.forEach(asset => {
+        reply += `\n${asset.asset}`
+      })
     }
     const obj = {
       reply,

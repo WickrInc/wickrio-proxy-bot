@@ -1,12 +1,25 @@
 import * as WickrIOBotAPI from 'wickrio-bot-api'
-import fs from 'fs'
 import MessageService from './services/message-service'
 import Factory from './factory'
 import logger from './logger'
-import MemberListRepo from './helpers/member-list'
+// import MemberListRepo from './helpers/member-list'
+import ProxyService from './services/proxy-service'
+import JSONCredentialsHandler from './helpers/json-credentials-handler'
 
-const memberListRepo = new MemberListRepo(fs)
-const factory = new Factory(memberListRepo)
+// const memberListRepo = new MemberListRepo(fs)
+// const factory = new Factory(memberListRepo)
+const defaultData = {
+  members: [],
+  assets: [],
+}
+
+const jsonCredentialsHandler = new JSONCredentialsHandler(
+  defaultData,
+  './credentials.json'
+)
+
+const proxyService = new ProxyService(jsonCredentialsHandler)
+const factory = new Factory(proxyService)
 const WickrUser = WickrIOBotAPI.WickrUser
 const bot = new WickrIOBotAPI.WickrIOBot()
 const WickrIOAPI = bot.getWickrIOAddon()
@@ -78,6 +91,7 @@ function listen(incomingMessage) {
     const { userEmail } = parsedMessage
     const vGroupID = parsedMessage.vgroupid
     const { convoType } = parsedMessage
+    const { isAdmin } = parsedMessage
     let personalVGroupID = ''
     if (convoType === 'personal') personalVGroupID = vGroupID
 
@@ -89,6 +103,7 @@ function listen(incomingMessage) {
         personalVGroupID,
         command: '',
         argument: '',
+        currentState,
       })
       user = bot.addUser(wickrUser) // Add a new user to the database
       logger.debug('Added user:', user)
@@ -96,34 +111,24 @@ function listen(incomingMessage) {
       logger.debug(bot.getUser(userEmail)) // Print the changed user object
     }
 
-    if (!parsedMessage.isAdmin) {
-      const reply = `${userEmail} is not authorized to use this bot. If you have a question, please get a hold of us a support@wickr.com or visit us a support.wickr.com. Thanks, Team Wickr`
-      const sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, reply)
-      logger.debug({ sMessage })
-      // writer.writeFile(message);
-      return
-    }
-
-    if (memberListRepo.vGroupID && memberListRepo === vGroupID) {
-      WickrIOAPI.send1to1(message)
-    }
-
     const messageService = new MessageService(
       message,
       userEmail,
       argument,
       command,
-      currentState,
+      user.currentState,
       vGroupID,
-      user
+      user,
+      isAdmin
     )
-    const obj = factory.execute(messageService)
-    logger.debug('Object reply:', obj.reply)
-    if (obj.reply) {
-      logger.debug('Object has a reply')
-      WickrIOAPI.cmdSendRoomMessage(vGroupID, obj.reply)
+
+    const returnObj = factory.executeCommands(messageService)
+
+    logger.debug('Object reply:', returnObj.reply)
+    if (returnObj.reply) {
+      WickrIOAPI.cmdSendRoomMessage(vGroupID, returnObj.reply)
     }
-    currentState = obj.state
+    user.currentState = returnObj.state
   } catch (err) {
     logger.error(err)
   }

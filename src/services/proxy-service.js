@@ -1,139 +1,144 @@
-import fs from 'fs'
-import logger from '../logger'
-import * as WickrIOBotAPI from 'wickrio-bot-api'
-const bot = new WickrIOBotAPI.WickrIOBot()
-const WickrIOAPI = bot.getWickrIOAddon()
+import APIService from './api-service'
+import Proxy from '../proxy'
+import Asset from '../asset'
 
 class ProxyService {
-  constructor() {
-    this.allMembers = this.readCredentialFile()
-  }
+  constructor(dataStorage, roomService) {
+    this.dataStorage = dataStorage
+    this.roomService = roomService
+    this.members = []
+    this.assets = []
 
-  readCredentialFile() {
-    const defaultdata = {
-      credentials: [],
+    const data = this.dataStorage.readCredentials()
+    if (data.members !== undefined && data.members.length !== 0) {
+      data.members.forEach(member => {
+        this.members.push(new Proxy(member.userID, member.proxyID))
+      })
     }
-    const creds = fs.readFile('credentials.json', (err, data) => {
-      if (err) {
-        fs.writeFile('credentials.json', JSON.stringify(defaultdata), err => {
-          if (err) console.log({ err })
-          logger.trace('Current alias saved in file')
-        })
-      } else if (data) {
-        console.log({ data })
-        return data
-      }
-    })
-    return creds
-  }
-
-  static findUserByProxy(proxyid) {
-    const findUserByProxy = this.allMembers.credentials.find(
-      usercredential => usercredential.proxyid === proxyid
-    )
-    return findUserByProxy
-  }
-
-  static findUserByID(userid) {
-    const findUserByID = this.allMembers.credentials.find(
-      usercredential => usercredential.userid === userid
-    )
-    return findUserByID
-  }
-
-  static getUserID(proxyid) {
-    const user = this.findUserByProxy(proxyid)
-    if (user) {
-      const { userid } = user
-      return userid
+    if (data.assets !== undefined && data.assets.length !== 0) {
+      data.assets.forEach(asset => {
+        this.assets.push(new Asset(asset.asset, asset.vGroupID))
+      })
     }
+    console.log(this.members, this.assets)
   }
 
-  static getProxyID(userid) {
-    const user = this.findUserByID(userid)
-    if (user) {
-      const { proxyid } = user
-      return proxyid
-    }
+  getMembers() {
+    return this.members
   }
 
-  static addProxyID(userid, proxyid) {
-    const user = this.findUserByID(userid)
-    const userCredentials = {
-      userid: userid,
-      proxyid: proxyid,
+  getAssets() {
+    return this.assets
+  }
+
+  addAsset(asset) {
+    const index = this.assets.findIndex(user => user.getAsset() === asset)
+    if (index < 0) {
+      this.assets.push(new Asset(asset, ''))
+      this.saveData()
+      return true
     }
+    return false
+  }
+
+  addMember(userID, proxyID) {
+    const member = this.findUserByID(userID)
     // if we find the user
-    user
-      ? // add proxy to the cedentials
-        this.allMembers.credentials
-          .find(usercredential => usercredential.userid === userid)
-          .proxyid.append(proxyid)
-      : // if not, add the user and proxy
-        this.allMembers.credentials.append(userCredentials)
-
-    fs.writeFile('credentials.json', this.allMembers, err => {
-      if (err) return console.log(err)
-      logger.trace('Current alias saved in file')
-    })
-    return userCredentials.proxyid.toString()
+    member
+      ? // change the proxy for the user
+        this.members
+          .find(user => user.getUserID() === userID)
+          .setProxyID(proxyID)
+      : // if not, add the new user
+        this.members.push(new Proxy(userID, proxyID))
+    this.saveData()
   }
 
-  static getUser(userid) {
-    const user = this.allMembers.credentials.find(
-      usercredential => usercredential.userid === userid
-    )
-
-    return `${user.userid}: ${user.proxyid}`
-  }
-
-  static getMemberList() {
-    const description = `Conversation with ${this.alias.alias}`
-    const title = `Conversation with ${this.alias.alias}`
-
-    console.log({ description, title })
-  }
-
-  static createRoom() {
-    let reply = 'Room created.'
-    if (this.members === undefined || this.members.length === 0) {
-      reply = 'Alias contains no members'
-    } else if (this.alias === undefined || this.alias === '') {
-      reply = 'No alias to send to set and alias with /alias'
-    } else {
-      const description = `Conversation with ${this.alias.alias}`
-      const title = `Conversation with ${this.alias.alias}`
-      const usernames = []
-      for (const member of this.members) {
-        usernames.push(member.userID)
-      }
-      // usernames.push() bot name!
-      const uMessage = WickrIOAPI.cmdAddRoom(
-        usernames,
-        usernames,
-        title,
-        description,
-        '',
-        ''
-      )
-      this.vGroupID = JSON.parse(uMessage).vgroupid
-      logger.debug(`Here is the uMessage${uMessage}`)
-      logger.debug(`Here is the vGroupID${this.vGroupID}`)
-      WickrIOAPI.cmdSendRoomMessage(this.vGroupID, description)
-
-      WickrIOAPI.cmdLeaveRoom(this.vGroupID)
+  removeMember(userID) {
+    const index = this.members.findIndex(user => user.getUserID() === userID)
+    if (index < 0) {
+      return false
     }
-    return reply
+    this.members.splice(index, 1)
+    this.saveData()
+    return true
   }
 
-  static sendMessage(message) {
-    const messageString = `Message from ${this.members[0].alias}:\n${message}`
-    const aliasArray = []
-    aliasArray.push(this.alias.userID)
-    WickrIOAPI.cmdSend1to1Message(aliasArray, messageString, '', '', '')
+  removeAsset(userID) {
+    const index = this.assets.findIndex(user => user.getAsset() === userID)
+    if (index < 0) {
+      return false
+    }
+    this.asset.splice(index, 1)
+    this.saveData()
+    return true
+  }
+
+  saveData() {
+    this.dataStorage.saveData({ members: this.members, assets: this.assets })
+  }
+
+  findUserByID(userID) {
+    return this.members.find(user => user.getUserID() === userID)
+  }
+
+  findAssetByID(asset) {
+    return this.assets.find(user => user.getAsset() === asset)
+  }
+
+  getProxyID(userID) {
+    const user = this.findUserByID(userID)
+    if (user) {
+      const { proxyID } = user
+      return proxyID
+    }
+  }
+
+  setVGroupID(asset, vGroupID) {
+    this.assets.find(user => user.getAsset() === asset).setVGroupID(vGroupID)
+    this.saveData()
+  }
+
+  sendMessage(userID, message, asset) {
+    const proxy = this.getProxyID(userID)
+    const messageString = `Message from ${proxy}:\n${message}`
+    const assetArray = [asset]
+    APIService.send1to1Message(assetArray, messageString, '', '', '')
+    this.message = ''
+  }
+
+  replyMessage(userID, message) {
+    const vGroupID = this.assets
+      .find(user => user.getAsset() === userID)
+      .getVGroupID()
+    const memberArray = []
+    this.members.forEach(member => {
+      memberArray.push(member.getUserID())
+    })
+    vGroupID
+      ? APIService.sendRoomMessage(vGroupID, message)
+      : APIService.send1to1Message(memberArray, message, '', '', '')
+  }
+
+  createRoom(asset) {
+    const description = 'To send a message to the asset: /send <message>'
+    const title = `Conversation with ${asset}`
+    const users = []
+    this.members.forEach(user => {
+      users.push(user.getUserID())
+    })
+    const uMessage = APIService.addRoom(
+      users,
+      users,
+      title,
+      description,
+      '',
+      ''
+    )
+    const vGroupID = JSON.parse(uMessage).vgroupid
+    this.setVGroupID(asset, vGroupID)
+    APIService.sendRoomMessage(vGroupID, description)
   }
 }
-const service = new ProxyService()
-console.log(service.allMembers)
 
 export default ProxyService
