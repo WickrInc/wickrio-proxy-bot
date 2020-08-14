@@ -8,6 +8,7 @@ class ProxyService {
     this.roomService = roomService
     this.members = []
     this.assets = []
+
     const data = this.dataStorage.readCredentials()
     if (data.members !== undefined && data.members.length !== 0) {
       data.members.forEach(member => {

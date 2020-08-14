@@ -3,17 +3,27 @@ import logger from '../logger'
 
 // TODO make all this static??
 class JSONCredentialsHandler {
-  readCredentials = (defaultData, credentialFile) => {
+  constructor(defaultData, credentialFile) {
+    this.defaultData = defaultData
+    this.credentialFile = credentialFile
+  }
+
+  readCredentials = () => {
     // TODO improve this!
-    // './credentials.json' = credentialFile
     if (!fs.existsSync('./credentials.json')) {
-      fs.writeFile('./credentials.json', JSON.stringify(defaultData), err => {
-        if (err) logger.error({ err })
-        logger.trace('creating credenitals.json')
-      })
-      return defaultData
+      fs.writeFile(
+        './credentials.json',
+        JSON.stringify(this.defaultData),
+        err => {
+          if (err) logger.error({ err })
+          logger.debug('creating credenitals.json')
+        }
+      )
+      console.log({ defaultData: this.defaultData })
+      return this.defaultData
     }
     const rawcreds = fs.readFileSync('./credentials.json', (err, data) => {
+      // TODO need more error handling here!
       if (err) {
         console.log({ err })
       } else if (data) {

@@ -17,6 +17,7 @@ const jsonCredentialsHandler = new JSONCredentialsHandler(
   defaultData,
   './credentials.json'
 )
+
 const proxyService = new ProxyService(jsonCredentialsHandler)
 const factory = new Factory(proxyService)
 const WickrUser = WickrIOBotAPI.WickrUser
