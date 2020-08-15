@@ -78,20 +78,39 @@ function listen(incomingMessage) {
     // Parses an incoming message and returns and object with command, argument,
     // vGroupID and Sender fields
     const parsedMessage = bot.parseMessage(incomingMessage)
+    logger.debug('New incoming Message:', parsedMessage)
+
     if (!parsedMessage) {
       return
     }
-    logger.debug('New incoming Message:', parsedMessage)
     let wickrUser
+    const {
+      // time,
+      // messageID,
+      // users,
+      // ttl,
+      // bor,
+      // control,
+      // msgTS,
+      // receiver,
+      // file,
+      // filename,
+      message,
+      command,
+      argument,
+      vGroupID,
+      convoType,
+      // msgType,
+      userEmail,
+      isAdmin,
+      // latitude,
+      // longitude,
+      // isVoiceMemo,
+      // voiceMemoDuration,
+    } = parsedMessage
+
     // TODO is this ok formatting??
     // combine all into one line
-    const { command } = parsedMessage
-    const { message } = parsedMessage
-    const { argument } = parsedMessage
-    const { userEmail } = parsedMessage
-    const vGroupID = parsedMessage.vgroupid
-    const { convoType } = parsedMessage
-    const { isAdmin } = parsedMessage
     let personalVGroupID = ''
     if (convoType === 'personal') personalVGroupID = vGroupID
 

@@ -1,5 +1,4 @@
-FROM wickr/bot-cloud-alpha:5.59.02.02
-
+FROM wickr/bot-cloud-alpha:5.62.02.03
 LABEL maintainer="wickr <info@wickr.com>"
 # Variables
 # ENV HOME /home/ubuntu
