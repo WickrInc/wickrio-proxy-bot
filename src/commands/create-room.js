@@ -24,7 +24,7 @@ class CreateRoom {
     } else if (assets === undefined || assets.length === 0) {
       reply = 'No asset to send to set an asset with /asset'
     } else if (assets.length === 1) {
-      this.proxyService.createRoom(assets[0])
+      this.proxyService.createRoom(assets[0].asset)
       reply = 'Room created'
     } else {
       let i = 1
