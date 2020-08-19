@@ -122,7 +122,7 @@ class ProxyService {
 
   createRoom(asset) {
     const description = 'To send a message to the asset: /send <message>'
-    const title = `Conversation with ${asset.asset}`
+    const title = `Conversation with ${asset}`
     const users = []
     this.members.forEach(user => {
       users.push(user.getUserID())
