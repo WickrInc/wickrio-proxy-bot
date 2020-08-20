@@ -95,7 +95,11 @@ class ProxyService {
   }
 
   setVGroupID(asset, vGroupID) {
-    this.assets.find(user => user.getAsset() === asset).setVGroupID(vGroupID)
+    const index = this.assets.findIndex(user => user.getAsset() === asset)
+    console.log('Index' + index)
+    this.assets[index].setVGroupID(vGroupID)
+    console.log(this.assets[index])
+    console.log({ assets: this.assets[index] })
     this.saveData()
   }
 
