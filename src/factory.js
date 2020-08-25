@@ -3,6 +3,7 @@ import State from './state'
 // Commands
 import AddProxy from './commands/add-proxy'
 import AddAsset from './commands/add-asset'
+import Cancel from './commands/cancel'
 import CreateRoom from './commands/create-room'
 import Help from './commands/help'
 import ListMembers from './commands/list-members'
@@ -33,6 +34,7 @@ class Factory {
 
     this.userCommandList = [
       // this.whichAsset,
+      Cancel,
       this.createRoom,
       Help,
       this.listMembers,
