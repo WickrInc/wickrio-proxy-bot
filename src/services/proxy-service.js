@@ -111,13 +111,17 @@ class ProxyService {
     const vGroupID = this.assets
       .find(user => user.getAsset() === userID)
       .getVGroupID()
-    const memberArray = []
-    this.members.forEach(member => {
-      memberArray.push(member.getUserID())
-    })
-    vGroupID
-      ? APIService.sendRoomMessage(vGroupID, message)
-      : APIService.send1to1Message(memberArray, message, '', '', '')
+    // const memberArray = []
+    // this.members.forEach(member => {
+    //   memberArray.push(member.getUserID())
+    // })
+    // vGroupID
+    //   ? APIService.sendRoomMessage(vGroupID, message)
+    //   : APIService.send1to1Message(memberArray, message, '', '', '')
+    if (vGroupID) {
+      return APIService.sendRoomMessage(vGroupID, message)
+    }
+    return false
   }
 
   createRoom(asset) {

@@ -17,7 +17,7 @@ class Send {
 
   execute(messageService) {
     let reply
-    let state = State.NONE
+    const state = State.NONE
     const assets = this.proxyService.getAssets()
     const userEmail = messageService.getUserEmail()
     const argument = messageService.getArgument()
@@ -28,8 +28,6 @@ class Send {
     } else if (assets === undefined || assets.length === 0) {
       reply =
         'Before sending a message set up an asset you would like to send to'
-    } else if (assets.length === 1) {
-      this.proxyService.sendMessage(userEmail, argument, assets[0].getAsset())
     } else {
       // Check if sending from a precreated room
       let assetRoom
@@ -41,15 +39,7 @@ class Send {
       if (assetRoom) {
         this.proxyService.sendMessage(userEmail, argument, assetRoom)
       } else {
-        let i = 1
-        reply = 'Which asset would you like to send to?'
-        assets.forEach(asset => {
-          reply += `\n${i}: ${asset.asset}`
-          i += 1
-        })
-        state = State.WHICH_ASSET
-        // TODO make this more robust
-        messageService.user.message = messageService.getArgument()
+        reply = 'Must first create a room with /create before sending a message'
       }
     }
     // TODO should we ask which asset if only one asset

@@ -3,15 +3,15 @@ import State from './state'
 // Commands
 import AddProxy from './commands/add-proxy'
 import AddAsset from './commands/add-asset'
+import Cancel from './commands/cancel'
 import CreateRoom from './commands/create-room'
 import Help from './commands/help'
 import ListMembers from './commands/list-members'
 import RemoveMembers from './commands/remove-members'
 import ReplyReceived from './commands/reply-received'
 import Send from './commands/send'
-import SendFromRoom from './commands/send-from-room'
 import Version from './commands/version'
-import WhichAsset from './commands/which-asset'
+// import WhichAsset from './commands/which-asset'
 import WhichRoom from './commands/which-room'
 
 class Factory {
@@ -24,22 +24,21 @@ class Factory {
     this.createRoom = new CreateRoom(this.proxyService)
     this.version = new Version()
     this.send = new Send(this.proxyService)
-    this.sendFromRoom = new SendFromRoom(this.proxyService)
     this.replyReceived = new ReplyReceived(this.proxyService)
     // Here are the options that rely on the current state
-    this.whichAsset = new WhichAsset(this.proxyService)
+    // this.whichAsset = new WhichAsset(this.proxyService)
     this.whichRoom = new WhichRoom(this.proxyService)
 
     // Order matters here /commands must go first
     this.adminCommandList = [this.addProxy, this.addAsset, this.removeMembers]
 
     this.userCommandList = [
-      this.whichAsset,
+      // this.whichAsset,
+      Cancel,
       this.createRoom,
       Help,
       this.listMembers,
       this.send,
-      this.sendFromRoom,
       Version,
       this.whichRoom,
     ]
