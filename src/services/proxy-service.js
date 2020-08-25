@@ -95,11 +95,7 @@ class ProxyService {
   }
 
   setVGroupID(asset, vGroupID) {
-    const index = this.assets.findIndex(user => user.getAsset() === asset)
-    console.log('Index' + index)
-    this.assets[index].setVGroupID(vGroupID)
-    console.log(this.assets[index])
-    console.log({ assets: this.assets[index] })
+    this.assets.find(user => user.getAsset() === asset).setVGroupID(vGroupID)
     this.saveData()
   }
 
@@ -115,13 +111,17 @@ class ProxyService {
     const vGroupID = this.assets
       .find(user => user.getAsset() === userID)
       .getVGroupID()
-    const memberArray = []
-    this.members.forEach(member => {
-      memberArray.push(member.getUserID())
-    })
-    vGroupID
-      ? APIService.sendRoomMessage(vGroupID, message)
-      : APIService.send1to1Message(memberArray, message, '', '', '')
+    // const memberArray = []
+    // this.members.forEach(member => {
+    //   memberArray.push(member.getUserID())
+    // })
+    // vGroupID
+    //   ? APIService.sendRoomMessage(vGroupID, message)
+    //   : APIService.send1to1Message(memberArray, message, '', '', '')
+    if (vGroupID) {
+      return APIService.sendRoomMessage(vGroupID, message)
+    }
+    return false
   }
 
   createRoom(asset) {

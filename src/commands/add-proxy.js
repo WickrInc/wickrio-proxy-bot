@@ -26,8 +26,14 @@ class AddProxy {
     // console.log(userData)
     const userInfo = APIService.getUserInfo(userArray)
     const failed = userInfo.failed
-    if (argArray.length !== 2) {
-      reply = 'Incorrect format, usage: /add <UserID> <Alias>'
+    if (
+      argArray.length !== 2 ||
+      userID === undefined ||
+      userID === '' ||
+      proxy === undefined ||
+      proxy === ''
+    ) {
+      reply = 'Must have a UserID and Alias, usage: /add <UserID> <Alias>'
     } else if (failed !== undefined && userInfo.failed.length !== 0) {
       reply = `Cannot add proxy for ${userID}: User does not exist`
     } else {

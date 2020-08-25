@@ -17,10 +17,14 @@ class AddAsset {
 
   execute(messageService) {
     const argument = messageService.getArgument()
-    // TODO check for empty argument
-    const added = this.proxyService.addAsset(argument)
     let reply = `Asset ${argument}`
-    reply += added ? ' created' : ' already exists'
+    if (argument === undefined || argument === '') {
+      reply = 'Must have an asset to add. Usage: /asset <username>'
+    } else {
+      // TODO check for empty argument
+      const added = this.proxyService.addAsset(argument)
+      reply += added ? ' created' : ' already exists'
+    }
     return {
       reply,
       state: State.NONE,

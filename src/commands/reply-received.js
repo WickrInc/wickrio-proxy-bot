@@ -6,7 +6,8 @@ class ReplyReceived {
   }
 
   shouldExecute(messageService) {
-    if (this.proxyService.findAssetByID(messageService.getUserEmail())) {
+    const userEmail = messageService.getUserEmail()
+    if (this.proxyService.findAssetByID(userEmail)) {
       return true
     }
     return false
@@ -17,8 +18,7 @@ class ReplyReceived {
     const message = messageService.getMessage()
     const messageToSend = `Message from ${userEmail}:\n${message}`
     const uMessage = this.proxyService.replyMessage(userEmail, messageToSend)
-    console.log('uMessage' + uMessage)
-    const reply = ''
+    const reply = uMessage ? '' : 'Message not delivered'
     return {
       reply,
       state: State.NONE,
