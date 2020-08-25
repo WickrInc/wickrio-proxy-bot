@@ -39,7 +39,7 @@ class Send {
       if (assetRoom) {
         this.proxyService.sendMessage(userEmail, argument, assetRoom)
       } else {
-        reply = 'Must be in a room to send a message'
+        reply = 'Must first create a room with /create before sending a message'
       }
     }
     // TODO should we ask which asset if only one asset
