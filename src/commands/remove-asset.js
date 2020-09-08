@@ -24,7 +24,7 @@ class RemoveAsset {
     } else {
       const removeFails = []
       for (let i = 0; i < members.length; i++) {
-        if (!this.proxyService.removeMember(members[i])) {
+        if (!this.proxyService.removeAsset(members[i])) {
           removeFails.push(members.splice(i, 1))
           i--
         }

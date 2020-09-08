@@ -69,7 +69,7 @@ class ProxyService {
     if (index < 0) {
       return false
     }
-    this.asset.splice(index, 1)
+    this.assets.splice(index, 1)
     this.saveData()
     return true
   }
