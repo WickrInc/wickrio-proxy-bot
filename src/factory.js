@@ -7,6 +7,7 @@ import Cancel from './commands/cancel'
 import CreateRoom from './commands/create-room'
 import Help from './commands/help'
 import ListMembers from './commands/list-members'
+import RemoveAsset from './commands/remove-asset'
 import RemoveMembers from './commands/remove-members'
 import ReplyReceived from './commands/reply-received'
 import Send from './commands/send'
@@ -19,6 +20,7 @@ class Factory {
     this.proxyService = proxyService
     this.addProxy = new AddProxy(this.proxyService)
     this.addAsset = new AddAsset(this.proxyService)
+    this.removeAsset = new RemoveAsset(this.proxyService)
     this.removeMembers = new RemoveMembers(this.proxyService)
     this.listMembers = new ListMembers(this.proxyService)
     this.createRoom = new CreateRoom(this.proxyService)
@@ -30,7 +32,12 @@ class Factory {
     this.whichRoom = new WhichRoom(this.proxyService)
 
     // Order matters here /commands must go first
-    this.adminCommandList = [this.addProxy, this.addAsset, this.removeMembers]
+    this.adminCommandList = [
+      this.addProxy,
+      this.addAsset,
+      this.removeAsset,
+      this.removeMembers,
+    ]
 
     this.userCommandList = [
       // this.whichAsset,
