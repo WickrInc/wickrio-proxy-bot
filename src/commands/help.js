@@ -11,20 +11,21 @@ class Help {
   static execute() {
     const reply =
       '*Proxy Commands*\n' +
-      '/asset <asset-name>: This will create a new room with the group of users posting your question\n' +
-      '/create : This will create a room with the group of users, messages sent to the room will be sent to the asset\n' +
-      '/add <member> <alias>: This will add a member with an alias to the group\n' +
-      // '/remove <members> : This will remove a comma separated list of users from the group\n' +
-      '/send <message> : This will send <message> to the asset in a one-to-one with the proxy bot\n' +
-      '/list : This will return the list of users currently in the group\n\n' +
-      '*Admin Commands*\n' +
+      '/add <member> <alias>: adds member with the given alias to the list of users\n' +
+      '/asset <asset-name>: creates an asset that will recieve messages from the /send command\n' +
+      '/create : creates a room with the list of users, use the /send command in this room to communicate with the asset\n' +
+      '/delete <asset> : deletes the asset from the list of assets\n' +
+      '/list : returns the current list of users in the group and the assets available to send to\n' +
+      '/remove <members> : removes a whitespace delimited list of users from the group\n' +
+      '/send <message> : sends a message to the asset in the form of a one-to-one conversation with the proxy bot, must be sent from the room created with the /create command\n' +
+      '\n*Admin Commands*\n' +
       '/admin list : Get list of admin users \n' +
       '/admin add <users> : Add one or more admin users \n' +
       '/admin remove <users> : Remove one or more admin users \n\n' +
       '*Other Commands*\n' +
-      '/help : Show help information\n' +
-      '/version : Get the version of the integration\n' +
-      '/cancel : To cancel the last operation and enter a new command\n'
+      '/cancel : cancels the last operation and enter a new command\n' +
+      '/help :  Returns a list of commands and information on how to interact with the ProxyBot\n' +
+      '/version : returns the version information of the integration\n'
     // '/files : To get a list of saved files that contain rooms'
     // var sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, reply);
     return {
