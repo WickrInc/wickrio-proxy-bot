@@ -29,7 +29,7 @@ class Help {
       '/admin add <users> : Add one or more admin users \n' +
       '/admin remove <users> : Remove one or more admin users \n\n' +
       '*Other Commands*\n' +
-      '/cancel : cancels the last operation and enter a new command\n' +
+      '/cancel : cancels the last command sent allowing for a new command to be entered\n' +
       '/help :  Returns a list of commands and information on how to interact with the ProxyBot\n' +
       '/version : returns the version information of the integration\n'
     return {
