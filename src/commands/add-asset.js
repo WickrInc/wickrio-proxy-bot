@@ -18,7 +18,11 @@ class AddAsset {
   execute(messageService) {
     const argument = messageService.getArgument()
     let reply = `Asset ${argument}`
-    if (argument === undefined || argument === '') {
+    if (
+      argument === undefined ||
+      argument === '' ||
+      argument.split(' ').length !== 1
+    ) {
       reply = 'Must have an asset to add. Usage: /asset <username>'
     } else {
       // TODO check for empty argument
