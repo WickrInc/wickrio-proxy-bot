@@ -66,6 +66,7 @@ class ProxyService {
 
   removeAsset(userID) {
     const index = this.assets.findIndex(user => user.getAsset() === userID)
+    console.log('INDEX = ', index)
     if (index < 0) {
       return false
     }

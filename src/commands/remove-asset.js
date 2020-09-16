@@ -15,32 +15,15 @@ class RemoveAsset {
   }
 
   execute(messageService) {
-    const members = messageService.getArgument().split(' ')
+    const asset = messageService.getArgument()
     let reply = ''
-    // TODO fix this!
-    if (members === undefined || members.length === 0) {
-      reply =
-        'Command contains no user names to remove, usage: /delete <username>'
+    if (asset === undefined || asset === '' || asset.split(' ').length !== 1) {
+      reply = 'Command contains no asset to delete, usage: /delete <username>'
     } else {
-      const removeFails = []
-      for (let i = 0; i < members.length; i++) {
-        if (!this.proxyService.removeAsset(members[i])) {
-          removeFails.push(members.splice(i, 1))
-          i--
-        }
-      }
-      if (removeFails.length >= 1) {
-        reply =
-          'Failed to remove member(s), current list of members does not contain:\n'
-        reply += removeFails.join('\n')
-        if (members.length >= 1) {
-          reply += '\n'
-        }
-      }
-
-      if (members.length >= 1) {
-        reply += 'Successfully removed the following users:\n'
-        reply += members.join('\n')
+      if (!this.proxyService.removeAsset(asset)) {
+        reply = `Failed to delete asset, current list of assets does not contain:${asset}`
+      } else {
+        reply = `Successfully deleted ${asset} from list of assets`
       }
     }
     return {
