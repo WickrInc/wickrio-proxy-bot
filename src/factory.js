@@ -55,14 +55,19 @@ class Factory {
 
   executeCommands(messageService) {
     const userEmail = messageService.getUserEmail()
+    // TODO fix this when in a room
     let defaultReply = `${userEmail} is not authorized to use this bot. If you have a question, please get a hold of us a support@wickr.com or visit us a support.wickr.com. Thanks, Team Wickr`
     let commandList
     if (messageService.getIsAdmin()) {
       commandList = this.adminCommandList.concat(this.userCommandList)
       defaultReply =
         'Command not recognized send the command /help for a list of commands'
+      // Check if the user isn't an admin but is a member of the group
     } else if (this.proxyService.findUserByID(userEmail)) {
       commandList = this.userCommandList
+      // If in an asset room ignore messages that aren't commands
+    } else if (this.proxyService.isAssetRoom(messageService.getVGroupID())) {
+      defaultReply = ''
     } else {
       commandList = this.assetCommandList
     }

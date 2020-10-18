@@ -144,6 +144,10 @@ class ProxyService {
     this.setVGroupID(asset, vGroupID)
     APIService.sendRoomMessage(vGroupID, description)
   }
+
+  isAssetRoom(vGroupID) {
+    return this.assets.find(user => user.getVGroupID() === vGroupID)
+  }
 }
 
 export default ProxyService
