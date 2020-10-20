@@ -1,6 +1,6 @@
 {
   "name": "wickrio-proxy-bot",
-  "version": "5.64.5",
+  "version": "5.68.1",
   "description": "WickrIO Proxy Bot",
   "main": "./build/index.js",
   "author": "Toren DeRosa",
