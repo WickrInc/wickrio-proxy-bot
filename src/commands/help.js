@@ -11,11 +11,11 @@ class Help {
   static execute() {
     const reply =
       '*ProxyBot Definitions*\n' +
-      'admin: a user who can give aliases to users and adding them to the group of users who can communicate with the asset' +
-      'alias: the name you would like to give to a user when communicating with assets, this will show up in the signature of messages sent through the ProxyBot to the asset' +
-      'asset: the user outside of your network that you would like to communicate with anonymously' +
-      'group: this is the list of users who have been given aliases and can communicate with the asset through the ProxyBot' +
-      'member: a user who has been given an alias and can communicate with assets' +
+      'admin: a user who can give aliases to users allowing them to communicate with the asset\n' +
+      'alias: the name that will appear when communicating with assets\n' +
+      'asset: the user outside of your network that you would like to communicate with anonymously\n' +
+      'group: this is the list of users and their aliases who can communicate with the asset through the ProxyBot\n' +
+      'member: a user who has been given an alias and can communicate with assets\n\n' +
       '*ProxyBot Commands*\n' +
       '/add <member> <alias>: adds member with the given alias to the list of users\n' +
       '/asset <asset>: creates an asset that will recieve messages from the ProxyBot using the /send command\n' +
