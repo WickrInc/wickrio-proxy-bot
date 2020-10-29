@@ -45,16 +45,15 @@ process.on(
 main()
 
 async function main() {
-  const tokenConfig = []
-
-  var fullName = process.cwd() + '/processes.json'
+  const tokens = require('./configTokens.json')
+  const fullName = process.cwd() + '/processes.json'
   wickrIOConfigure = new WickrIOBotAPI.WickrIOConfigure(
-    tokenConfig,
+    tokens.tokens,
     fullName,
-    true,
-    true
+    tokens.supportAdministrators,
+    tokens.supportVerification
   )
 
-  await wickrIOConfigure.configureYourBot('WickrIO-Proxy-Bot')
+  await wickrIOConfigure.configureYourBot(tokens.integration)
   process.exit()
 }
