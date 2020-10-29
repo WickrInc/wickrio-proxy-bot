@@ -111,6 +111,7 @@ function listen(incomingMessage) {
       logger.debug(bot.getUser(userEmail)) // Print the changed user object
     }
 
+    // TODO add message type here
     const messageService = new MessageService(
       message,
       userEmail,
