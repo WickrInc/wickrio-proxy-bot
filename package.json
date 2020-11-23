@@ -1,6 +1,6 @@
 {
   "name": "wickrio-proxy-bot",
-  "version": "5.68.3",
+  "version": "5.68.4",
   "description": "WickrIO Proxy Bot",
   "main": "./build/index.js",
   "author": "Toren DeRosa",
@@ -12,15 +12,18 @@
     "pino": "^5.15.0",
     "pm2": "^3.5.2",
     "prompt": "^1.0.0",
-    "wickrio-bot-api": "5.64.x"
-  },
-  "devDependencies": {
     "@babel/cli": "^7.10.4",
     "@babel/core": "^7.10.4",
-    "@babel/node": "^7.10.4",
+    "@babel/node": "^7.10.5",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.10.4",
     "@babel/plugin-transform-modules-commonjs": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/register": "^7.10.4",
+    "wickrio-toolbox": "5.68.x"
+  },
+  "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^3.6.0",
     "@typescript-eslint/parser": "^3.6.0",
     "babel-jest": "^26.1.0",
@@ -58,11 +61,13 @@
   "database": true,
   "scripts": {
     "start": "pm2 start processes.json --update-env",
-    "dev": "nodemon --exec 'babel-node --inspect=0.0.0.0 src/index.js'",
-    "build": "npm run lint && npm run prettier && rm -rf build && babel ./src --out-dir ./build --ignore node_modules",
+    "dev": "./node_modules/.bin/nodemon --exec 'babel-node src/index.js'",
+    "build": "rm -rf build && babel ./src --out-dir ./build --copy-files --no-copy-ignored",
     "lint": "eslint src/**/*.js --fix --color",
-    "prettier": "prettier --write ./src",
-    "stop": "pm2 delete processes.json"
+    "prettier": "prettier --write ./src/*",
+    "stop": "pm2 delete processes.json",
+    "test": "jest --coverage --bail",
+    "debug": "node --inspect-brk index.js"
   },
   "husky": {
     "hooks": {
@@ -112,7 +117,24 @@
   },
   "babel": {
     "env": {
-      "test": {
+      "production": {
+        "ignore": [
+          "**/__tests__"
+        ],
+        "presets": [
+          "@babel/preset-env"
+        ],
+        "plugins": [
+          "@babel/plugin-proposal-optional-chaining",
+          "@babel/plugin-transform-runtime",
+          "@babel/plugin-transform-modules-commonjs",
+          "@babel/plugin-proposal-class-properties"
+        ]
+      },
+      "development": {
+        "ignore": [
+          "**/__tests__"
+        ],
         "presets": [
           "@babel/preset-env"
         ],
@@ -125,18 +147,7 @@
         "sourceMaps": "inline",
         "retainLines": true
       },
-      "production": {
-        "presets": [
-          "@babel/preset-env"
-        ],
-        "plugins": [
-          "@babel/plugin-proposal-optional-chaining",
-          "@babel/plugin-transform-runtime",
-          "@babel/plugin-transform-modules-commonjs",
-          "@babel/plugin-proposal-class-properties"
-        ]
-      },
-      "development": {
+      "test": {
         "presets": [
           "@babel/preset-env"
         ],
@@ -150,5 +161,8 @@
         "retainLines": true
       }
     }
+  },
+  "com_wickr": {
+    "config": "./src/config/configTokens.json"
   }
 }

@@ -1,4 +1,4 @@
-import * as WickrIOBotAPI from 'wickrio-bot-api'
+import { BotAPI, WickrUser } from 'wickrio-bot-api'
 import MessageService from './services/message-service'
 import Factory from './factory'
 import logger from './logger'
@@ -20,8 +20,7 @@ const jsonCredentialsHandler = new JSONCredentialsHandler(
 
 const proxyService = new ProxyService(jsonCredentialsHandler)
 const factory = new Factory(proxyService)
-const WickrUser = WickrIOBotAPI.WickrUser
-const bot = new WickrIOBotAPI.WickrIOBot()
+const bot = new BotAPI()
 const WickrIOAPI = bot.getWickrIOAddon()
 let currentState
 process.stdin.resume() // so the program will not close instantly

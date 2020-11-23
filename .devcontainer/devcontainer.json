@@ -7,16 +7,22 @@
 
   // Use 'settings' to set *default* container specific settings.json values on container create.
   "settings": {
+    // "terminal.integrated.shell.linux": "/bin/sh"
     // "terminal.integrated.shell.linux": "/bin/bash"
     // "terminal.integrated.shell.linux": "/bin/zsh"
   },
+  // mount the local clientConfig.json file to the devcontainer (for testing -- do not commit clientConfig.json to github unless it is intended always to be autoconfig,
+  // even under development and production).
+  // never commit clientConfig to npm unless it is a private package to be used internally
   "mounts": [
+    // "source=${localWorkspaceFolder}/.devcontainer/clientConfig.json,target=/usr/local/wickr/WickrIO/clientConfig.json,type=bind,consistency=cached"
+    // "source=${localWorkspaceFolder},target=/opt/WickrIODebug/clients/localrecordertestbot/integration/${localWorkspaceFolderBasename},type=bind,consistency=cached"
     // "source=/opt/WickrIO,target=opt/WickrIODebug ,type=bind,consistency=cached"
-    // "source=${localWorkspaceFolder}/app-data,target=/data,type=bind,consistency=cached"
   ],
   // Add the IDs of extensions you want installed when the container is created in the array below.
   "extensions": [
     "msjsdiag.debugger-for-chrome",
+    "ms-vscode.js-debug-nightly",
     "ldez.ignore-file",
     "ibm.output-colorizer",
     "ms-vscode-remote.vscode-remote-extensionpack",
@@ -25,15 +31,39 @@
     "dbaeumer.vscode-eslint",
     "ms-vsliveshare.vsliveshare",
     "esbenp.prettier-vscode",
-    "robbowen.synthwave-vscode",
-    "rust-lang.rust"
+    "robbowen.synthwave-vscode"
+    // "rust-lang.rust"
+    // "gitlab.gitlab-workflow"
   ],
+  // "overrideCommand": false,
   "runArgs": ["-v", "/var/run/docker.sock:/var/run/docker.sock"],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [8000, 4545, 9229],
+  "forwardPorts": [8000, 3001, 4545, 9229],
+  "remoteEnv": {
+    // "AUTO_CONFIG": "false",
+    "NODE_ENV": "development",
+    "BOT_INTEGRATIONNAME": "wickrio-proxy-bot",
+    "BOT_CLIENTNAME": "localproxytestbot",
+    "BOT_PASSWORD": "password"
+  },
   // Specifies a command that should be run after the container has been created.
-  "postCreateCommand": "npm install"
+  "postCreateCommand": "ps -p $$ \
+  && { \
+    echo 'yes'; \
+    echo 'add'; \
+    echo ${BOT_CLIENTNAME}; \
+    echo ${BOT_PASSWORD}; \
+    echo 'yes'; \
+    echo 'search'; \
+    echo 'wickrio-basic-bot'; \
+    echo 'wickrio-basic-bot'; \
+  } | /home/ubuntu/start.sh \
+  && rm -rf /opt/WickrIODebug/clients/${BOT_CLIENTNAME}/integration/wickrio-basic-bot "
+
+  // "postAttachCommand": "{ echo 'yes'; echo 'start'; echo 'yes'; echo ${BOT_PASSWORD}; } | /home/ubuntu/start.sh"
+  // && { echo 'yes'; echo 'start'; echo 'yes'; echo ${BOT_PASSWORD}; } | /home/ubuntu/start.sh"
+  // "postStartCommand": "/bin/sh -c { echo 'yes'; echo 'start'; echo 'yes'; echo ${BOT_PASSWORD}; } | /home/ubuntu/start.sh"
   // Comment out the next line to run as root instead.
   // "remoteUser": "ubuntu"
   // "remoteUser": "node"

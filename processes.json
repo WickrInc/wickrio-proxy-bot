@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "WickrIO-Proxy-Bot",
+      "name": "wickrio-proxy-bot",
       "args": [],
       "script": "./build/index.js",
       "exec_interpreter": "node",

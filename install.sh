@@ -1,4 +1,7 @@
 #!/bin/sh
 npm install --unsafe-perm
 
-npm run build
+if [ -d "/src" ] 
+then
+    npm run build
+fi

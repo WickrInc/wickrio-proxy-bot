@@ -1,11 +1,8 @@
-const WickrIOBotAPI = require('wickrio-bot-api')
-const util = require('util')
+import { ConfigBot } from 'wickrio-toolbox'
 
 require('dotenv').config({
   path: `.env.configure`,
 })
-
-var wickrIOConfigure
 
 // so the program will not close instantly
 process.stdin.resume()
@@ -45,9 +42,9 @@ process.on(
 main()
 
 async function main() {
-  const tokens = require('./configTokens.json')
+  const tokens = require('../../configTokens.json')
   const fullName = process.cwd() + '/processes.json'
-  wickrIOConfigure = new WickrIOBotAPI.WickrIOConfigure(
+  const wickrIOConfigure = new ConfigBot(
     tokens.tokens,
     fullName,
     tokens.supportAdministrators,
