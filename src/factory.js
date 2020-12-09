@@ -60,7 +60,13 @@ class Factory {
     let commandList
     // If in a created asset room ignore messages that aren't commands
     if (this.proxyService.isAssetRoom(messageService.getVGroupID())) {
-      defaultReply = ''
+      console.log('inAsset room ' + messageService.getCommand())
+      if (!messageService.getCommand() || messageService.getCommand() === '') {
+        defaultReply = ''
+      } else {
+        defaultReply =
+          'Command not recognized send the command /help for a list of commands'
+      }
     } else if (messageService.getIsAdmin()) {
       // TODO give this reply on spelling mistake even in asset rooms
       defaultReply =
@@ -74,6 +80,11 @@ class Factory {
       commandList = this.userCommandList
     } else if (this.proxyService.isAsset(userEmail)) {
       commandList = this.assetCommandList
+    } else {
+      return {
+        reply: defaultReply,
+        state: State.NONE,
+      }
     }
     for (const command of commandList) {
       if (command.shouldExecute(messageService)) {
