@@ -24,6 +24,7 @@ class Help {
       '/list : returns the current list of members in the group and the assets available to send to\n' +
       '/remove <members> : removes a whitespace delimited list of users from the group\n' +
       '/send <message> : sends a message to the asset in the form of a one-to-one conversation with the ProxyBot, must be sent in the room created with the /create command\n' +
+      '/setup : starts the setup wizard allowing you to add aliases and assets\n' +
       '\n*Admin Commands*\n' +
       '/admin list : Get list of admin users \n' +
       '/admin add <users> : Add one or more admin users \n' +

@@ -11,6 +11,7 @@ import RemoveAsset from './commands/remove-asset'
 import RemoveMembers from './commands/remove-members'
 import ReplyReceived from './commands/reply-received'
 import Send from './commands/send'
+import Setup from './commands/setup'
 import Version from './commands/version'
 // import WhichAsset from './commands/which-asset'
 import WhichRoom from './commands/which-room'
@@ -26,6 +27,7 @@ class Factory {
     this.createRoom = new CreateRoom(this.proxyService)
     this.version = new Version()
     this.send = new Send(this.proxyService)
+    this.setup = new Setup(this.proxyService)
     this.replyReceived = new ReplyReceived(this.proxyService)
     // Here are the options that rely on the current state
     // this.whichAsset = new WhichAsset(this.proxyService)
@@ -37,6 +39,7 @@ class Factory {
       this.addAsset,
       this.removeAsset,
       this.removeMembers,
+      this.setup,
     ]
 
     this.userCommandList = [
