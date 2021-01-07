@@ -5,6 +5,9 @@ import logger from './logger'
 // import MemberListRepo from './helpers/member-list'
 import ProxyService from './services/proxy-service'
 import JSONCredentialsHandler from './helpers/json-credentials-handler'
+import State from './state'
+import pkgjson from '../package.json'
+import APIService from './services/api-service'
 
 // const memberListRepo = new MemberListRepo(fs)
 // const factory = new Factory(memberListRepo)
@@ -24,6 +27,8 @@ const WickrUser = WickrIOBotAPI.WickrUser
 const bot = new WickrIOBotAPI.WickrIOBot()
 const WickrIOAPI = bot.getWickrIOAddon()
 let currentState
+let setupComplete = false
+
 process.stdin.resume() // so the program will not close instantly
 
 async function exitHandler(options, err) {
@@ -64,6 +69,11 @@ async function main() {
         reason: 'Client not able to start',
       })
     }
+    let welcomeMessage = `Welcome to the Wickr ProxyBot (version ${pkgjson.version}) has started.\n`
+    welcomeMessage +=
+      'Setup Wizard Started\nStart by adding aliases to users one user at a time using: <username> <alias>'
+    APIService.send1to1Message(bot.getAdmins(), welcomeMessage, '', '', '')
+
     await bot.startListening(listen) // Passes a callback function that will receive incoming messages into the bot client
     // /////////////////////
     // Start coding below and modify the listen function to your needs
@@ -111,6 +121,10 @@ function listen(incomingMessage) {
       logger.debug(bot.getUser(userEmail)) // Print the changed user object
     }
 
+    if (!setupComplete) {
+      user.currentState = State.SETUP_ALIAS
+      setupComplete = true
+    }
     // TODO add message type here
     const messageService = new MessageService(
       message,

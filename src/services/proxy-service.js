@@ -126,7 +126,15 @@ class ProxyService {
   }
 
   createRoom(asset) {
+    // TODO change copy!
     const description = 'To send a message to the asset: /send <message>'
+    let reply = 'This is a conversation with:'
+    this.members.forEach(member => {
+      reply += `\n${member.userID}, ${member.proxyID}`
+    })
+    reply +=
+      '\nYour username and anything you say here is not visible to the asset. When you use the /send command the message will be sent to the asset with your alias as the signature\n'
+    reply += `To send a message to ${asset} use /send <message>`
     const title = `Conversation with ${asset}`
     const users = []
     this.members.forEach(user => {
@@ -142,7 +150,8 @@ class ProxyService {
     )
     const vGroupID = JSON.parse(uMessage).vgroupid
     this.setVGroupID(asset, vGroupID)
-    APIService.sendRoomMessage(vGroupID, description)
+    APIService.sendRoomMessage(vGroupID, reply)
+    return title
   }
 
   isAssetRoom(vGroupID) {

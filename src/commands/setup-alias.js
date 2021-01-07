@@ -27,7 +27,7 @@ class SetupAlias {
     const failed = userInfo.failed
     let reply
     let state
-    if (messageService.getMessage().toLower() === 'done') {
+    if (messageService.getMessage().toLowerCase() === 'done') {
       reply = 'Enter the assets one at a time by sending the username'
       state = State.SETUP_ASSET
     } else if (
@@ -37,14 +37,15 @@ class SetupAlias {
       proxy === undefined ||
       proxy === ''
     ) {
-      reply = 'Must have a UserID and Alias, usage: /add <UserID> <Alias>'
+      reply = 'Must have a UserID and Alias, usage: <UserID> <Alias>'
       state = this.state
     } else if (failed !== undefined && userInfo.failed.length !== 0) {
       reply = `Cannot add proxy for ${userID}: User does not exist`
       state = this.state
     } else {
       this.proxyService.addMember(userID, proxy)
-      reply = `Alias "${proxy}" created for user ${userID}`
+      reply = `Alias "${proxy}" created for user ${userID}'nEnter a new alias with <UserID> <Alias> or enter done to continue`
+      state = this.state
     }
 
     const obj = {
