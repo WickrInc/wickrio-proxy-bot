@@ -1,7 +1,6 @@
 import fs from 'fs'
 import logger from '../logger'
 
-// TODO make all this static??
 class JSONCredentialsHandler {
   constructor(defaultData, credentialFile) {
     this.defaultData = defaultData
@@ -10,9 +9,9 @@ class JSONCredentialsHandler {
 
   readCredentials = () => {
     // TODO improve this!
-    if (!fs.existsSync('./credentials.json')) {
+    if (!fs.existsSync(this.credentialFile)) {
       fs.writeFile(
-        './credentials.json',
+        this.credentialFile,
         JSON.stringify(this.defaultData),
         err => {
           if (err) logger.error({ err })
@@ -22,7 +21,7 @@ class JSONCredentialsHandler {
       console.log({ defaultData: this.defaultData })
       return this.defaultData
     }
-    const rawcreds = fs.readFileSync('./credentials.json', (err, data) => {
+    const rawcreds = fs.readFileSync(this.credentialFile, (err, data) => {
       // TODO need more error handling here!
       if (err) {
         console.log({ err })
@@ -35,7 +34,7 @@ class JSONCredentialsHandler {
   }
 
   saveData(writeObject) {
-    fs.writeFile('./credentials.json', JSON.stringify(writeObject), err => {
+    fs.writeFile(this.credentialFile, JSON.stringify(writeObject), err => {
       if (err) return console.log(err)
       logger.trace('Current data saved in file')
     })
