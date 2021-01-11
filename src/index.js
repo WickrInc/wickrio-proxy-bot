@@ -141,10 +141,6 @@ function listen(incomingMessage) {
       logger.debug(bot.getUser(userEmail)) // Print the changed user object
     }
 
-    if (!setupComplete) {
-      user.currentState = State.SETUP_ALIAS
-      setupComplete = true
-    }
     // TODO add message type here
     const messageService = new MessageService(
       message,
