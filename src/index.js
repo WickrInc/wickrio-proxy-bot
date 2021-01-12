@@ -5,6 +5,10 @@ import logger from './logger'
 // import MemberListRepo from './helpers/member-list'
 import ProxyService from './services/proxy-service'
 import JSONCredentialsHandler from './helpers/json-credentials-handler'
+import State from './state'
+import pkgjson from '../package.json'
+import APIService from './services/api-service'
+import SetupService from './services/setup-service'
 
 // const memberListRepo = new MemberListRepo(fs)
 // const factory = new Factory(memberListRepo)
@@ -23,7 +27,10 @@ const factory = new Factory(proxyService)
 const WickrUser = WickrIOBotAPI.WickrUser
 const bot = new WickrIOBotAPI.WickrIOBot()
 const WickrIOAPI = bot.getWickrIOAddon()
+
 let currentState
+// const setupComplete = false
+
 process.stdin.resume() // so the program will not close instantly
 
 async function exitHandler(options, err) {
@@ -64,6 +71,31 @@ async function main() {
         reason: 'Client not able to start',
       })
     }
+    const adminList = bot.getAdmins()
+    const setupData = { admins: {} }
+    for (const admin of adminList) {
+      console.log('admin' + admin)
+      setupData.admins[admin] = false
+    }
+
+    const setupHandler = new JSONCredentialsHandler(
+      setupData,
+      './setupData.json'
+    )
+
+    this.setupService = new SetupService(setupHandler)
+    const setupAdmins = []
+    for (const admin of bot.getAdmins()) {
+      if (!this.setupService.alreadySetup(admin)) {
+        setupAdmins.push(admin)
+      }
+    }
+
+    let welcomeMessage = `Welcome to the Wickr ProxyBot (version ${pkgjson.version}) has started.\n`
+    welcomeMessage +=
+      'Setup Wizard Started\nStart by adding aliases to users one user at a time using: <username> <alias>'
+    APIService.send1to1Message(setupAdmins, welcomeMessage, '', '', '')
+
     await bot.startListening(listen) // Passes a callback function that will receive incoming messages into the bot client
     // /////////////////////
     // Start coding below and modify the listen function to your needs
@@ -122,6 +154,10 @@ function listen(incomingMessage) {
       user,
       isAdmin
     )
+    if (isAdmin && !this.setupService.alreadySetup(userEmail)) {
+      user.currentState = State.SETUP_ALIAS
+      this.setupService.setupComplete(userEmail)
+    }
 
     const returnObj = factory.executeCommands(messageService)
 
