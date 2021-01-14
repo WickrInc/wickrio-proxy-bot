@@ -29,7 +29,7 @@ class WhichRoom {
       // Subtract one to account for 0 based indexing
       const asset = assets[parseInt(index, 10) - 1].getAsset()
       const title = this.proxyService.createRoom(asset)
-      reply = `Success! Navigate to the Wickr room called ${title} to begin communicating with your team. At any point, you can type /help to get a list of available commands.`
+      reply = `Success! Navigate to the Wickr room called '${title}' to begin communicating with your team. At any point, you can type /help to get a list of available commands.`
     }
     const obj = {
       reply,

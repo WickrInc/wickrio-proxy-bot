@@ -23,9 +23,8 @@ class AddAsset {
       argument === '' ||
       argument.split(' ').length !== 1
     ) {
-      reply = 'Must have an asset to add. Usage: /asset <username>'
+      reply = 'Must have an asset to add. Format: /asset <username>'
     } else {
-      // TODO check for empty argument
       const added = this.proxyService.addAsset(argument)
       reply += added ? ' created' : ' already exists'
     }
