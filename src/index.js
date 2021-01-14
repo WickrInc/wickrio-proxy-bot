@@ -92,7 +92,9 @@ async function main() {
     }
 
     const welcomeMessage = `Welcome to the Wickr ProxyBot (version ${pkgjson.version}) has started, create an alias for yourself or your teammate one user at a time in the format <username> <alias>`
-    APIService.send1to1Message(setupAdmins, welcomeMessage, '', '', '')
+    if (setupAdmins.length > 0) {
+      APIService.send1to1Message(setupAdmins, welcomeMessage, '', '', '')
+    }
 
     await bot.startListening(listen) // Passes a callback function that will receive incoming messages into the bot client
     // /////////////////////

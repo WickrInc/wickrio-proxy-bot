@@ -1,5 +1,8 @@
-// import State from '../state';
 import State from '../state'
+import pkgjson from '../../package.json'
+import addonpjson from '../../node_modules/wickrio_addon/package.json'
+import botapipjson from '../../node_modules/wickrio-bot-api/package.json'
+import fs from 'fs'
 
 class Version {
   static shouldExecute(messageService) {
@@ -10,14 +13,18 @@ class Version {
   }
 
   static execute() {
-    let json = require('../../node_modules/wickrio_addon/package.json')
-    const addonVersion = json.version
-    json = require('../../node_modules/wickrio-bot-api/package.json')
-    const apiVersion = json.version
-    const reply =
-      `*Versions*\nIntegration: ${process.env.npm_package_version}\n` +
-      `WickrIO Addon: ${addonVersion}\n` +
-      `WickrIO API: ${apiVersion}`
+    let reply = `*Versions*\nIntegration: ${pkgjson.version}\nWickrIO Addon: ${addonpjson.version}\nWickrIO API: ${botapipjson.version}`
+
+    const dockerInfoFile = '/usr/lib/wickr/docker_info.json'
+    if (fs.existsSync(dockerInfoFile)) {
+      const dockerinfo = JSON.parse(fs.readFileSync(dockerInfoFile, 'utf-8'))
+      const imagetag = dockerinfo.tag
+
+      if (imagetag) {
+        reply += `\nDocker Tag: ${imagetag}`
+      }
+    }
+
     return {
       reply,
       state: State.NONE,
