@@ -20,12 +20,14 @@ class CreateRoom {
     const users = this.proxyService.getMembers()
     const assets = this.proxyService.getAssets()
     if (users === undefined || users.length === 0) {
-      reply = 'No members to create a room'
+      reply =
+        'You must have at least one Alias member before you can create a room. Add an alias using /add <email> <alias>.'
     } else if (assets === undefined || assets.length === 0) {
-      reply = 'No asset to send to set an asset with /asset'
+      reply =
+        'You must have at least one Asset before you can create a room. Add an asset using /asset <username>.'
     } else if (assets.length === 1) {
-      this.proxyService.createRoom(assets[0].getAsset())
-      reply = 'Room created'
+      const title = this.proxyService.createRoom(assets[0].getAsset())
+      reply = `Success! Navigate to the Wickr room called '${title}' to begin communicating with your team. At any point, you can type /help to get a list of available commands.`
     } else {
       let i = 1
       reply = 'Which asset would you like to create a room with?'

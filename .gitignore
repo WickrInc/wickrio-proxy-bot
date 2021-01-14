@@ -13,6 +13,7 @@ files
 .eslintrc.js*
 exclude-list.txt
 sync.sh
+alpha-sync.sh
 .env*
 ._.DS_store
 software

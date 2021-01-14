@@ -133,7 +133,7 @@ class ProxyService {
       reply += `\n${member.userID}, ${member.proxyID}`
     })
     reply +=
-      '\nYour username and anything you say here is not visible to the asset. When you use the /send command the message will be sent to the asset with your alias as the signature\n'
+      '\nYour email address and anything you say here (including messages from the ProxyBot) is not visible to the asset. To communicate with the asset, start your message with /send'
     reply += `To send a message to ${asset} use /send <message>`
     const title = `Conversation with ${asset}`
     const users = []
