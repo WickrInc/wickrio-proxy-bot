@@ -5,4 +5,6 @@ export default Object.freeze({
   WHICH_ASSET: 1,
   WHICH_ROOM: 2,
   SETUP_ALIAS: 3,
+  CREATE_ROOM_SETUP: 4,
+  WHICH_ROOM_SETUP: 5,
 })

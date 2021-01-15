@@ -4,11 +4,16 @@ class WhichRoom {
   constructor(proxyService) {
     this.proxyService = proxyService
     this.state = State.WHICH_ROOM
+    this.stateArray = [
+      State.WHICH_ROOM,
+      State.CREATE_ROOM_SETUP,
+      State.WHICH_ROOM_SETUP,
+    ]
   }
 
   shouldExecute(messageService) {
     if (
-      messageService.getCurrentState() === this.state &&
+      this.stateArray.includes(messageService.getCurrentState()) &&
       // Check so that commands get preference
       !messageService.getCommand()
     ) {
@@ -20,16 +25,25 @@ class WhichRoom {
   execute(messageService) {
     let reply
     let state = State.NONE
+    const curState = messageService.getCurrentState()
     const index = messageService.getMessage()
     const assets = this.proxyService.getAssets()
-    if (!messageService.isInt() || index < 1 || index > assets.length) {
+    if (curState === State.CREATE_ROOM_SETUP) {
+      if (messageService.affirmativeReply()) {
+        const asset = assets[0].getAsset()
+        const title = this.proxyService.createRoom(asset)
+        reply = `Success! Navigate to the Wickr room called '${title}' to begin communicating with your team. At any point, you can type /help to get a list of available commands.`
+      }
+    } else if (!messageService.isInt() || index < 1 || index > assets.length) {
       reply = `Index: ${index} is out of range. Please enter an integer between 1 and ${assets.length}`
-      state = this.state
+      state = curState
     } else {
       // Subtract one to account for 0 based indexing
       const asset = assets[parseInt(index, 10) - 1].getAsset()
       const title = this.proxyService.createRoom(asset)
-      reply = `Success! Navigate to the Wickr room called '${title}' to begin communicating with your team. At any point, you can type /help to get a list of available commands.`
+
+      reply = curState === State.WHICH_ROOM_SETUP ? 'Step 4 of 4: ' : ''
+      reply += `Success! Navigate to the Wickr room called '${title}' to begin communicating with your team. At any point, you can type /help to get a list of available commands.`
     }
     const obj = {
       reply,

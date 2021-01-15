@@ -1,6 +1,7 @@
 import APIService from './api-service'
 import Proxy from '../proxy'
 import Asset from '../asset'
+import State from '../state'
 
 class ProxyService {
   constructor(dataStorage, roomService) {
@@ -128,13 +129,11 @@ class ProxyService {
   createRoom(asset) {
     // TODO change copy!
     const description = 'To send a message to the asset: /send <message>'
-    let reply = 'This is a conversation with:'
+    let reply = 'This is a conversation with:\n'
     this.members.forEach(member => {
-      reply += `\n${member.userID}, ${member.proxyID}`
+      reply += `${member.userID}, ${member.proxyID}\n`
     })
-    reply +=
-      '\nYour email address and anything you say here (including messages from the ProxyBot) is not visible to the asset. To communicate with the asset, start your message with /send'
-    reply += `To send a message to ${asset} use /send <message>`
+    reply += `Your email address and anything you say here (including messages from the ProxyBot) is not visible to the asset. To communicate with the asset, start your message with /send\nTo send a message to ${asset.asset} use /send <message>`
     const title = `Conversation with ${asset}`
     const users = []
     this.members.forEach(user => {
@@ -152,6 +151,35 @@ class ProxyService {
     this.setVGroupID(asset, vGroupID)
     APIService.sendRoomMessage(vGroupID, reply)
     return title
+  }
+
+  setupCreateRoom() {
+    let reply
+    let state = State.NONE
+    if (this.members === undefined || this.members.length === 0) {
+      reply =
+        'You must have at least one Alias member before you can create a room. Add an alias using /add <email> <alias>.'
+    } else if (this.assets === undefined || this.assets.length === 0) {
+      reply =
+        'You must have at least one Asset before you can create a room. Add an asset using /asset <username>.'
+    } else if (this.assets.length === 1) {
+      // const title = this.proxyService.createRoom(this.assets[0].getAsset())
+      reply = `Step 3 of 4: Asset creation is now complete! Would you like to create a room with this asset (${this.assets[0]}? (Yes/No)`
+      state = State.CREATE_ROOM_SETUP
+    } else {
+      let i = 1
+      reply =
+        'Step 3 of 4: Asset creation is now complete! Which asset would you like to create a room with?'
+      this.assets.forEach(asset => {
+        reply += `\n${i}: ${asset.asset}`
+        i += 1
+      })
+      state = State.WHICH_ROOM_SETUP
+    }
+    return {
+      reply,
+      state,
+    }
   }
 
   isAssetRoom(vGroupID) {

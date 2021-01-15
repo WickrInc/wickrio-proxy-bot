@@ -26,11 +26,16 @@ class SetupAlias {
     const userInfo = APIService.getUserInfo(userArray)
     const failed = userInfo.failed
     let reply
-    let state
+    let state = this.state
     if (messageService.getMessage().toLowerCase() === 'done') {
-      reply =
-        "Step 2 of 4: Great! Now create your assets one at a time by typing asset's WickrMe username. Make sure to add the right WickrMe user as an asset."
-      state = State.SETUP_ASSET
+      if (this.proxyService.getMembers().length < 1) {
+        reply =
+          'Must create at least one alias to proceed. Add an alias for yourself or a teammate in the format <user@email.com> <alias>'
+      } else {
+        reply =
+          "Step 2 of 4: Great! Now create your assets one at a time by typing the asset's WickrMe username. Make sure to add the right WickrMe user as an asset in the format <username>"
+        state = State.SETUP_ASSET
+      }
     } else if (
       argArray.length !== 2 ||
       userID === undefined ||
@@ -38,15 +43,15 @@ class SetupAlias {
       proxy === undefined ||
       proxy === ''
     ) {
-      reply = 'Must have a UserID and Alias, format: <UserID> <Alias>'
-      state = this.state
+      reply =
+        'Must have an email and alias. Add an alias for yourself or teammate in the format <user@email.com> alias>'
     } else if (failed !== undefined && userInfo.failed.length !== 0) {
-      reply = `Cannot add proxy for ${userID}: User does not exist`
-      state = this.state
+      reply = `Cannot add alias for ${userID}: User does not exist. `
+      reply +=
+        'Add an alias for yourself or teammate in the format <user@email.com> <alias>'
     } else {
       this.proxyService.addMember(userID, proxy)
       reply = `The alias "${proxy}" has been created for the user ${userID}.\nAdd another alias using the same format or type "done" to continue`
-      state = this.state
     }
 
     const obj = {

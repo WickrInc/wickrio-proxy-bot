@@ -91,7 +91,7 @@ async function main() {
       }
     }
 
-    const welcomeMessage = `Welcome to the Wickr ProxyBot (version ${pkgjson.version}) has started, create an alias for yourself or your teammate one user at a time in the format <username> <alias>`
+    const welcomeMessage = `Welcome to the Wickr ProxyBot (version ${pkgjson.version}). Follow the 4-step guide or type /cancel to exit and configure your users manually.\n\nStep 1 of 4: Create an alias for yourself or your teammate one user at a time in the format <user@email.com> <alias>`
     if (setupAdmins.length > 0) {
       APIService.send1to1Message(setupAdmins, welcomeMessage, '', '', '')
     }
