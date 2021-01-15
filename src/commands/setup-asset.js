@@ -22,24 +22,21 @@ class SetupAsset {
   execute(messageService) {
     const message = messageService.getMessage()
     let reply = `Asset ${message} added`
-    let state
+    const state = this.state
     if (messageService.getMessage().toLowerCase() === 'done') {
-      reply =
-        'Setup Complete use the /create command to create a room with an asset of your choosing and the members with created aliases'
-      state = State.NONE
+      return this.proxyService.setupCreateRoom()
     } else if (
       message === undefined ||
       message === '' ||
       message.split(' ').length !== 1
     ) {
-      reply = 'Must have an asset to add. Usage: <username>'
-      state = this.state
+      reply = 'Must have an asset to add. Enter asset in the format: <username>'
     } else {
       // TODO check for empty message
       const added = this.proxyService.addAsset(message)
       reply += added ? ' created' : ' already exists'
-      reply += '\nEnter another asset with <asset> or type done to finish'
-      state = this.state
+      reply +=
+        '.\nEnter another asset in the format <username> or type "done" to finish'
     }
     return {
       reply,

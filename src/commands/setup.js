@@ -17,7 +17,7 @@ class Setup {
 
   execute(messageService) {
     const reply =
-      'Setup Wizard Started\nStep 1 of 4: To get started, create an alias for yourself or your teammate one user at a time in the format <username> <alias>'
+      'Setup Wizard Started\nStep 1 of 4: To get started, create an alias for yourself or your teammate one user at a time in the format: <user@email.com> <alias>'
     return {
       reply,
       state: State.SETUP_ALIAS,
