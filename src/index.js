@@ -92,6 +92,7 @@ async function main() {
     }
 
     const welcomeMessage = `Welcome to the Wickr ProxyBot (version ${pkgjson.version}). Follow the 4-step guide or type /cancel to exit and configure your users manually.\n\nStep 1 of 4: Create an alias for yourself or your teammate one user at a time in the format <user@email.com> <alias>`
+    console.log('sending welcome to ' + setupAdmins)
     if (setupAdmins.length > 0) {
       APIService.send1to1Message(setupAdmins, welcomeMessage, '', '', '')
     }
@@ -143,6 +144,12 @@ function listen(incomingMessage) {
       logger.debug(bot.getUser(userEmail)) // Print the changed user object
     }
 
+    if (isAdmin && !this.setupService.alreadySetup(userEmail)) {
+      console.log('isAdmin and not already setup')
+      user.currentState = State.SETUP_ALIAS
+      this.setupService.setupComplete(userEmail)
+    }
+
     // TODO add message type here
     const messageService = new MessageService(
       message,
@@ -154,10 +161,6 @@ function listen(incomingMessage) {
       user,
       isAdmin
     )
-    if (isAdmin && !this.setupService.alreadySetup(userEmail)) {
-      user.currentState = State.SETUP_ALIAS
-      this.setupService.setupComplete(userEmail)
-    }
 
     const returnObj = factory.executeCommands(messageService)
 

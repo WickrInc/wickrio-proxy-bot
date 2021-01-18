@@ -21,7 +21,7 @@ class SetupAsset {
 
   execute(messageService) {
     const message = messageService.getMessage()
-    let reply = `Asset ${message} added`
+    let reply = `Asset ${message} `
     const state = this.state
     if (messageService.getMessage().toLowerCase() === 'done') {
       return this.proxyService.setupCreateRoom()
@@ -34,7 +34,7 @@ class SetupAsset {
     } else {
       // TODO check for empty message
       const added = this.proxyService.addAsset(message)
-      reply += added ? ' created' : ' already exists'
+      reply += added ? 'created' : 'already exists'
       reply +=
         '.\nEnter another asset in the format <username> or type "done" to finish'
     }
