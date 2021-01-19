@@ -75,12 +75,12 @@ class Factory {
         defaultReply = ''
       } else {
         defaultReply =
-          'Command not recognized send the command /help for a list of commands'
+          'This command is not recognized. Check the format and spelling and try again. For a list of available commands, type in /help'
       }
     } else if (messageService.getIsAdmin()) {
       // TODO give this reply on spelling mistake even in asset rooms
       defaultReply =
-        'Command not recognized send the command /help for a list of commands'
+        'This command is not recognized. Check the format and spelling and try again. For a list of available commands, type in /help'
     }
 
     if (messageService.getIsAdmin()) {
