@@ -27,7 +27,7 @@ const factory = new Factory(proxyService)
 const WickrUser = WickrIOBotAPI.WickrUser
 const bot = new WickrIOBotAPI.WickrIOBot()
 const WickrIOAPI = bot.getWickrIOAddon()
-
+let setupService
 let currentState
 // const setupComplete = false
 
@@ -83,10 +83,10 @@ async function main() {
       './setupData.json'
     )
 
-    this.setupService = new SetupService(setupHandler)
+    setupService = new SetupService(setupHandler)
     const setupAdmins = []
     for (const admin of bot.getAdmins()) {
-      if (!this.setupService.alreadySetup(admin)) {
+      if (!setupService.alreadySetup(admin)) {
         setupAdmins.push(admin)
       }
     }
@@ -144,10 +144,10 @@ function listen(incomingMessage) {
       logger.debug(bot.getUser(userEmail)) // Print the changed user object
     }
 
-    if (isAdmin && !this.setupService.alreadySetup(userEmail)) {
+    if (isAdmin && !setupService.alreadySetup(userEmail)) {
       console.log('isAdmin and not already setup')
       user.currentState = State.SETUP_ALIAS
-      this.setupService.setupComplete(userEmail)
+      setupService.setupComplete(userEmail)
     }
 
     // TODO add message type here
