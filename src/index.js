@@ -163,12 +163,13 @@ function listen(incomingMessage) {
     )
 
     const returnObj = factory.executeCommands(messageService)
-
-    logger.debug('Object reply:', returnObj.reply)
-    if (returnObj.reply) {
-      WickrIOAPI.cmdSendRoomMessage(vGroupID, returnObj.reply)
+    if (returnObj) {
+      if (returnObj.reply) {
+        logger.debug('Object reply:', returnObj.reply)
+        WickrIOAPI.cmdSendRoomMessage(vGroupID, returnObj.reply)
+      }
+      user.currentState = returnObj.state
     }
-    user.currentState = returnObj.state
   } catch (err) {
     logger.error(err)
   }
