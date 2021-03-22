@@ -1,8 +1,7 @@
-import State from '../state'
-import pkgjson from '../../package.json'
-import addonpjson from '../../node_modules/wickrio_addon/package.json'
-import botapipjson from '../../node_modules/wickrio-bot-api/package.json'
-import fs from 'fs'
+import path from 'path'
+
+import WickrIOBotAPI from 'wickrio-bot-api'
+const bot = new WickrIOBotAPI.WickrIOBot()
 
 class Version {
   static shouldExecute(messageService) {
@@ -13,21 +12,18 @@ class Version {
   }
 
   static execute() {
-    let reply = `*Versions*\nIntegration: ${pkgjson.version}\nWickrIO Addon: ${addonpjson.version}\nWickrIO API: ${botapipjson.version}`
+    try {
+      const packageJsonFile = path.join(process.cwd(), 'package.json')
+      const reply = bot.getVersions(packageJsonFile)
 
-    const dockerInfoFile = '/usr/lib/wickr/docker_info.json'
-    if (fs.existsSync(dockerInfoFile)) {
-      const dockerinfo = JSON.parse(fs.readFileSync(dockerInfoFile, 'utf-8'))
-      const imagetag = dockerinfo.tag
-
-      if (imagetag) {
-        reply += `\nDocker Tag: ${imagetag}`
+      return {
+        reply,
       }
-    }
-
-    return {
-      reply,
-      state: State.NONE,
+    } catch (err) {
+      const reply = 'Failed to get version information!'
+      return {
+        reply,
+      }
     }
   }
 }
