@@ -21,7 +21,6 @@ class APIService {
     messageID,
     flags
   ) {
-    const buttons = []
     return WickrIOAPI.cmdSend1to1Message(
       userArray,
       reply,
@@ -29,7 +28,7 @@ class APIService {
       bor,
       messageID,
       flags,
-      buttons,
+      '',
       true
     )
   }
