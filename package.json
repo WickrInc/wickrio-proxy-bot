@@ -1,6 +1,6 @@
 {
   "name": "wickrio-proxy-bot",
-  "version": "5.79.1",
+  "version": "5.79.2",
   "description": "WickrIO Proxy Bot",
   "main": "./build/index.js",
   "author": "Toren DeRosa",
@@ -10,7 +10,7 @@
     "dotenv": "^8.2.0",
     "log4js": "^5.3.0",
     "pino": "^5.15.0",
-    "pm2": "^3.5.2",
+    "pm2": "^4.5.5",
     "prompt": "^1.0.0",
     "wickrio-bot-api": "5.79.x"
   },
