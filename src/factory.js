@@ -27,7 +27,6 @@ class Factory {
     this.removeMembers = new RemoveMembers(this.proxyService)
     this.listMembers = new ListMembers(this.proxyService)
     this.createRoom = new CreateRoom(this.proxyService)
-    this.version = new Version()
     this.send = new Send(this.proxyService)
     this.setup = new Setup(this.proxyService)
     this.setupAlias = new SetupAlias(this.proxyService)

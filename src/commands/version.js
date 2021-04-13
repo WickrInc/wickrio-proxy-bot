@@ -28,4 +28,4 @@ class Version {
   }
 }
 
-export default Version
+module.exports = Version
