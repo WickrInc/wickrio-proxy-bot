@@ -3,6 +3,7 @@ package-lock.json
 *.key
 *.cert
 *.output
+.nyc_output
 build/
 last_id.json
 # processes.json
