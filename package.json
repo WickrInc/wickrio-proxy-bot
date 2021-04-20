@@ -158,7 +158,8 @@
           "@babel/plugin-proposal-optional-chaining",
           "@babel/plugin-transform-runtime",
           "@babel/plugin-transform-modules-commonjs",
-          "@babel/plugin-proposal-class-properties"
+          "@babel/plugin-proposal-class-properties",
+          "istanbul"
         ]
       },
       "development": {
@@ -169,7 +170,8 @@
           "@babel/plugin-proposal-optional-chaining",
           "@babel/plugin-transform-runtime",
           "@babel/plugin-transform-modules-commonjs",
-          "@babel/plugin-proposal-class-properties"
+          "@babel/plugin-proposal-class-properties",
+          "istanbul"
         ],
         "sourceMaps": true,
         "retainLines": true
