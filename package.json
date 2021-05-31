@@ -11,7 +11,7 @@
     "log4js": "^5.3.0",
     "pino": "^5.15.0",
     "prompt": "^1.0.0",
-    "wickrio-bot-api": "5.79.x"
+    "wickrio-bot-api": "5.82.x"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.4",
