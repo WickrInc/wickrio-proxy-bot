@@ -4,14 +4,18 @@ import WickrIOBotAPI from 'wickrio-bot-api'
 const bot = new WickrIOBotAPI.WickrIOBot()
 
 class Version {
-  static shouldExecute(messageService) {
-    if (messageService.getCommand() === '/version') {
+  constructor() {
+    this.commandString = '/version'
+  }
+
+  shouldExecute(messageService) {
+    if (messageService.getCommand() === this.commandString) {
       return true
     }
     return false
   }
 
-  static execute() {
+  execute() {
     try {
       const packageJsonFile = path.join(process.cwd(), 'package.json')
       const reply = bot.getVersions(packageJsonFile)

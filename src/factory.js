@@ -36,6 +36,7 @@ class Factory {
     // Here are the options that rely on the current state
     // this.whichAsset = new WhichAsset(this.proxyService)
     this.whichRoom = new WhichRoom(this.proxyService)
+    this.version = new Version()
 
     // Order matters here /commands must go first
     this.adminCommandList = [
@@ -55,7 +56,7 @@ class Factory {
       Help,
       this.listMembers,
       this.send,
-      Version,
+      this.version,
       this.whichRoom,
     ]
 
