@@ -1,0 +1,10 @@
+{
+  "uid": "",
+  "append": true,
+  "watch": false,
+  "script": "./build/index.js",
+  "sourceDir": "",
+  "logFile": "",
+  "outFile": "",
+  "errFile": ""
+}
