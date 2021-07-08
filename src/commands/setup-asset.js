@@ -10,7 +10,9 @@ class SetupAsset {
 
   shouldExecute(messageService) {
     if (
-      messageService.getCurrentState() === this.state &&
+      messageService.matchUserCommandCurrentState({
+        commandState: this.state,
+      }) &&
       // Check so that commands get preference
       !messageService.getCommand()
     ) {

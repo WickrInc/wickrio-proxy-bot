@@ -12,12 +12,14 @@ class WhichRoom {
   }
 
   shouldExecute(messageService) {
-    if (
-      this.stateArray.includes(messageService.getCurrentState()) &&
-      // Check so that commands get preference
-      !messageService.getCommand()
-    ) {
-      return true
+    for (const state of this.stateArray) {
+      if (
+        messageService.matchUserCommandCurrentState({ commandState: state }) &&
+        // Check so that commands get preference
+        !messageService.getCommand()
+      ) {
+        return true
+      }
     }
     return false
   }
@@ -25,7 +27,7 @@ class WhichRoom {
   execute(messageService) {
     let reply
     let state = State.NONE
-    const curState = messageService.getCurrentState()
+    const curState = messageService.getUserCurrentStateConstructor()
     const index = messageService.getMessage()
     const assets = this.proxyService.getAssets()
     if (curState === State.CREATE_ROOM_SETUP) {

@@ -1,10 +1,8 @@
 import path from 'path'
 import fs from 'fs'
 import * as WickrIOBotAPI from 'wickrio-bot-api'
-import MessageService from './services/message-service'
 import Factory from './factory'
 import logger from './logger'
-// import MemberListRepo from './helpers/member-list'
 import ProxyService from './services/proxy-service'
 import JSONCredentialsHandler from './helpers/json-credentials-handler'
 import State from './state'
@@ -12,8 +10,6 @@ import pkgjson from '../package.json'
 import APIService from './services/api-service'
 import SetupService from './services/setup-service'
 
-// const memberListRepo = new MemberListRepo(fs)
-// const factory = new Factory(memberListRepo)
 const defaultData = {
   members: [],
   assets: [],
@@ -26,12 +22,9 @@ const jsonCredentialsHandler = new JSONCredentialsHandler(
 
 const proxyService = new ProxyService(jsonCredentialsHandler)
 const factory = new Factory(proxyService)
-const WickrUser = WickrIOBotAPI.WickrUser
 const bot = new WickrIOBotAPI.WickrIOBot()
 const WickrIOAPI = bot.getWickrIOAddon()
 let setupService
-let currentState
-// const setupComplete = false
 
 process.stdin.resume() // so the program will not close instantly
 
@@ -84,6 +77,21 @@ async function main() {
         reason: 'Client not able to start',
       })
     }
+
+    bot.setAdminOnly(false)
+
+    const { VERIFY_USERS } = tokens
+
+    // set the verification mode to true
+    let verifyUsersMode
+    if (VERIFY_USERS.encrypted) {
+      verifyUsersMode = WickrIOAPI.cmdDecryptString(VERIFY_USERS.value)
+    } else {
+      verifyUsersMode = VERIFY_USERS.value
+    }
+
+    bot.setVerificationMode(verifyUsersMode)
+
     const adminList = bot.getAdmins()
     const setupData = { admins: {} }
     for (const admin of adminList) {
@@ -119,42 +127,13 @@ async function main() {
   }
 }
 
-function listen(incomingMessage) {
+function listen(rawMessage) {
   try {
-    // Parses an incoming message and returns and object with command, argument,
-    // vGroupID and Sender fields
-    const parsedMessage = bot.parseMessage(incomingMessage)
-    if (!parsedMessage) {
-      return
-    }
-    logger.debug('New incoming Message:', parsedMessage)
-    let wickrUser
-    // TODO is this ok formatting??
-    // combine all into one line
-    const { command } = parsedMessage
-    const { message } = parsedMessage
-    const { argument } = parsedMessage
-    const { userEmail } = parsedMessage
-    const vGroupID = parsedMessage.vgroupid
-    const { convoType } = parsedMessage
-    const { isAdmin } = parsedMessage
-    let personalVGroupID = ''
-    if (convoType === 'personal') personalVGroupID = vGroupID
+    const messageService = bot.messageService({ rawMessage })
+    const { isAdmin, vGroupID, msgType, user, userEmail } = messageService
 
-    let user = bot.getUser(userEmail) // Look up user by their wickr email
-    if (user === undefined) {
-      // Check if a user exists in the database
-      wickrUser = new WickrUser(userEmail, {
-        index: 0,
-        personalVGroupID,
-        command: '',
-        argument: '',
-        currentState,
-      })
-      user = bot.addUser(wickrUser) // Add a new user to the database
-      logger.debug('Added user:', user)
-      user.token = 'example_token_A1234'
-      logger.debug(bot.getUser(userEmail)) // Print the changed user object
+    if (msgType !== 'file' && msgType !== undefined) {
+      return
     }
 
     if (isAdmin && !setupService.alreadySetup(userEmail)) {
@@ -162,18 +141,6 @@ function listen(incomingMessage) {
       user.currentState = State.SETUP_ALIAS
       setupService.setupComplete(userEmail)
     }
-
-    // TODO add message type here
-    const messageService = new MessageService(
-      message,
-      userEmail,
-      argument,
-      command,
-      user.currentState,
-      vGroupID,
-      user,
-      isAdmin
-    )
 
     const returnObj = factory.executeCommands(messageService)
     if (returnObj) {
