@@ -76,7 +76,7 @@ class Factory {
         defaultReply =
           'This command is not recognized. Check the format and spelling and try again. For a list of available commands, type in /help'
       }
-    } else if (messageService.isAdmin) {
+    } else if (messageService.getIsAdmin()) {
       // TODO give this reply on spelling mistake even in asset rooms
       defaultReply =
         'This command is not recognized. Check the format and spelling and try again. For a list of available commands, type in /help'

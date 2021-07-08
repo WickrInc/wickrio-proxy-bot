@@ -9,8 +9,10 @@ class SetupAlias {
 
   shouldExecute(messageService) {
     if (
-      messageService.getCurrentState() === this.state &&
-      // Check so that commands get preference
+      messageService.matchUserCommandCurrentState({
+        commandState: this.state,
+      }) &&
+      // TODO Check so that commands get preference currently messageSErvice always has command
       !messageService.getCommand()
     ) {
       return true

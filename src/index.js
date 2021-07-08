@@ -1,10 +1,8 @@
 import path from 'path'
 import fs from 'fs'
 import * as WickrIOBotAPI from 'wickrio-bot-api'
-import MessageService from './services/message-service'
 import Factory from './factory'
 import logger from './logger'
-// import MemberListRepo from './helpers/member-list'
 import ProxyService from './services/proxy-service'
 import JSONCredentialsHandler from './helpers/json-credentials-handler'
 import State from './state'
@@ -12,8 +10,6 @@ import pkgjson from '../package.json'
 import APIService from './services/api-service'
 import SetupService from './services/setup-service'
 
-// const memberListRepo = new MemberListRepo(fs)
-// const factory = new Factory(memberListRepo)
 const defaultData = {
   members: [],
   assets: [],
@@ -26,12 +22,9 @@ const jsonCredentialsHandler = new JSONCredentialsHandler(
 
 const proxyService = new ProxyService(jsonCredentialsHandler)
 const factory = new Factory(proxyService)
-const WickrUser = WickrIOBotAPI.WickrUser
 const bot = new WickrIOBotAPI.WickrIOBot()
 const WickrIOAPI = bot.getWickrIOAddon()
 let setupService
-let currentState
-// const setupComplete = false
 
 process.stdin.resume() // so the program will not close instantly
 
