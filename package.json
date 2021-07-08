@@ -1,6 +1,6 @@
 {
   "name": "wickrio-proxy-bot",
-  "version": "5.84.1",
+  "version": "5.85.1",
   "description": "WickrIO Proxy Bot",
   "main": "./build/index.js",
   "author": "Toren DeRosa",
@@ -11,7 +11,7 @@
     "log4js": "^5.3.0",
     "pino": "^5.15.0",
     "prompt": "^1.0.0",
-    "wickrio-bot-api": "5.84.x"
+    "wickrio-bot-api": "5.85.x"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.4",
