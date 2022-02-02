@@ -60,10 +60,6 @@ async function main() {
     }
     const processesJson = fs.readFileSync(processesJsonFile)
     // console.log('processes.json=' + processesJson)
-    console.log(
-      'TOREN START HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-    )
-    logger.debug('Toren debug here')
     const processesJsonObject = JSON.parse(processesJson)
 
     process.env.tokens = JSON.stringify(processesJsonObject.apps[0].env.tokens)
