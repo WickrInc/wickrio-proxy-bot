@@ -1,5 +1,5 @@
 import fs from 'fs'
-import logger from '../logger'
+import logger from './logger'
 
 class JSONCredentialsHandler {
   constructor(defaultData, credentialFile) {
@@ -36,7 +36,7 @@ class JSONCredentialsHandler {
   saveData(writeObject) {
     fs.writeFile(this.credentialFile, JSON.stringify(writeObject), err => {
       if (err) return console.log(err)
-      logger.trace('Current data saved in file')
+      logger.verbose('Current data saved in file')
     })
   }
 }

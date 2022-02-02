@@ -1,6 +1,6 @@
 import util from 'util'
 import fs from 'fs'
-import logger from '../logger'
+import logger from './logger'
 
 const copyFileAsync = util.promisify(fs.copyFile)
 util.promisify(fs.readdir)

@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import * as WickrIOBotAPI from 'wickrio-bot-api'
 import Factory from './factory'
-import logger from './logger'
+import logger from './helpers/logger'
 import ProxyService from './services/proxy-service'
 import JSONCredentialsHandler from './helpers/json-credentials-handler'
 import State from './state'
@@ -51,7 +51,6 @@ process.on('SIGUSR2', exitHandler.bind(null, { pid: true }))
 process.on('uncaughtException', exitHandler.bind(null, { exit: true }))
 
 async function main() {
-  // logger.debug('Entering main!');
   try {
     // Read in the processes.json file
     const processesJsonFile = path.join(process.cwd(), 'processes.json')
@@ -60,7 +59,7 @@ async function main() {
       process.exit(1)
     }
     const processesJson = fs.readFileSync(processesJsonFile)
-    console.log('processes.json=' + processesJson)
+    // console.log('processes.json=' + processesJson)
     const processesJsonObject = JSON.parse(processesJson)
 
     process.env.tokens = JSON.stringify(processesJsonObject.apps[0].env.tokens)

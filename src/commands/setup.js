@@ -1,5 +1,4 @@
 import State from '../state'
-// import logger from '../logger'
 
 // TODO use this instead of putting it in main!
 class Setup {

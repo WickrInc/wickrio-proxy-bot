@@ -1,5 +1,5 @@
 import State from '../state'
-import logger from '../logger'
+import logger from '../helpers/logger'
 import APIService from '../services/api-service'
 
 // TODO use this instead of putting it in main!
