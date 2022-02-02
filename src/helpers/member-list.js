@@ -1,5 +1,5 @@
 import * as WickrIOBotAPI from 'wickrio-bot-api'
-import logger from '../logger'
+import logger from './logger'
 
 const bot = new WickrIOBotAPI.WickrIOBot()
 const WickrIOAPI = bot.getWickrIOAddon()
@@ -14,7 +14,7 @@ class MemberListRepo {
       if (fs.existsSync('./files/members.json')) {
         memberData = fs.readFileSync('./files/members.json')
         if (!memberData) {
-          // logger.error('Error reading members.json!');
+          logger.error('Error reading members.json!')
           return
         }
         this.members = JSON.parse(memberData)
@@ -36,7 +36,7 @@ class MemberListRepo {
         this.asset = ''
       }
     } catch (err) {
-      // logger.error(err);
+      logger.error(err)
     }
   }
 
@@ -57,11 +57,11 @@ class MemberListRepo {
       this.fs.writeFile('./files/members.json', memberListToWrite, err => {
         // TODO Fix this
         if (err) throw err
-        logger.trace('Current Members saved in file')
+        logger.verbose('Current Members saved in file')
       })
       return memberList.toString()
     } catch (err) {
-      // logger.error(err);
+      logger.error(err)
     }
   }
 
@@ -75,7 +75,7 @@ class MemberListRepo {
       this.fs.writeFile('./files/asset.json', assetToWrite, err => {
         // TODO Fix this
         if (err) throw err
-        logger.trace('Current asset saved in file')
+        logger.verbose('Current asset saved in file')
       })
       return asset.toString()
     } catch (err) {
