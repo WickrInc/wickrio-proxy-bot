@@ -1,6 +1,6 @@
 {
   "name": "wickrio-proxy-bot",
-  "version": "5.113.1",
+  "version": "6.8.1",
   "description": "WickrIO Proxy Bot",
   "main": "./build/index.js",
   "author": "Toren DeRosa",
@@ -9,7 +9,7 @@
     "babel-eslint": "^10.1.0",
     "dotenv": "^8.2.0",
     "prompt": "^1.0.0",
-    "wickrio-bot-api": "5.113.x"
+    "wickrio-bot-api": "6.8.x"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.4",
@@ -76,13 +76,13 @@
     ]
   },
   "scripts": {
-    "start": "forever start -m 1 ./forever.json",
+    "start": "wpm2 start ./wpm.json --pidfile $(cat pidLocation.json)",
     "dev": "nodemon --exec 'babel-node --inspect=0.0.0.0 src/index.js'",
     "build": "npm run lint && npm run prettier && rm -rf build && babel ./src --out-dir ./build --ignore node_modules",
     "lint": "eslint src/**/*.js --fix --color",
     "prettier": "prettier --write ./src",
-    "stop": "forever stopall",
-    "restart": "forever restartall",
+    "stop": "kill $(cat $(cat pidLocation.json))",
+    "restart": "kill $(cat $(cat pidLocation.json)) && wpm2 start ./wpm.json --pidfile $(cat pidLocation.json)",
     "test": "nyc --reporter=text-summary  --reporter=text mocha test"
   },
   "husky": {
