@@ -1,6 +1,6 @@
 {
   "name": "wickrio-proxy-bot",
-  "version": "6.8.1",
+  "version": "6.8.2",
   "description": "WickrIO Proxy Bot",
   "main": "./build/index.js",
   "author": "Toren DeRosa",
@@ -68,7 +68,6 @@
       "scratchpad/*.js",
       ".npm/**/*.js",
       ".git",
-      "wickrio-bot-web",
       "node_modules",
       "public",
       "src",
