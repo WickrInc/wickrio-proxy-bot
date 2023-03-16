@@ -1,6 +1,6 @@
 {
   "name": "wickrio-proxy-bot",
-  "version": "6.8.4",
+  "version": "6.8.5",
   "description": "WickrIO Proxy Bot",
   "main": "./build/index.js",
   "author": "Toren DeRosa",
@@ -75,13 +75,13 @@
     ]
   },
   "scripts": {
-    "start": "nohup wpm2 start ./wpm.json >>wpm2.output 2>&1 & echo $! > $(cat pidLocation.json)",
+    "start": "nohup wpm2 start --no-metrics ./wpm.json >>wpm2.output 2>&1 & echo $! > $(cat pidLocation.json)",
     "dev": "nodemon --exec 'babel-node --inspect=0.0.0.0 src/index.js'",
     "build": "npm run lint && npm run prettier && rm -rf build && babel ./src --out-dir ./build --ignore node_modules",
     "lint": "eslint src/**/*.js --fix --color",
     "prettier": "prettier --write ./src",
     "stop": "kill $(cat $(cat pidLocation.json))",
-    "restart": "kill $(cat $(cat pidLocation.json)) && nohup wpm2 start ./wpm.json >>wpm2.output 2>&1 & echo $! > $(cat pidLocation.json)",
+    "restart": "kill $(cat $(cat pidLocation.json)) && nohup wpm2 start --no-metrics ./wpm.json >>wpm2.output 2>&1 & echo $! > $(cat pidLocation.json)",
     "test": "nyc --reporter=text-summary  --reporter=text mocha test"
   },
   "husky": {
