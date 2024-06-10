@@ -13,11 +13,14 @@ class ReplyReceived {
     return false
   }
 
-  execute(messageService) {
+  async execute(messageService) {
     const userEmail = messageService.getUserEmail()
     const message = messageService.getMessage()
     const messageToSend = `Message from ${userEmail}:\n${message}`
-    const uMessage = this.proxyService.replyMessage(userEmail, messageToSend)
+    const uMessage = await this.proxyService.replyMessage(
+      userEmail,
+      messageToSend
+    )
     const reply = uMessage ? '' : 'Message not delivered'
     return {
       reply,

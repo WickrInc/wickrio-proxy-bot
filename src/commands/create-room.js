@@ -14,7 +14,7 @@ class CreateRoom {
     return false
   }
 
-  execute(messageService) {
+  async execute(messageService) {
     let reply
     let state = State.NONE
     const users = this.proxyService.getMembers()
@@ -26,7 +26,7 @@ class CreateRoom {
       reply =
         'You must have at least one Asset before you can create a room. Add an asset using /asset <username>.'
     } else if (assets.length === 1) {
-      const title = this.proxyService.createRoom(assets[0].getAsset())
+      const title = await this.proxyService.createRoom(assets[0].getAsset())
       reply = `Success! Navigate to the Wickr room called '${title}' to begin communicating with your team. At any point, you can type /help to get a list of available commands.`
     } else {
       let i = 1

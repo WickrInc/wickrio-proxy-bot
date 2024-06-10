@@ -16,7 +16,7 @@ class AddProxy {
     return false
   }
 
-  execute(messageService) {
+  async execute(messageService) {
     let reply
     const argArray = messageService.getArgument().split(' ')
     const userID = argArray[0]
@@ -24,7 +24,7 @@ class AddProxy {
     const userArray = [userID]
     // const userData = APIService.getUserInfo(userArray)
     // console.log(userData)
-    const userInfo = APIService.getUserInfo(userArray)
+    const userInfo = await APIService.getUserInfo(userArray)
     const failed = userInfo.failed
     if (
       argArray.length !== 2 ||

@@ -87,7 +87,7 @@ class MemberListRepo {
     return this.asset
   }
 
-  createRoom() {
+  async createRoom() {
     let reply = 'Room created.'
     if (this.members === undefined || this.members.length === 0) {
       reply = 'asset contains no members'
@@ -102,7 +102,7 @@ class MemberListRepo {
         usernames.push(member.userID)
       }
       // usernames.push() bot name!
-      const uMessage = WickrIOAPI.cmdAddRoom(
+      const uMessage = await WickrIOAPI.cmdAddRoom(
         usernames,
         usernames,
         title,
@@ -113,7 +113,7 @@ class MemberListRepo {
       this.vGroupID = JSON.parse(uMessage).vgroupid
       logger.debug(`Here is the uMessage${uMessage}`)
       logger.debug(`Here is the vGroupID${this.vGroupID}`)
-      WickrIOAPI.cmdSendRoomMessage(this.vGroupID, description)
+      await WickrIOAPI.cmdSendRoomMessage(this.vGroupID, description)
       // WickrIOAPI.cmdLeaveRoom(vGroupID);
     }
     return reply
@@ -121,7 +121,7 @@ class MemberListRepo {
 
   // sendMessage(userID, message) {
   // TODO for multiple aliases
-  sendMessage(userID, message) {
+  async sendMessage(userID, message) {
     let alias
     for (const member of this.members) {
       if (member.userID === userID) {
@@ -134,7 +134,7 @@ class MemberListRepo {
     aliasArray.push(this.alias.userID)
     logger.debug(`UserID: ${this.alias.userID}`)
     logger.debug(`Array: ${aliasArray}`)
-    const uMessage = WickrIOAPI.cmdSend1to1Message(
+    const uMessage = await WickrIOAPI.cmdSend1to1Message(
       aliasArray,
       messageString,
       '',
@@ -144,17 +144,17 @@ class MemberListRepo {
     logger.debug('uMessage:' + uMessage)
   }
 
-  replyMessage(message) {
+  async replyMessage(message) {
     const messageString = `Message from ${this.asset.userID}:\n${message}`
     if (this.vGroupID !== undefined && this.vGroupID !== '') {
-      WickrIOAPI.cmdSendRoomMessage(this.vGroupID, messageString)
+      await WickrIOAPI.cmdSendRoomMessage(this.vGroupID, messageString)
     } else {
       const proxyArray = []
       for (const member of this.members) {
         proxyArray.push(member.userID)
       }
       logger.debug(`Members: ${proxyArray}`)
-      WickrIOAPI.cmdSend1to1Message(proxyArray, messageString, '', '', '')
+      await WickrIOAPI.cmdSend1to1Message(proxyArray, messageString, '', '', '')
     }
   }
 }

@@ -15,7 +15,7 @@ class Send {
     return false
   }
 
-  execute(messageService) {
+  async execute(messageService) {
     let reply
     const state = State.NONE
     const assets = this.proxyService.getAssets()
@@ -37,7 +37,7 @@ class Send {
         }
       })
       if (assetRoom) {
-        this.proxyService.sendMessage(userEmail, argument, assetRoom)
+        await this.proxyService.sendMessage(userEmail, argument, assetRoom)
       } else {
         reply = 'Must first create a room with /create before sending a message'
       }

@@ -101,15 +101,15 @@ class ProxyService {
     this.saveData()
   }
 
-  sendMessage(userID, message, asset) {
+  async sendMessage(userID, message, asset) {
     const proxy = this.getProxyID(userID)
     const messageString = `Message from ${proxy}:\n${message}`
     const assetArray = [asset]
-    APIService.send1to1Message(assetArray, messageString, '', '', '')
+    await APIService.send1to1Message(assetArray, messageString, '', '', '')
     this.message = ''
   }
 
-  replyMessage(userID, message) {
+  async replyMessage(userID, message) {
     const vGroupID = this.assets
       .find(user => user.getAsset() === userID)
       .getVGroupID()
@@ -121,25 +121,25 @@ class ProxyService {
     //   ? APIService.sendRoomMessage(vGroupID, message)
     //   : APIService.send1to1Message(memberArray, message, '', '', '')
     if (vGroupID) {
-      return APIService.sendRoomMessage(vGroupID, message)
+      return await APIService.sendRoomMessage(vGroupID, message)
     }
     return false
   }
 
-  createRoom(asset) {
+  async createRoom(asset) {
     // TODO change copy!
     const description = 'To send a message to the asset: /send <message>'
     let reply = 'This is a conversation with:\n'
     this.members.forEach(member => {
       reply += `${member.userID}, ${member.proxyID}\n`
     })
-    reply += `Your email address and anything you say here (including messages from the ProxyBot) are not visible to the asset. To communicate with the asset, start your message with /send\nTo send a message to ${asset.asset} use /send <message>`
+    reply += `Your email address and anything you say here (including messages from the ProxyBot) are not visible to the asset. To communicate with the asset, start your message with /send\nTo send a message to ${asset} use /send <message>`
     const title = `Conversation with ${asset}`
     const users = []
     this.members.forEach(user => {
       users.push(user.getUserID())
     })
-    const uMessage = APIService.addRoom(
+    const uMessage = await APIService.addRoom(
       users,
       users,
       title,
@@ -149,7 +149,7 @@ class ProxyService {
     )
     const vGroupID = JSON.parse(uMessage).vgroupid
     this.setVGroupID(asset, vGroupID)
-    APIService.sendRoomMessage(vGroupID, reply)
+    await APIService.sendRoomMessage(vGroupID, reply)
     return title
   }
 

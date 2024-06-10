@@ -18,7 +18,7 @@ class Help {
       'member: a user who has been given an alias and can communicate with assets\n\n' +
       '*ProxyBot Commands*\n' +
       '/add <member> <alias>: adds member with the given alias to the list of users\n' +
-      '/asset <asset>: creates an asset that will recieve messages from the ProxyBot using the /send command\n' +
+      '/asset <asset>: creates an asset that will receive messages from the ProxyBot using the /send command\n' +
       '/create : creates a room with the group of members, use the /send command in this room to communicate with the asset\n' +
       '/delete <asset> : deletes asset from the list of assets\n' +
       '/list : returns the current list of members in the group and the assets available to send to\n' +

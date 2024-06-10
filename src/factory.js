@@ -62,7 +62,7 @@ class Factory {
     this.assetCommandList = [this.replyReceived]
   }
 
-  executeCommands(messageService) {
+  async executeCommands(messageService) {
     const userEmail = messageService.getUserEmail()
     // TODO fix this when in a room
     let defaultReply = `${userEmail} is not authorized to use this bot. If you have a question, please get a hold of us at wickr-support@amazon.com or visit us at support.wickr.com. Thanks, Team Wickr`
@@ -97,7 +97,7 @@ class Factory {
     }
     for (const command of commandList) {
       if (command.shouldExecute(messageService)) {
-        return command.execute(messageService)
+        return await command.execute(messageService)
       }
     }
     // TODO fix the admin command returning this then add it back

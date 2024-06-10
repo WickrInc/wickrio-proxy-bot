@@ -84,7 +84,7 @@ async function main() {
     // set the verification mode to true
     let verifyUsersMode
     if (VERIFY_USERS.encrypted) {
-      verifyUsersMode = WickrIOAPI.cmdDecryptString(VERIFY_USERS.value)
+      verifyUsersMode = await WickrIOAPI.cmdDecryptString(VERIFY_USERS.value)
     } else {
       verifyUsersMode = VERIFY_USERS.value
     }
@@ -114,7 +114,7 @@ async function main() {
     const welcomeMessage = `Welcome to the Wickr ProxyBot (version ${pkgjson.version}). Follow the 4-step guide or type /cancel to exit and configure your users manually.\n\nStep 1 of 4: Create an alias for yourself or your teammate one user at a time in the format <user@email.com> <alias>`
     console.log('sending welcome to ' + setupAdmins)
     if (setupAdmins.length > 0) {
-      APIService.send1to1Message(setupAdmins, welcomeMessage, '', '', '')
+      await APIService.send1to1Message(setupAdmins, welcomeMessage, '', '', '')
     }
 
     await bot.startListening(listen) // Passes a callback function that will receive incoming messages into the bot client
@@ -126,7 +126,7 @@ async function main() {
   }
 }
 
-function listen(rawMessage) {
+async function listen(rawMessage) {
   try {
     const messageService = bot.messageService({ rawMessage })
     const { isAdmin, vGroupID, msgType, user, userEmail } = messageService
@@ -141,11 +141,12 @@ function listen(rawMessage) {
       setupService.setupComplete(userEmail)
     }
 
-    const returnObj = factory.executeCommands(messageService)
+    const returnObj = await factory.executeCommands(messageService)
     if (returnObj) {
+      console.log('returnObj', returnObj)
       if (returnObj.reply) {
         logger.debug('Object reply:', returnObj.reply)
-        WickrIOAPI.cmdSendRoomMessage(vGroupID, returnObj.reply)
+        await WickrIOAPI.cmdSendRoomMessage(vGroupID, returnObj.reply)
       }
       user.currentState = returnObj.state
     }

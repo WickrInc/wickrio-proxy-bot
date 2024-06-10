@@ -1,6 +1,6 @@
 {
   "name": "wickrio-proxy-bot",
-  "version": "6.26.1",
+  "version": "6.38.1",
   "description": "WickrIO Proxy Bot",
   "main": "./build/index.js",
   "author": "Toren DeRosa",
@@ -9,7 +9,7 @@
     "babel-eslint": "^10.1.0",
     "dotenv": "^8.2.0",
     "prompt": "^1.0.0",
-    "wickrio-bot-api": "6.26.x"
+    "wickrio-bot-api": "7.1.1-beta.01"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.4",

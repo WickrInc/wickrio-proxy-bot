@@ -1,19 +1,25 @@
 import WickrIOAPI from 'wickrio_addon'
 
 class APIService {
-  static sendRoomMessage(vGroupID, message) {
-    return WickrIOAPI.cmdSendRoomMessage(vGroupID, message)
+  static async sendRoomMessage(vGroupID, message) {
+    return await WickrIOAPI.cmdSendRoomMessage(vGroupID, message)
   }
 
-  static sendRoomAttachment(vGroupID, attachment, display) {
-    return WickrIOAPI.cmdSendRoomAttachment(vGroupID, attachment, display)
+  static async sendRoomAttachment(vGroupID, attachment, display) {
+    return await WickrIOAPI.cmdSendRoomAttachment(vGroupID, attachment, display)
   }
 
-  static send1to1Message(userArray, reply, ttl, bor, messageID) {
-    return WickrIOAPI.cmdSend1to1Message(userArray, reply, ttl, bor, messageID)
+  static async send1to1Message(userArray, reply, ttl, bor, messageID) {
+    return await WickrIOAPI.cmdSend1to1Message(
+      userArray,
+      reply,
+      ttl,
+      bor,
+      messageID
+    )
   }
 
-  static send1to1MessageLowPriority(
+  static async send1to1MessageLowPriority(
     userArray,
     reply,
     ttl,
@@ -21,7 +27,7 @@ class APIService {
     messageID,
     flags
   ) {
-    return WickrIOAPI.cmdSend1to1Message(
+    return await WickrIOAPI.cmdSend1to1Message(
       userArray,
       reply,
       ttl,
@@ -33,14 +39,14 @@ class APIService {
     )
   }
 
-  static getUserInfo(users) {
-    const userInfoData = WickrIOAPI.cmdGetUserInfo(users)
+  static async getUserInfo(users) {
+    const userInfoData = await WickrIOAPI.cmdGetUserInfo(users)
     const temp = JSON.parse(userInfoData)
     return temp
   }
 
-  static addRoom(users, moderators, title, description) {
-    return WickrIOAPI.cmdAddRoom(users, moderators, title, description)
+  static async addRoom(users, moderators, title, description) {
+    return await WickrIOAPI.cmdAddRoom(users, moderators, title, description)
   }
 }
 

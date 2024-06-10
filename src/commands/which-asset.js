@@ -19,7 +19,7 @@ class WhichAsset {
     return false
   }
 
-  execute(messageService) {
+  async execute(messageService) {
     let reply
     let state = State.NONE
     const index = messageService.getMessage()
@@ -32,7 +32,7 @@ class WhichAsset {
     } else {
       // Subtract one to account for 0 based indexing
       const asset = assets[parseInt(index, 10) - 1].getAsset()
-      this.proxyService.sendMessage(userEmail, message, asset)
+      await this.proxyService.sendMessage(userEmail, message, asset)
     }
     const obj = {
       reply,

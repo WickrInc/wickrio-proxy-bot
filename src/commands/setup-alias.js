@@ -20,12 +20,12 @@ class SetupAlias {
     return false
   }
 
-  execute(messageService) {
+  async execute(messageService) {
     const argArray = messageService.getMessage().split(' ')
     const userID = argArray[0]
     const proxy = argArray[1]
     const userArray = [userID]
-    const userInfo = APIService.getUserInfo(userArray)
+    const userInfo = await APIService.getUserInfo(userArray)
     const failed = userInfo.failed
     let reply
     let state = this.state
